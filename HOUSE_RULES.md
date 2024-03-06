@@ -4,10 +4,10 @@
 
 This document serves as a TypeScript coding guide for maintaining consistency and cleanliness within our project. It's a living document, subject to adjustments as the project evolves and our team gains more insights into best practices.
 
-## Table of Contents
+## Table of Contents 📚
 
 - [TypeScript Coding Guide 🚀](#typescript-coding-guide-)
-  - [Table of Contents](#table-of-contents)
+  - [Table of Contents 📚](#table-of-contents-)
   - [General Principles 📜](#general-principles-)
   - [Naming Conventions 🔤](#naming-conventions-)
   - [Type Annotations 📝](#type-annotations-)
