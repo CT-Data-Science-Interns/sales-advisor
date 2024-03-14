@@ -19,8 +19,10 @@
         "Docstrings",
         "Flowbite",
         "IDOR",
+        "nextjs",
         "Nidec",
         "Supabase",
-        "tailwindcss"
+        "tailwindcss",
+        "trpc"
     ]
 }
