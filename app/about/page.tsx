@@ -1,8 +1,7 @@
-import { SignIn } from "@clerk/nextjs";
 import React from "react";
 
 const Page = () => {
-  return <SignIn />;
+  return <div className="h-screen">About Page</div>;
 };
 
 export default Page;
