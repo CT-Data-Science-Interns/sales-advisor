@@ -340,7 +340,7 @@ const Page = () => {
           </nav>
       </div>
 
-      {/*Suggested Schedule */}
+    {/* Suggested Schedule */}
     <div className="py-16 px-8 mx-auto max-w-screen-3xl lg:py-20 lg:px-10">
     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
     <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
