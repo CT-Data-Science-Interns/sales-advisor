@@ -10,15 +10,14 @@ import type {
 import { useEffect } from "react";
 
 const Page = () => {
-  let tabsElement: HTMLElement;
-  let tabElements: TabItem[];
-
   useEffect(
     () => {
-      tabsElement = document.getElementById("tabs-example") as HTMLElement;
+      const tabsElement: HTMLElement = document.getElementById(
+        "tabs-example"
+      ) as HTMLElement;
 
       // create an array of objects with the id, trigger element (eg. button), and the content element
-      tabElements = [
+      const tabElements: TabItem[] = [
         {
           id: "profile",
           triggerEl: document.querySelector(

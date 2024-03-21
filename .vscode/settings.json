@@ -16,6 +16,7 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "cSpell.words": [
+        "datepicker",
         "Docstrings",
         "Flowbite",
         "IDOR",
