@@ -16,6 +16,8 @@
         "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     "cSpell.words": [
+        "classname",
+        "datepicker",
         "Docstrings",
         "Flowbite",
         "IDOR",
