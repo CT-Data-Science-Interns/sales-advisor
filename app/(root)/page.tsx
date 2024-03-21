@@ -9,6 +9,8 @@ import type {
 } from "flowbite";
 import { useEffect } from "react";
 import LandingHeader from "./components/landing-header";
+import LandingFirstCTA from "./components/landing-first-cta";
+import MainFooter from "@/components/main-footer";
 
 const Page = () => {
   useEffect(() => {
@@ -54,7 +56,7 @@ const Page = () => {
   return (
     <>
       <LandingHeader />
-
+      <LandingFirstCTA />
       <section className="bg-white antialiased dark:bg-gray-900">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-16 lg:py-24">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
@@ -562,6 +564,7 @@ const Page = () => {
           </div>
         </div>
       </section>
+      <MainFooter />
     </>
   );
 };
