@@ -1,7 +1,8 @@
 "use client";
 
-import ApexCharts from "apexcharts";
-import React, { useEffect } from "react";
+// import ApexCharts from "apexcharts";
+// import React, { useEffect } from "react";
+import React from "react";
 
 // import Datepicker from 'flowbite-datepicker/Datepicker';
 // import DateRangePicker from 'flowbite-datepicker/DateRangePicker';
@@ -14,100 +15,100 @@ const Page = () => {
   // let successfulDealsCount: number = 0;
   // let failedDealsCount: number = 0;
 
-  let visitChart: ApexCharts;
-  let dealsChart: ApexCharts;
+  // let visitChart: ApexCharts;
+  // let dealsChart: ApexCharts;
 
-  useEffect(() => {
-    // Create visit chart
-    if (visitChart == null && document.getElementById("visit-chart")) {
-      visitChart = new ApexCharts(
-        document.getElementById("visit-chart"),
-        visitChartOptions
-      );
-      visitChart.render();
-    }
+  // useEffect(() => {
+  //   // Create visit chart
+  //   if (visitChart == null && document.getElementById("visit-chart")) {
+  //     visitChart = new ApexCharts(
+  //       document.getElementById("visit-chart"),
+  //       visitChartOptions
+  //     );
+  //     visitChart.render();
+  //   }
 
-    // Create deals chart
-    if (dealsChart == null && document.getElementById("deals-chart")) {
-      dealsChart = new ApexCharts(
-        document.getElementById("deals-chart"),
-        dealsChartOptions
-      );
-      dealsChart.render();
-    }
-  }, []);
+  //   // Create deals chart
+  //   if (dealsChart == null && document.getElementById("deals-chart")) {
+  //     dealsChart = new ApexCharts(
+  //       document.getElementById("deals-chart"),
+  //       dealsChartOptions
+  //     );
+  //     dealsChart.render();
+  //   }
+  // }, []);
 
-  const visitChartOptions = {
-    series: [1, 1],
-    colors: ["#1C64F2", "#16BDCA"],
-    chart: {
-      height: 420,
-      width: "100%",
-      type: "pie",
-    },
-    stroke: {
-      colors: ["white"],
-      lineCap: "",
-    },
-    plotOptions: {
-      pie: {
-        labels: {
-          show: true,
-        },
-        size: "100%",
-        dataLabels: {
-          offset: -25,
-        },
-      },
-    },
-    labels: ["Visited", "Not Visited"],
-    dataLabels: {
-      enabled: true,
-      style: {
-        fontFamily: "Inter, sans-serif",
-      },
-    },
-    legend: {
-      position: "bottom",
-      fontFamily: "Inter, sans-serif",
-    },
-  };
+  // const visitChartOptions = {
+  //   series: [1, 1],
+  //   colors: ["#1C64F2", "#16BDCA"],
+  //   chart: {
+  //     height: 420,
+  //     width: "100%",
+  //     type: "pie",
+  //   },
+  //   stroke: {
+  //     colors: ["white"],
+  //     lineCap: "",
+  //   },
+  //   plotOptions: {
+  //     pie: {
+  //       labels: {
+  //         show: true,
+  //       },
+  //       size: "100%",
+  //       dataLabels: {
+  //         offset: -25,
+  //       },
+  //     },
+  //   },
+  //   labels: ["Visited", "Not Visited"],
+  //   dataLabels: {
+  //     enabled: true,
+  //     style: {
+  //       fontFamily: "Inter, sans-serif",
+  //     },
+  //   },
+  //   legend: {
+  //     position: "bottom",
+  //     fontFamily: "Inter, sans-serif",
+  //   },
+  // };
 
-  const dealsChartOptions = {
-    series: [1, 1, 1],
-    colors: ["#1C64F2", "#16BDCA", "#9061F9"],
-    chart: {
-      height: 420,
-      width: "100%",
-      type: "pie",
-    },
-    stroke: {
-      colors: ["white"],
-      lineCap: "",
-    },
-    plotOptions: {
-      pie: {
-        labels: {
-          show: true,
-        },
-        size: "100%",
-        dataLabels: {
-          offset: -25,
-        },
-      },
-    },
-    labels: ["Ongoing", "Successful", "Failed"],
-    dataLabels: {
-      enabled: true,
-      style: {
-        fontFamily: "Inter, sans-serif",
-      },
-    },
-    legend: {
-      position: "bottom",
-      fontFamily: "Inter, sans-serif",
-    },
-  };
+  // const dealsChartOptions = {
+  //   series: [1, 1, 1],
+  //   colors: ["#1C64F2", "#16BDCA", "#9061F9"],
+  //   chart: {
+  //     height: 420,
+  //     width: "100%",
+  //     type: "pie",
+  //   },
+  //   stroke: {
+  //     colors: ["white"],
+  //     lineCap: "",
+  //   },
+  //   plotOptions: {
+  //     pie: {
+  //       labels: {
+  //         show: true,
+  //       },
+  //       size: "100%",
+  //       dataLabels: {
+  //         offset: -25,
+  //       },
+  //     },
+  //   },
+  //   labels: ["Ongoing", "Successful", "Failed"],
+  //   dataLabels: {
+  //     enabled: true,
+  //     style: {
+  //       fontFamily: "Inter, sans-serif",
+  //     },
+  //   },
+  //   legend: {
+  //     position: "bottom",
+  //     fontFamily: "Inter, sans-serif",
+  //   },
+  // };
 
   const setDate = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const option = event.target.value;
