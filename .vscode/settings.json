@@ -1,34 +1,34 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "always", // ? from true to "always"s
-        "source.addMissingImports": "always" // ? from true to "always"
-    },
-    "prettier.tabWidth": 2,
-    "prettier.useTabs": false,
-    "prettier.semi": true,
-    "prettier.singleQuote": false,
-    "prettier.jsxSingleQuote": false,
-    "prettier.trailingComma": "es5",
-    "prettier.arrowParens": "always",
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "cSpell.words": [
-        "classname",
-        "datepicker",
-        "Docstrings",
-        "Flowbite",
-        "IDOR",
-        "Neue",
-        "nextjs",
-        "Nidec",
-        "Noto",
-        "Roboto",
-        "Segoe",
-        "Supabase",
-        "tailwindcss",
-        "trpc"
-    ]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always", // ? from true to "always"s
+    "source.addMissingImports": "always" // ? from true to "always"
+  },
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false,
+  "prettier.semi": true,
+  "prettier.singleQuote": false,
+  "prettier.jsxSingleQuote": false,
+  "prettier.trailingComma": "es5",
+  "prettier.arrowParens": "always",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "cSpell.words": [
+    "classname",
+    "datepicker",
+    "Docstrings",
+    "Flowbite",
+    "IDOR",
+    "Neue",
+    "nextjs",
+    "Nidec",
+    "Noto",
+    "Roboto",
+    "Segoe",
+    "Supabase",
+    "tailwindcss",
+    "trpc"
+  ]
 }

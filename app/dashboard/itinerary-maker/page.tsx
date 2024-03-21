@@ -1,16 +1,13 @@
-'use client';
-
-import React, { useState } from "react";
+"use client";
 
 const Page = () => {
   return (
     <section className="bg-white dark:bg-gray-900">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
       <div className="py-8 px-4 mx-auto md:max-w-6xl lg:py-16">
         <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">
           Itinerary Maker
         </h1>
-        <div className='mb-6'>
+        <div className="mb-6">
           <ol className="items-center sm:flex">
             <li className="relative mb-6 sm:mb-0">
               <div className="flex items-center">
@@ -76,7 +73,6 @@ const Page = () => {
               </div>
             </li>
           </ol>
-
         </div>
         <form action="#">
           <div className="gap-4 sm:grid sm:grid-cols-2 xl:grid-cols-5 sm:gap-6 sm:mb-2">
@@ -116,7 +112,9 @@ const Page = () => {
                       placeholder="Select date start"
                     />
                   </div>
-                  <span className="hidden text-gray-500 md:mx-4 md:flex">to</span>
+                  <span className="hidden text-gray-500 md:mx-4 md:flex">
+                    to
+                  </span>
                   <div className="relative w-full">
                     <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                       <svg
@@ -143,7 +141,9 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-              <h3 className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Indicate Starting Location</h3>
+              <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Indicate Starting Location
+              </h3>
               <div className="flex items-center space-x-3">
                 <div className="flex items-center">
                   <input
@@ -236,7 +236,10 @@ const Page = () => {
               </div>
             </div>
             <div className="mb-4 space-y-4 xl:col-span-3">
-              <img src='https://www.thestatesman.com/wp-content/uploads/2020/04/googl_ED.jpg' className='w-full object-scale-down' />
+              <img
+                src="https://www.thestatesman.com/wp-content/uploads/2020/04/googl_ED.jpg"
+                className="w-full object-scale-down"
+              />
             </div>
           </div>
           <button
@@ -248,7 +251,6 @@ const Page = () => {
         </form>
       </div>
     </section>
-
   );
 };
 
