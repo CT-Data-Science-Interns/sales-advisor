@@ -1,4 +1,13 @@
-// "use-client";
+"use client";
+
+import { Tabs } from "flowbite";
+import type {
+  InstanceOptions,
+  TabItem,
+  TabsInterface,
+  TabsOptions,
+} from "flowbite";
+import { useEffect } from "react";
 
 // Learn more about the Tabs API here: https://flowbite.com/docs/components/tabs/#javascript-behaviour
 
@@ -30,6 +39,46 @@
 // tabs.show("ios");
 
 const Page = () => {
+  useEffect(() => {
+    const tabsElement: HTMLElement = document.getElementById(
+      "deviceTabs"
+    ) as HTMLElement;
+
+    const tabElements: TabItem[] = [
+      {
+        id: "ios",
+        triggerEl: document.querySelector("#ios-tab") as HTMLElement,
+        targetEl: document.querySelector("#ios") as HTMLElement,
+      },
+      {
+        id: "android",
+        triggerEl: document.querySelector("#android-tab") as HTMLElement,
+        targetEl: document.querySelector("#android") as HTMLElement,
+      },
+    ];
+
+    const options: TabsOptions = {
+      defaultTabId: "ios",
+      onShow: () => {
+        console.log("tab is shown");
+      },
+    };
+
+    const instanceOptions: InstanceOptions = {
+      id: "deviceTabs",
+      override: true,
+    };
+
+    const tabs: TabsInterface = new Tabs(
+      tabsElement,
+      tabElements,
+      options,
+      instanceOptions
+    );
+
+    tabs.show("ios");
+  }, []);
+
   return (
     <section className="bg-white antialiased dark:bg-gray-900">
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-16 lg:py-24">
