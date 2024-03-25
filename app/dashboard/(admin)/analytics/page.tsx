@@ -1,11 +1,10 @@
 "use client";
 
 // import ApexCharts from "apexcharts";
-// import React, { useEffect } from "react";
-import React from "react";
+import React, { useState } from "react";
 
-// import Datepicker from 'flowbite-datepicker/Datepicker';
-// import DateRangePicker from 'flowbite-datepicker/DateRangePicker';
+import DatePicker from "tailwind-datepicker-react";
+import { IOptions } from "tailwind-datepicker-react/types/Options";
 
 const Page = () => {
   // let companiesCount: number = 0;
@@ -110,14 +109,63 @@ const Page = () => {
   //   },
   // };
 
-  const setDate = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  // Datepicker options
+  const startDatepickerOptions: IOptions = {
+    autoHide: true,
+    todayBtn: true,
+    clearBtn: false,
+    inputDateFormatProp: {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    },
+  };
+  const endDatepickerOptions: IOptions = {
+    autoHide: true,
+    todayBtn: true,
+    clearBtn: false,
+    datepickerClassNames: "right-0",
+    inputDateFormatProp: {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    },
+  };
+
+  // Datepicker useStates
+  const [startDate, setStartDate] = useState(new Date(Date.now()));
+  const [endDate, setEndDate] = useState(startDate);
+  const [showDatepickers, setShowDatePickers] = useState<boolean>(false);
+  const [showStartDate, setShowStartDate] = useState<boolean>(false);
+  const [showEndDate, setShowEndDate] = useState<boolean>(false);
+
+  // Datepicker functions
+  const setDateType = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const option = event.target.value;
-    console.log(option);
+
+    setShowDatePickers(option === "4");
+
     if (option === "1") {
       // Show date picker
     } else if (option === "2") {
       // Show daterange picker
     }
+  };
+  const setStartDateHandler = (date: Date) => {
+    // Adjust end date if start date is greater
+    if (date > endDate) {
+      setEndDate(date);
+    }
+
+    setStartDate(date);
+  };
+  const setEndDateHandler = (date: Date) => {
+    // Adjust start date if end date is greater
+    if (startDate > date) {
+      setStartDate(date);
+    }
+
+    setEndDate(date);
   };
 
   const applyFilters = () => {
@@ -130,12 +178,10 @@ const Page = () => {
   };
 
   return (
-    <div className="container mx-auto sm:p-8 p-2">
-      {/* <div className="h-screen">Analytics Page</div> */}
-
+    <div className="container mx-auto p-2 sm:p-8">
       {/* Dropdown filters */}
-      <div className="p-6 rounded-lg shadow mb-8">
-        <div className="grid gap-6 md:grid-cols-3 mb-6">
+      <div className="rounded-lg p-6 mb-8 shadow">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           <div>
             <label
               htmlFor="salesperson"
@@ -170,7 +216,8 @@ const Page = () => {
               <option>Successful</option>
             </select>
           </div>
-          <div>
+          {/* Dates */}
+          <div className="sm:col-span-2">
             <label
               htmlFor="datetype"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -179,13 +226,36 @@ const Page = () => {
             </label>
             <select
               id="datetype"
-              onChange={setDate}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={setDateType}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
             >
               <option value={0}>All</option>
-              <option value={1}>Specific</option>
-              <option value={2}>Range</option>
+              <option value={1}>Today</option>
+              <option value={2}>Last 7 days</option>
+              <option value={3}>Last 30 days</option>
+              <option value={4}>Custom</option>
             </select>
+            {showDatepickers && (
+              <div className="flex">
+                <DatePicker
+                  value={startDate}
+                  options={startDatepickerOptions}
+                  onChange={setStartDateHandler}
+                  classNames="relative"
+                  show={showStartDate}
+                  setShow={setShowStartDate}
+                />
+                <span className="mx-4 my-auto text-gray-500">to</span>
+                <DatePicker
+                  value={endDate}
+                  options={endDatepickerOptions}
+                  onChange={setEndDateHandler}
+                  classNames="relative"
+                  show={showEndDate}
+                  setShow={setShowEndDate}
+                />
+              </div>
+            )}
           </div>
         </div>
         <div className="flex justify-end">
@@ -262,9 +332,7 @@ const Page = () => {
       </div>
 
       <div className="rounded-lg shadow mb-8">
-        <h5 className="p-6 text-xl font-bold text-gray-900 dark:text-white me-1">
-          Client List
-        </h5>
+        <h5 className="p-6 text-xl font-bold text-gray-900 dark:text-white me-1">Client List</h5>
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
