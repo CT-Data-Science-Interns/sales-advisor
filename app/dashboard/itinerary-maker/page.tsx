@@ -3,7 +3,7 @@
 const Page = () => {
   return (
     <section className="bg-white dark:bg-gray-900">
-      <div className="py-8 px-4 mx-auto md:max-w-6xl lg:py-16">
+      <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
         <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">
           Itinerary Maker
         </h1>
@@ -11,9 +11,9 @@ const Page = () => {
           <ol className="items-center sm:flex">
             <li className="relative mb-6 sm:mb-0">
               <div className="flex items-center">
-                <div className="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                <div className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full bg-blue-100 ring-0 ring-white dark:bg-blue-900 dark:ring-gray-900 sm:ring-8">
                   <svg
-                    className="w-3.5 h-3.5 text-blue-800 dark:text-blue-300"
+                    className="size-3.5 text-blue-800 dark:text-blue-300"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -22,7 +22,7 @@ const Page = () => {
                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                   </svg>
                 </div>
-                <div className="hidden sm:flex w-full bg-gray-800 h-0.5 dark:bg-gray-700" />
+                <div className="hidden h-0.5 w-full bg-gray-800 dark:bg-gray-700 sm:flex" />
               </div>
               <div className="mt-3 sm:pe-8">
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white">
@@ -32,9 +32,9 @@ const Page = () => {
             </li>
             <li className="relative mb-6 sm:mb-0">
               <div className="flex items-center">
-                <div className="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                <div className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full bg-blue-100 ring-0 ring-white dark:bg-blue-900 dark:ring-gray-900 sm:ring-8">
                   <svg
-                    className="w-2.5 h-2.5 text-blue-200 dark:text-blue-300"
+                    className="size-2.5 text-blue-200 dark:text-blue-300"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -43,7 +43,7 @@ const Page = () => {
                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                   </svg>
                 </div>
-                <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
+                <div className="hidden h-0.5 w-full bg-gray-200 dark:bg-gray-700 sm:flex" />
               </div>
               <div className="mt-3 sm:pe-8">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -53,9 +53,9 @@ const Page = () => {
             </li>
             <li className="relative mb-6 sm:mb-0">
               <div className="flex items-center">
-                <div className="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                <div className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full bg-blue-100 ring-0 ring-white dark:bg-blue-900 dark:ring-gray-900 sm:ring-8">
                   <svg
-                    className="w-2.5 h-2.5 text-blue-200 dark:text-blue-300"
+                    className="size-2.5 text-blue-200 dark:text-blue-300"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -64,7 +64,7 @@ const Page = () => {
                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                   </svg>
                 </div>
-                <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
+                <div className="hidden h-0.5 w-full bg-gray-200 dark:bg-gray-700 sm:flex" />
               </div>
               <div className="mt-3 sm:pe-8">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -75,12 +75,12 @@ const Page = () => {
           </ol>
         </div>
         <form action="#">
-          <div className="gap-4 sm:grid sm:grid-cols-2 xl:grid-cols-5 sm:gap-6 sm:mb-2">
-            <div className="mb-4 space-y-4 xl:col-span-2 border-gray-300 border-2 rounded-xl p-4 my-4">
+          <div className="gap-4 sm:mb-2 sm:grid sm:grid-cols-2 sm:gap-6 xl:grid-cols-5">
+            <div className="my-4 space-y-4 rounded-xl border-2 border-gray-300 p-4 xl:col-span-2">
               <div>
                 <label
                   htmlFor="date_start"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Select date for schedule creation
                 </label>
@@ -89,10 +89,10 @@ const Page = () => {
                   className="items-center space-y-4 md:flex md:space-y-0"
                 >
                   <div className="relative w-full">
-                    <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <svg
                         aria-hidden="true"
-                        className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                        className="size-5 text-gray-500 dark:text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +108,7 @@ const Page = () => {
                       id="date_start"
                       name="start"
                       type="text"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 datepicker-input"
+                      className="datepicker-input block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                       placeholder="Select date start"
                     />
                   </div>
@@ -116,10 +116,10 @@ const Page = () => {
                     to
                   </span>
                   <div className="relative w-full">
-                    <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                       <svg
                         aria-hidden="true"
-                        className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                        className="size-5 text-gray-500 dark:text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -135,13 +135,13 @@ const Page = () => {
                       id="date_end"
                       name="end"
                       type="text"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 datepicker-input"
+                      className="datepicker-input block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                       placeholder="Select date end"
                     />
                   </div>
                 </div>
               </div>
-              <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <h3 className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                 Indicate Starting Location
               </h3>
               <div className="flex items-center space-x-3">
@@ -150,7 +150,7 @@ const Page = () => {
                     id="event-duration-checkbox"
                     type="checkbox"
                     defaultValue=""
-                    className="w-4 h-4 bg-gray-100 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    className="size-4 rounded border-gray-300 bg-gray-100 text-primary-600 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-600"
                   />
                   <label
                     htmlFor="event-duration-checkbox"
@@ -161,17 +161,17 @@ const Page = () => {
                 </div>
               </div>
               <div>
-                <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <div className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Select method of entering coordinates
                 </div>
-                <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
+                <div className="space-y-4 md:flex md:space-x-4 md:space-y-0">
                   <div className="w-full">
                     <label htmlFor="reminder-type" className="sr-only">
                       Reminder type
                     </label>
                     <select
                       id="reminder-type"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                     >
                       <option value="AL">via entering address</option>
                       <option value="EM">via pinning location in map</option>
@@ -181,17 +181,17 @@ const Page = () => {
                 </div>
               </div>
               <div>
-                <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
+                <div className="space-y-4 md:flex md:space-x-4 md:space-y-0">
                   <div className="w-full">
                     <label htmlFor="reminder-type" className="sr-only">
                       Reminder type
                     </label>
-                    <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    <div className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                       Country
                     </div>
                     <select
                       id="reminder-type"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                     >
                       <option value="AL">Indonesia</option>
                       <option value="EM">Philippines</option>
@@ -202,12 +202,12 @@ const Page = () => {
                     <label htmlFor="reminder-length-type" className="sr-only">
                       State
                     </label>
-                    <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    <div className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                       State
                     </div>
                     <select
                       id="reminder-length-type"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                     >
                       <option value="WE">Jakarta</option>
                       <option value="MO">Java</option>
@@ -216,18 +216,18 @@ const Page = () => {
                 </div>
               </div>
               <div>
-                <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
+                <div className="space-y-4 md:flex md:space-x-4 md:space-y-0">
                   <div className="w-full">
                     <label htmlFor="reminder-type" className="sr-only">
                       Reminder type
                     </label>
-                    <div className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    <div className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                       Address
                     </div>
                     <input
                       type="text"
                       id="add-guests"
-                      className="block p-3 pl-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 pl-4 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                       placeholder="Your complete address"
                       required
                     />
@@ -244,7 +244,7 @@ const Page = () => {
           </div>
           <button
             type="submit"
-            className="text-white justify-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            className="justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
             Proceed to Filtering
           </button>
