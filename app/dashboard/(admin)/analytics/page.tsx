@@ -151,7 +151,7 @@ const Page = () => {
       // Show daterange picker
     }
   };
-  const setStartDateHandler = (date: Date) => {
+  const onSelectedStartDateChanged = (date: Date) => {
     // Adjust end date if start date is greater
     if (date > endDate) {
       setEndDate(date);
@@ -159,7 +159,7 @@ const Page = () => {
 
     setStartDate(date);
   };
-  const setEndDateHandler = (date: Date) => {
+  const onSelectedEndDateChanged = (date: Date) => {
     // Adjust start date if end date is greater
     if (startDate > date) {
       setStartDate(date);
@@ -240,19 +240,19 @@ const Page = () => {
                 <DatePicker
                   value={startDate}
                   options={startDatepickerOptions}
-                  onChange={setStartDateHandler}
                   classNames="relative"
                   show={showStartDate}
                   setShow={setShowStartDate}
+                  selectedDateState={[startDate, onSelectedStartDateChanged]}
                 />
                 <span className="mx-4 my-auto text-gray-500">to</span>
                 <DatePicker
                   value={endDate}
                   options={endDatepickerOptions}
-                  onChange={setEndDateHandler}
                   classNames="relative"
                   show={showEndDate}
                   setShow={setShowEndDate}
+                  selectedDateState={[endDate, onSelectedEndDateChanged]}
                 />
               </div>
             )}
