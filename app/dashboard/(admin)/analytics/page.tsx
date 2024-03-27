@@ -1,10 +1,11 @@
 "use client";
 
-// import ApexCharts from "apexcharts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
+
+import "svgmap/dist/svgMap.min.css";
 
 const Page = () => {
   // let companiesCount: number = 0;
@@ -13,101 +14,6 @@ const Page = () => {
   // let onGoingDealsCount: number = 0;
   // let successfulDealsCount: number = 0;
   // let failedDealsCount: number = 0;
-
-  // let visitChart: ApexCharts;
-  // let dealsChart: ApexCharts;
-
-  // useEffect(() => {
-  //   // Create visit chart
-  //   if (visitChart == null && document.getElementById("visit-chart")) {
-  //     visitChart = new ApexCharts(
-  //       document.getElementById("visit-chart"),
-  //       visitChartOptions
-  //     );
-  //     visitChart.render();
-  //   }
-
-  //   // Create deals chart
-  //   if (dealsChart == null && document.getElementById("deals-chart")) {
-  //     dealsChart = new ApexCharts(
-  //       document.getElementById("deals-chart"),
-  //       dealsChartOptions
-  //     );
-  //     dealsChart.render();
-  //   }
-  // }, []);
-
-  // const visitChartOptions = {
-  //   series: [1, 1],
-  //   colors: ["#1C64F2", "#16BDCA"],
-  //   chart: {
-  //     height: 420,
-  //     width: "100%",
-  //     type: "pie",
-  //   },
-  //   stroke: {
-  //     colors: ["white"],
-  //     lineCap: "",
-  //   },
-  //   plotOptions: {
-  //     pie: {
-  //       labels: {
-  //         show: true,
-  //       },
-  //       size: "100%",
-  //       dataLabels: {
-  //         offset: -25,
-  //       },
-  //     },
-  //   },
-  //   labels: ["Visited", "Not Visited"],
-  //   dataLabels: {
-  //     enabled: true,
-  //     style: {
-  //       fontFamily: "Inter, sans-serif",
-  //     },
-  //   },
-  //   legend: {
-  //     position: "bottom",
-  //     fontFamily: "Inter, sans-serif",
-  //   },
-  // };
-
-  // const dealsChartOptions = {
-  //   series: [1, 1, 1],
-  //   colors: ["#1C64F2", "#16BDCA", "#9061F9"],
-  //   chart: {
-  //     height: 420,
-  //     width: "100%",
-  //     type: "pie",
-  //   },
-  //   stroke: {
-  //     colors: ["white"],
-  //     lineCap: "",
-  //   },
-  //   plotOptions: {
-  //     pie: {
-  //       labels: {
-  //         show: true,
-  //       },
-  //       size: "100%",
-  //       dataLabels: {
-  //         offset: -25,
-  //       },
-  //     },
-  //   },
-  //   labels: ["Ongoing", "Successful", "Failed"],
-  //   dataLabels: {
-  //     enabled: true,
-  //     style: {
-  //       fontFamily: "Inter, sans-serif",
-  //     },
-  //   },
-  //   legend: {
-  //     position: "bottom",
-  //     fontFamily: "Inter, sans-serif",
-  //   },
-  // };
 
   // Datepicker options
   const startDatepickerOptions: IOptions = {
@@ -176,6 +82,48 @@ const Page = () => {
     //   failedDealsCount,
     // ]);
   };
+
+  let map: null;
+
+  useEffect(() => {
+    if (map == null) {
+      const svgMap = require("svgmap");
+      map = new svgMap({
+        targetElementID: "svgMap",
+        data: {
+          data: {
+            companies: {
+              name: "Companies",
+              thresholdMax: 100000,
+              thresholdMin: 1000,
+            },
+            visited: {
+              name: "Visited",
+            },
+            notVisited: {
+              name: "Not Visited",
+            },
+            onGoing: {
+              name: "Ongoing Deals",
+            },
+            success: {
+              name: "Successful Deals",
+            },
+            failed: {
+              name: "Failed Deals",
+            },
+          },
+          applyData: "companies",
+          values: {
+            AF: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
+            AL: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
+            DZ: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
+            // ...
+          },
+        },
+      });
+    }
+  }, []);
 
   return (
     <div className="container mx-auto p-2 sm:p-8">
@@ -301,36 +249,12 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="mb-8 grid gap-6 lg:grid-cols-2">
-        {/* Visited pie chart */}
-        <div className="bg-white rounded-lg shadow dark:bg-gray-800 p-6">
-          <div className="flex justify-between items-start w-full">
-            <div className="flex-col items-center">
-              <div className="flex items-center mb-1">
-                <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1">
-                  Visit Progress
-                </h5>
-              </div>
-            </div>
-          </div>
-          <div id="visit-chart"></div>
-        </div>
-
-        {/* Deal status pie chart */}
-        <div className="bg-white rounded-lg shadow dark:bg-gray-800 p-6">
-          <div className="flex justify-between items-start w-full">
-            <div className="flex-col items-center">
-              <div className="flex items-center mb-1">
-                <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1">
-                  Deal Status
-                </h5>
-              </div>
-            </div>
-          </div>
-          <div id="deals-chart"></div>
-        </div>
+      {/* Choropleth Map */}
+      <div className="rounded-lg shadow mb-8 p-2 sm:p-6">
+        <div id="svgMap"></div>
       </div>
 
+      {/* Client List */}
       <div className="rounded-lg shadow mb-8">
         <h5 className="p-6 text-xl font-bold text-gray-900 dark:text-white me-1">Client List</h5>
         <div className="relative overflow-x-auto">
