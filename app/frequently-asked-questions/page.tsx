@@ -4,9 +4,9 @@ import StaticPageNavbar from "@/components/static-page-navbar";
 import StaticPageFooter from "@/components/static-page-footer";
 
 const Page = () => {
-  const [isOpen, setIsOpen] = useState([]);
+  const [isOpen, setIsOpen] = useState<boolean[]>([]);
 
-  const toggleAnswer = (index) => {
+  const toggleAnswer = (index: number) => {
     setIsOpen((prev) => {
       const updatedIsOpen = [...prev];
       updatedIsOpen[index] = !updatedIsOpen[index];
@@ -24,9 +24,9 @@ const Page = () => {
               What questions do you have in mind?
             </h2>
             <p className="mb-8 font-light text-gray-500 dark:text-gray-400 sm:text-xl">
-              Here are a few of the questions we get the most. If you don't see
-              what's on your mind, reach out to us anytime on phone, chat, or
-              email.
+              Here are a few of the questions we get the most. If you don&apos;t
+              see what&apos;s on your mind, reach out to us anytime on phone,
+              chat, or email.
             </p>
             <label
               htmlFor="email-adress-icon"
@@ -64,7 +64,7 @@ const Page = () => {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <div>
               <h3 className="mb-4 text-xl font-bold dark:text-white">
-                General
+                Progress Tracker
               </h3>
               <ul
                 role="list"
@@ -82,12 +82,98 @@ const Page = () => {
                 </li>
                 <li>
                   <a href="#" className="hover:underline">
-                    Pricing
+                    Project Management Features
                   </a>
                 </li>
                 <li>
                   <a href="#" className="hover:underline">
                     Errors
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-4 text-xl font-bold text-black">
+                Itinerary Builder
+              </h3>
+              <ul
+                role="list"
+                className="space-y-4 text-gray-500 dark:text-gray-400"
+              >
+                <li>
+                  <a href="#" className="hover:underline">
+                    Simplifying workflow
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    Itinerary Inaccuracies
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    How to manage your notifications
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    Labelling Itineraries
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-4 text-xl font-bold text-black">Admin</h3>
+              <ul
+                role="list"
+                className="space-y-4 text-gray-500 dark:text-gray-400"
+              >
+                <li>
+                  <a href="#" className="hover:underline">
+                    How to restore your sales history
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    Data Privacy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    Managing your dashboard
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    Managing employees
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-4 text-xl font-bold text-black">Account</h3>
+              <ul
+                role="list"
+                className="space-y-4 text-gray-500 dark:text-gray-400"
+              >
+                <li>
+                  <a href="#" className="hover:underline">
+                    About Security
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    How to log in or out
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    How to edit your profile
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:underline">
+                    Can&apos;t log out
                   </a>
                 </li>
               </ul>

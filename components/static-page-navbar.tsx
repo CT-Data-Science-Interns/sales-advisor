@@ -6,11 +6,11 @@ const StaticPageNavbar = () => {
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
-            href="https://flowbite.com/"
-            className="flex items-center space-x-3 rtl:space-x-reverse"
+            href="/dashboard"
+            className="flex items-center space-x-3 rtl:space-x-reverse w-10 h-10"
           >
             <span className="self-center text-2xl font-semibold whitespace-nowrap text-black">
-              Logo
+              Nidec
             </span>
           </a>
           <button
