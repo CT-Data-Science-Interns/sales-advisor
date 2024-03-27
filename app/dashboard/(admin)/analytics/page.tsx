@@ -126,7 +126,9 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-2 sm:p-8">
+    <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
+      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+
       {/* Dropdown filters */}
       <div className="rounded-lg p-6 mb-8 shadow">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-6">

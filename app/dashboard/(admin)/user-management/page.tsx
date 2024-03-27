@@ -4,7 +4,9 @@ import React from "react";
 
 const Page = () => {
   return (
-    <div className="max-w-2xl px-4 py-8 mx-auto lg:py-16">
+    <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
+      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">User Management</h1>
+
       <div className="p-6 rounded-lg shadow mb-8">
         <div>
           <label
@@ -26,9 +28,7 @@ const Page = () => {
 
       {/* Delegations dropdown */}
       <div className="p-6 rounded-lg shadow mb-8">
-        <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1 mb-6">
-          Delegations
-        </h5>
+        <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1 mb-6">Delegations</h5>
         <div className="grid gap-6 sm:grid-cols-2  mb-6">
           <div>
             <label
