@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
 
-// import "svgmap/dist/svgMap.min.css";
+import "svgmap/dist/svgMap.min.css";
 
 const Page = () => {
   // let companiesCount: number = 0;
@@ -17,7 +17,7 @@ const Page = () => {
 
   let pieChart: any;
   let areaChart: any;
-  // let choroplethMap: null;
+  let choroplethMap: null;
 
   let clientInitialized = false;
 
@@ -226,7 +226,7 @@ const Page = () => {
     if (!clientInitialized) {
       // Import client-only packages
       const ApexCharts = require("apexcharts");
-      // const svgMap = require("svgmap");
+      const svgMap = require("svgmap");
 
       // Pie chart
       pieChart = new ApexCharts(document.getElementById("pie-chart"), pieChartOptions);
@@ -237,40 +237,41 @@ const Page = () => {
       areaChart.render();
 
       // Choropleth Map
-      // if (choroplethMap == null) {
-      //   choroplethMap = new svgMap({
-      //     targetElementID: "choropleth-map",
-      //     data: {
-      //       data: {
-      //         companies: {
-      //           name: "Companies",
-      //         },
-      //         visited: {
-      //           name: "Visited",
-      //         },
-      //         notVisited: {
-      //           name: "Not Visited",
-      //         },
-      //         onGoing: {
-      //           name: "Ongoing Deals",
-      //         },
-      //         success: {
-      //           name: "Successful Deals",
-      //         },
-      //         failed: {
-      //           name: "Failed Deals",
-      //         },
-      //       },
-      //       applyData: "visited",
-      //       values: {
-      //         AF: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
-      //         AL: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
-      //         DZ: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
-      //         // ...
-      //       },
-      //     },
-      //   });
-      // }
+      if (choroplethMap == null) {
+        // eslint-disable-next-line new-cap
+        choroplethMap = new svgMap({
+          targetElementID: "choropleth-map",
+          data: {
+            data: {
+              companies: {
+                name: "Companies",
+              },
+              visited: {
+                name: "Visited",
+              },
+              notVisited: {
+                name: "Not Visited",
+              },
+              onGoing: {
+                name: "Ongoing Deals",
+              },
+              success: {
+                name: "Successful Deals",
+              },
+              failed: {
+                name: "Failed Deals",
+              },
+            },
+            applyData: "visited",
+            values: {
+              AF: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
+              AL: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
+              DZ: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
+              // ...
+            },
+          },
+        });
+      }
 
       clientInitialized = true;
     }
