@@ -14,8 +14,10 @@ const DynamicMap = ({
 
   useEffect(() => {
     const googleMapsScript = document.createElement("script");
-    // Will use env variable for the API key
-    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAnOO0FR11Im8BbwWC0IB2r5uPdZ6c7SvQ`;
+    if (!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+      throw new Error("Google Maps API key not found");
+    }
+    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
     googleMapsScript.async = true;
     googleMapsScript.defer = true;
     googleMapsScript.addEventListener("load", initializeMap);
