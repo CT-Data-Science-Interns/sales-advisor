@@ -1,29 +1,12 @@
 import React from "react";
 
-export class ItineraryStage {
-  static readonly SET_LOCATION = new ItineraryStage(
-    "SET_LOCATION",
-    "Set starting location"
-  );
-
-  static readonly FILTER_COMPANIES = new ItineraryStage(
-    "FILTER_COMPANIES",
-    "Filter delegated companies"
-  );
-
-  static readonly GENERATE_AND_SAVE = new ItineraryStage(
-    "GENERATE_AND_SAVE",
-    "Generate and Save Itinerary"
-  );
-
-  private constructor(
-    private readonly key: string,
-    public readonly value: any
-  ) {}
-
-  toString() {
-    return this.key;
-  }
+export enum ItineraryStage {
+  // eslint-disable-next-line no-unused-vars
+  SET_LOCATION = "Set starting location",
+  // eslint-disable-next-line no-unused-vars
+  FILTER_COMPANIES = "Filter delegated companies",
+  // eslint-disable-next-line no-unused-vars
+  GENERATE_AND_SAVE = "Generate and Save Itinerary",
 }
 
 const ItineraryStageItem = ({
@@ -55,7 +38,7 @@ const ItineraryStageItem = ({
         <h3
           className={`text-sm text-gray-900 dark:text-white ${isCurrent ? "font-bold" : "font-medium"}`}
         >
-          {itineraryStage.value}
+          {itineraryStage}
         </h3>
       </div>
     </li>
@@ -63,16 +46,16 @@ const ItineraryStageItem = ({
 };
 
 const ItineraryStageProgress = ({
-  current_itinerary_stage,
+  currentItineraryStage,
 }: {
-  current_itinerary_stage: ItineraryStage;
+  currentItineraryStage: ItineraryStage;
 }) => {
   return (
     <div className="mb-6 flex justify-center">
       <ol className="items-center sm:flex">
         <ItineraryStageItem
           itineraryStage={ItineraryStage.SET_LOCATION}
-          isCurrent={ItineraryStage.SET_LOCATION === current_itinerary_stage}
+          isCurrent={ItineraryStage.SET_LOCATION === currentItineraryStage}
         >
           <path
             fillRule="evenodd"
@@ -82,17 +65,13 @@ const ItineraryStageProgress = ({
         </ItineraryStageItem>
         <ItineraryStageItem
           itineraryStage={ItineraryStage.FILTER_COMPANIES}
-          isCurrent={
-            ItineraryStage.FILTER_COMPANIES === current_itinerary_stage
-          }
+          isCurrent={ItineraryStage.FILTER_COMPANIES === currentItineraryStage}
         >
           <path d="M5.05 3C3.291 3 2.352 5.024 3.51 6.317l5.422 6.059v4.874c0 .472.227.917.613 1.2l3.069 2.25c1.01.742 2.454.036 2.454-1.2v-7.124l5.422-6.059C21.647 5.024 20.708 3 18.95 3H5.05Z" />
         </ItineraryStageItem>
         <ItineraryStageItem
           itineraryStage={ItineraryStage.GENERATE_AND_SAVE}
-          isCurrent={
-            ItineraryStage.GENERATE_AND_SAVE === current_itinerary_stage
-          }
+          isCurrent={ItineraryStage.GENERATE_AND_SAVE === currentItineraryStage}
         >
           <path
             fillRule="evenodd"

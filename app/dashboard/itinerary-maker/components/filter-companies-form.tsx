@@ -1,18 +1,22 @@
 "use client";
 import FormSelect from "@/components/form-select";
 
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 
 const FilterCompaniesForm = () => {
   const [state, setState] = useState<string[] | null>(null);
-  const [business_model, setBusinessModel] = useState<string[] | null>(null);
+  const [businessModel, setBusinessModel] = useState<string[] | null>(null);
   const [category, setCategory] = useState<string[] | null>(null);
-  const [annual_sales_range, setAnnualSalesRange] = useState<string[] | null>(
+  const [annualSalesRange, setAnnualSalesRange] = useState<string[] | null>(
     null
   );
 
   // Logging for now to remove linting errors
-  console.log(state, business_model, category, annual_sales_range);
+  console.log(state, businessModel, category, annualSalesRange);
+
+  const handleFormSubmit = (event: FormEvent) => {
+    event.preventDefault();
+  };
 
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -20,7 +24,7 @@ const FilterCompaniesForm = () => {
         <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
           Filter Companies
         </h2>
-        <form action="#">
+        <form action="#" onSubmit={handleFormSubmit}>
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
             <div className="sm:col-span-2">
               <FormSelect

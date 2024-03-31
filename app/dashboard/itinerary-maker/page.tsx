@@ -17,9 +17,7 @@ const Page = () => {
         <h1 className="mb-10 text-5xl font-bold text-gray-900 dark:text-white text-center">
           Itinerary Maker
         </h1>
-        <ItineraryStageProgress
-          current_itinerary_stage={currentItineraryStage}
-        />
+        <ItineraryStageProgress currentItineraryStage={currentItineraryStage} />
         {currentItineraryStage === ItineraryStage.SET_LOCATION && (
           <StartingLocationForm currentPageHandler={setCurrentItineraryStage} />
         )}
