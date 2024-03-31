@@ -16,10 +16,12 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "cSpell.words": [
+    "apexcharts",
     "classname",
     "datepicker",
     "Docstrings",
     "dribbble",
+    "Firestore",
     "Flowbite",
     "Glassmorphism",
     "IDOR",
