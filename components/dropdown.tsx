@@ -1,21 +1,21 @@
 "use client";
 
-import React, { FC, useState } from 'react';
+import React, { FC, useState } from "react";
 
 interface DropdownProps {
-    name: string;
-    values: string[];
-    onSelectCallback: (value: string) => void;
+  name: string;
+  values: string[];
+  onSelectCallback: (value: string) => void;
 }
 
 interface DropdownButtonProps {
-    onClickCallback: () => void;
+  onClickCallback: () => void;
 }
 
 interface DropdownItemsProps {
-    name: string;
-    values: string[];
-    onClickCallback: (value: string) => void;
+  name: string;
+  values: string[];
+  onClickCallback: (value: string) => void;
 }
 
 /**
@@ -24,16 +24,33 @@ interface DropdownItemsProps {
  * @example
  * <DropdownButton onClickCallback={handleClick} />
  */
-const DropdownButton:FC<DropdownButtonProps> = ({onClickCallback}) => {
-    return (
-        <button id="dropdownRadioButton" onClick={onClickCallback} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-            Dropdown radio 
-            <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/>
-            </svg>
-        </button>
-    );
-}
+const DropdownButton: FC<DropdownButtonProps> = ({ onClickCallback }) => {
+  return (
+    <button
+      id="dropdownRadioButton"
+      onClick={onClickCallback}
+      className="inline-flex items-center rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      type="button"
+    >
+      Dropdown radio
+      <svg
+        className="ms-3 size-2.5"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 10 6"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="m1 1 4 4 4-4"
+        />
+      </svg>
+    </button>
+  );
+};
 
 /**
  * DropdownItems component
@@ -43,22 +60,43 @@ const DropdownButton:FC<DropdownButtonProps> = ({onClickCallback}) => {
  * @example
  * <DropdownItems name='dropdown' values={['one', 'two', 'three']} onClickCallback={handleSelect} />
  */
-const DropdownItems:FC<DropdownItemsProps> = ({ name, values, onClickCallback }) => {
-    return (
-        <div id="dropdownDefaultRadio" className="z-10 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
-            <ul className="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
-                {values.map((value, index) => (
-                    <li key={index} onClick={() => onClickCallback(value)}>
-                        <div className="flex items-center">
-                            <input id={`${name}-dropdown-radio-${index}`} type="radio" value={value} name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                            <label htmlFor={`${name}-dropdown-radio-${index}`} className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{value}</label>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-}
+const DropdownItems: FC<DropdownItemsProps> = ({
+  name,
+  values,
+  onClickCallback,
+}) => {
+  return (
+    <div
+      id="dropdownDefaultRadio"
+      className="z-10 w-48 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700"
+    >
+      <ul
+        className="space-y-3 p-3 text-sm text-gray-700 dark:text-gray-200"
+        aria-labelledby="dropdownRadioButton"
+      >
+        {values.map((value, index) => (
+          <li key={index} onClick={() => onClickCallback(value)}>
+            <div className="flex items-center">
+              <input
+                id={`${name}-dropdown-radio-${index}`}
+                type="radio"
+                value={value}
+                name="default-radio"
+                className="size-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+              />
+              <label
+                htmlFor={`${name}-dropdown-radio-${index}`}
+                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                {value}
+              </label>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 /**
  * Dropdown component
@@ -70,23 +108,29 @@ const DropdownItems:FC<DropdownItemsProps> = ({ name, values, onClickCallback })
  * @returns {JSX.Element} - JSX Element
  */
 const Dropdown: FC<DropdownProps> = ({ name, values, onSelectCallback }) => {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-        console.log('isOpen', isOpen);
-    }
-    
-    const handleSelect = (value: string) => {
-        onSelectCallback(value);
-    }
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+    console.log("isOpen", isOpen);
+  };
 
-    return (
-        <div>
-            <DropdownButton onClickCallback={toggleDropdown} />
-            {isOpen && <DropdownItems name={name} values={values} onClickCallback={handleSelect} />}
-        </div>
-    );
+  const handleSelect = (value: string) => {
+    onSelectCallback(value);
+  };
+
+  return (
+    <div>
+      <DropdownButton onClickCallback={toggleDropdown} />
+      {isOpen && (
+        <DropdownItems
+          name={name}
+          values={values}
+          onClickCallback={handleSelect}
+        />
+      )}
+    </div>
+  );
 };
 
 export default Dropdown;
