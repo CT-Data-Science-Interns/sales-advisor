@@ -282,8 +282,8 @@ const Page = () => {
 
       {/* Dropdown filters */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1 pb-6">Filters</h5>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">Filters</h5>
+        <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label
               htmlFor="salesperson"
@@ -329,7 +329,7 @@ const Page = () => {
             <select
               id="datetype"
               onChange={setDateType}
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 mb-2"
+              className="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               <option value={0}>All</option>
               <option value={1}>Today</option>
@@ -364,7 +364,7 @@ const Page = () => {
           <button
             type="button"
             onClick={applyFilters}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Apply Filters
           </button>
@@ -375,11 +375,11 @@ const Page = () => {
       <div className="mb-8 grid gap-6 md:grid-cols-2">
         {/* Pie chart */}
         <div className="rounded-lg p-6 shadow">
-          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
+          <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
             Companies Status
           </h5>
           <div id="pie-chart"></div>
-          <div className="grid gap-2 grid-cols-3 mt-4">
+          <div className="mt-4 grid grid-cols-3 gap-2">
             <div>
               <div className="text-center text-sm">Total</div>
               <div className="text-center text-3xl">0</div>
@@ -396,11 +396,11 @@ const Page = () => {
         </div>
         {/* Area chart */}
         <div className="rounded-lg p-6 shadow">
-          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
+          <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
             Deals Status
           </h5>
           <div id="area-chart"></div>
-          <div className="grid gap-2 grid-cols-3 mt-4">
+          <div className="mt-4 grid grid-cols-3 gap-2">
             <div>
               <div className="text-center text-sm">Ongoing Deals</div>
               <div className="text-center text-3xl">0</div>
@@ -419,7 +419,7 @@ const Page = () => {
 
       {/* Choropleth Map */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
+        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
           World Overview
         </h5>
         <div id="choropleth-map"></div>
@@ -427,10 +427,10 @@ const Page = () => {
 
       {/* Client List */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="p-6 text-xl font-bold text-gray-900 dark:text-white me-1">Client List</h5>
+        <h5 className="me-1 p-6 text-xl font-bold text-gray-900 dark:text-white">Client List</h5>
         <div className="relative overflow-x-auto">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Company
