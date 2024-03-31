@@ -3,25 +3,25 @@ import React from "react";
 const Page = () => {
   return (
     <div>
-      <div className="flex flex-col items-center mt-10 max-w-screen h-screen">
-        <h1 className="text-5xl font-bold text-center text-gray-900 dark:text-white mt- 6 mb-4">
+      <div className="max-w-screen mt-10 flex h-screen flex-col items-center">
+        <h1 className="mt- 6 mb-4 text-center text-5xl font-bold text-gray-900 dark:text-white">
           Sales Visit Progress Tracker
         </h1>
 
         {/* First Column: Select Date Part */}
         <section className="bg-white dark:bg-gray-900">
-          <div className="py-16 px-8 lg:py-20 lg:px-10 flex flex-col lg:flex-row lg:justify-start">
+          <div className="flex flex-col px-8 py-16 lg:flex-row lg:justify-start lg:px-10 lg:py-20">
             <div className="grid grid-cols-3 gap-10 lg:gap-16">
               <form>
                 <label
                   htmlFor="dates"
-                  className="block mb-4 text-base font-medium text-gray-900 dark:text-white"
+                  className="mb-4 block text-base font-medium text-gray-900 dark:text-white"
                 >
                   Select Date option
                 </label>
                 <select
                   id="dates"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                   defaultValue=""
                 >
                   <option disabled value="">
@@ -33,27 +33,27 @@ const Page = () => {
                 </select>
               </form>
 
-              <div className="flex items-center space-x-4 my-6">
+              <div className="my-6 flex items-center space-x-4">
                 <input
                   name="start"
                   type="date"
                   id="start"
                   placeholder="Select start date"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                 />
-                <span className="text-gray-500 text-xl">to</span>
+                <span className="text-xl text-gray-500">to</span>
                 <input
                   name="end"
                   type="date"
                   placeholder="Select end date"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                 />
               </div>
 
               {/* Second Column: Progress Bar */}
               <div className="ml-5">
                 <div>
-                  <div className="flex justify-between mb-1">
+                  <div className="mb-1 flex justify-between">
                     <span className="text-base font-medium text-blue-700 dark:text-white">
                       Your Progress
                     </span>
@@ -61,9 +61,9 @@ const Page = () => {
                       45%
                     </span>
                   </div>
-                  <div className="w-full h-10 bg-gray-200 rounded-full dark:bg-gray-700">
+                  <div className="h-10 w-full rounded-full bg-gray-200 dark:bg-gray-700">
                     <div
-                      className="h-10 bg-blue-600 rounded-full dark:bg-blue-500"
+                      className="h-10 rounded-full bg-blue-600 dark:bg-blue-500"
                       style={{ width: "45%" }}
                     ></div>
                   </div>
@@ -74,62 +74,16 @@ const Page = () => {
         </section>
 
         {/* Second Row: Conversion Status */}
-        <div></div>
         <section className="bg-white dark:bg-gray-900">
-          {/* <div className="max-w-3/4 mx-auto text-center mb-8 lg:mb-16 bg-black"> */}
-          <div
-            style={{ maxWidth: "75%", margin: "0 auto" }}
-            className="mb-8 lg:mb-16 text-center"
-          >
-            {/* <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-              What do you want to see?
-            </h2> */}
-            <h3 className="mb-8 font-bold text-gray-900 dark:text-gray-400 sm:text-xl">
-              Search below to find the projects you are looking for.
-            </h3>
-            <label
-              htmlFor="email-adress-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
-            >
-              Your Email
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg
-                  className="w-6 h-6 text-gray-500 dark:text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="email-adress-icon"
-                className="block w-full p-4 pl-12 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type keywords to find answers"
-              />
-            </div>
-            {/* <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              You can also browse the topics below to find what you are looking
-              for.
-            </p> */}
-          </div>
-
-          <div className="py-16 px-8 mx-auto max-w-screen-3xl lg:py-20 lg:px-10">
+          <div className="max-w-screen-3xl mx-auto px-8 py-16 lg:px-10 lg:py-20">
             <div className="grid grid-cols-3 gap-10 lg:gap-16">
               {/* Ongoing Column */}
-              <div className="flex flex-col p-10 bg-white rounded-lg border border-gray-300 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
+              <div className="flex flex-col rounded-lg border border-gray-300 bg-white p-10 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
                 <h3 className="mb-8 text-4xl font-semibold">Ongoing</h3>
                 {/* Cards for companies in Ongoing status */}
                 <div className="space-y-8">
-                  <div className="bg-gray-100 p-8 rounded-lg">
-                    <h4 className="font-bold mb-2">21 CENTURY CORPORATION</h4>
+                  <div className="rounded-lg bg-gray-100 p-8">
+                    <h4 className="mb-2 font-bold">21 CENTURY CORPORATION</h4>
                     <p>
                       Building 11, EZP Center Determine Street, CPIP, Barangay
                       Batino Calamba, Laguna, 4027 Philippines
@@ -137,11 +91,11 @@ const Page = () => {
                     <p>Business Category: Tools, Cutters, Moulds, and Dies</p>
                     <a
                       href="#"
-                      className="inline-flex items-center px-3 mt-6 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Read more
                       <svg
-                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                        className="ms-2 size-3.5 rtl:rotate-180"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -157,8 +111,8 @@ const Page = () => {
                       </svg>
                     </a>
                   </div>
-                  <div className="bg-gray-100 p-8 rounded-lg">
-                    <h4 className="font-bold mb-2">
+                  <div className="rounded-lg bg-gray-100 p-8">
+                    <h4 className="mb-2 font-bold">
                       3J METAL INDUSTRIES, INC.
                     </h4>
                     <p>
@@ -168,11 +122,11 @@ const Page = () => {
                     <p>Business Category: Steel</p>
                     <a
                       href="#"
-                      className="inline-flex items-center px-3 mt-6 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Read more
                       <svg
-                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                        className="ms-2 size-3.5 rtl:rotate-180"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -193,12 +147,12 @@ const Page = () => {
               </div>
 
               {/* Success Column */}
-              <div className="flex flex-col p-10 bg-white rounded-lg border border-gray-300 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
+              <div className="flex flex-col rounded-lg border border-gray-300 bg-white p-10 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
                 <h3 className="mb-8 text-4xl font-semibold">Success</h3>
                 {/* Cards for companies in Success status */}
                 <div className="space-y-8">
-                  <div className="bg-gray-100 p-8 rounded-lg">
-                    <h4 className="font-bold mb-2">3M PHILIPPINES, INC.</h4>
+                  <div className="rounded-lg bg-gray-100 p-8">
+                    <h4 className="mb-2 font-bold">3M PHILIPPINES, INC.</h4>
                     <p>
                       10th and 11th Floors The Finance Center 26th Street corner
                       9th Avenue Taguig, Manila, 1634 Philippines
@@ -206,11 +160,11 @@ const Page = () => {
                     <p>Business Category: Transportation Equipment</p>
                     <a
                       href="#"
-                      className="inline-flex items-center px-3 mt-6 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Read more
                       <svg
-                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                        className="ms-2 size-3.5 rtl:rotate-180"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -226,8 +180,8 @@ const Page = () => {
                       </svg>
                     </a>
                   </div>
-                  <div className="bg-gray-100 p-8 rounded-lg">
-                    <h4 className="font-bold mb-2">Puyat Steel Corporation</h4>
+                  <div className="rounded-lg bg-gray-100 p-8">
+                    <h4 className="mb-2 font-bold">Puyat Steel Corporation</h4>
                     <p>
                       2nd Floor Alegria Alta Building 2294 Don Chino Roces
                       Extension, Magallanes Makati, Manila, 1232 Philippines
@@ -235,11 +189,11 @@ const Page = () => {
                     <p>Business Category: Fabricated Metal</p>
                     <a
                       href="#"
-                      className="inline-flex items-center px-3 mt-6 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Read more
                       <svg
-                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                        className="ms-2 size-3.5 rtl:rotate-180"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -260,12 +214,12 @@ const Page = () => {
               </div>
 
               {/* Failed Column */}
-              <div className="flex flex-col p-10 bg-white rounded-lg border border-gray-300 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
+              <div className="flex flex-col rounded-lg border border-gray-300 bg-white p-10 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
                 <h3 className="mb-8 text-4xl font-semibold">Failed</h3>
                 {/* Cards for companies in Failed status */}
                 <div className="space-y-8">
-                  <div className="bg-gray-100 p-8 rounded-lg">
-                    <h4 className="font-bold mb-2">A.S.RIVERA CORPORATION</h4>
+                  <div className="rounded-lg bg-gray-100 p-8">
+                    <h4 className="mb-2 font-bold">A.S.RIVERA CORPORATION</h4>
                     <p>
                       Block 46, Lot 1, Pampano Street, Barangay Longos Malabon,
                       Manila, 1470 Philippines
@@ -273,11 +227,11 @@ const Page = () => {
                     <p>Business Category: Fabricated Metal</p>
                     <a
                       href="#"
-                      className="inline-flex items-center px-3 mt-6 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Read more
                       <svg
-                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                        className="ms-2 size-3.5 rtl:rotate-180"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -293,8 +247,8 @@ const Page = () => {
                       </svg>
                     </a>
                   </div>
-                  <div className="bg-gray-100 p-8 rounded-lg">
-                    <h4 className="font-bold mb-2">
+                  <div className="rounded-lg bg-gray-100 p-8">
+                    <h4 className="mb-2 font-bold">
                       AAB BAKING GOODS & SUPPLIES INC.
                     </h4>
                     <p>
@@ -304,11 +258,11 @@ const Page = () => {
                     <p>Business Category: Food</p>
                     <a
                       href="#"
-                      className="inline-flex items-center px-3 mt-6 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Read more
                       <svg
-                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                        className="ms-2 size-3.5 rtl:rotate-180"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -331,22 +285,22 @@ const Page = () => {
         </section>
 
         {/* Fourth Row: Client List */}
-        {/* <div className="relative shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+        <div className="relative shadow-md sm:rounded-lg">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+            <caption className="bg-white p-5 text-left text-lg font-semibold text-gray-900 dark:bg-gray-800 dark:text-white rtl:text-right">
               Client List
               <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
                 Overview of the clients.
               </p>
             </caption>
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-all-search"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label htmlFor="checkbox-all-search" className="sr-only">
                       checkbox
@@ -377,13 +331,13 @@ const Page = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -393,7 +347,7 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   EPSON PRECISION (PHILIPPINES), INC.
                 </td>
                 <td className="px-6 py-4">End-User</td>
@@ -407,25 +361,25 @@ const Page = () => {
                 <td className="px-6 py-4">1,236,040,000</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
                     Visited
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-red-500"></div>
                     Failed
                   </div>
                 </td>
               </tr>
 
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -435,7 +389,7 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   3M PHILIPPINES, INC.
                 </td>
                 <td className="px-6 py-4">End-User</td>
@@ -447,25 +401,25 @@ const Page = () => {
                 <td className="px-6 py-4">1,540,000</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
                     Visited
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
                     Success
                   </div>
                 </td>
               </tr>
 
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -475,7 +429,7 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   21 CENTURY CORPORATION
                 </td>
                 <td className="px-6 py-4">End-User</td>
@@ -487,25 +441,25 @@ const Page = () => {
                 <td className="px-6 py-4">803,000</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
                     Visited
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-yellow-300 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-yellow-300"></div>
                     Ongoing
                   </div>
                 </td>
               </tr>
 
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -515,7 +469,7 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   A.S.RIVERA CORPORATION
                 </td>
                 <td className="px-6 py-4">End-User</td>
@@ -527,24 +481,25 @@ const Page = () => {
                 <td className="px-6 py-4">26,040,000</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-red-500"></div>
                     Failed
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div>
+                    <div className="me-2 size-2.5 rounded-full bg-red-500"></div>
                     Failed
                   </div>
                 </td>
               </tr>
+              {/* Additional rows */}
             </tbody>
           </table>
           <nav
-            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            className="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
             aria-label="Table navigation"
           >
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+            <span className="mb-4 block w-full text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 md:inline md:w-auto">
               Showing{" "}
               <span className="font-semibold text-gray-900 dark:text-white">
                 1-10
@@ -554,36 +509,37 @@ const Page = () => {
                 1000
               </span>
             </span>
-            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            <ul className="inline-flex h-8 -space-x-px text-sm rtl:space-x-reverse">
               <li>
                 <a
                   href="#"
-                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  className="ms-0 flex h-8 items-center justify-center rounded-s-lg border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   Previous
                 </a>
               </li>
+              {/* Additional pagination links */}
             </ul>
           </nav>
-        </div> */}
+        </div>
 
         {/* Suggested Schedule */}
-        {/* <div className="py-16 px-8 mx-auto max-w-screen-3xl lg:py-20 lg:px-10">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+        <div className="max-w-screen-3xl mx-auto px-8 py-16 lg:px-10 lg:py-20">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+            <caption className="bg-white p-5 text-left text-lg font-semibold text-gray-900 dark:bg-gray-800 dark:text-white rtl:text-right">
               Suggested Schedule
               <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
                 Feel free to follow this schedule.
               </p>
             </caption>
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-all-search"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label htmlFor="checkbox-all-search" className="sr-only">
                       checkbox
@@ -602,13 +558,13 @@ const Page = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -618,7 +574,7 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   07:30 to 08:30 (2024-03-15 )
                 </td>
                 <td className="px-6 py-4">🤝Meeting</td>
@@ -627,13 +583,13 @@ const Page = () => {
                 </td>
               </tr>
 
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -643,7 +599,7 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   08:30 to 09:30 (2024-03-15 )
                 </td>
                 <td className="px-6 py-4">🤝Meeting</td>
@@ -652,13 +608,13 @@ const Page = () => {
                 </td>
               </tr>
 
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -668,20 +624,20 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   09:40 to 10:40 (2024-03-15 )
                 </td>
                 <td className="px-6 py-4">🤝Meeting</td>
                 <td className="px-6 py-4">FIRST PHILEC, INC.</td>
               </tr>
 
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td className="w-4 p-4">
                   <div className="flex items-center">
                     <input
                       id="checkbox-table-search-1"
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                     />
                     <label
                       htmlFor="checkbox-table-search-1"
@@ -691,7 +647,7 @@ const Page = () => {
                     </label>
                   </div>
                 </td>
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
                   11:01 to 12:01 (2024-03-15 )
                 </td>
                 <td className="px-6 py-4">🤝Meeting</td>
@@ -699,13 +655,14 @@ const Page = () => {
                   ZAMA PRECISION INDUSTRY MANUFACTURING PHILIPPINES, INC.
                 </td>
               </tr>
+              {/* Additional rows */}
             </tbody>
           </table>
           <nav
-            className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+            className="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
             aria-label="Table navigation"
           >
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+            <span className="mb-4 block w-full text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 md:inline md:w-auto">
               Showing{" "}
               <span className="font-semibold text-gray-900 dark:text-white">
                 1-10
@@ -715,18 +672,19 @@ const Page = () => {
                 1000
               </span>
             </span>
-            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            <ul className="inline-flex h-8 -space-x-px text-sm rtl:space-x-reverse">
               <li>
                 <a
                   href="#"
-                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  className="ms-0 flex h-8 items-center justify-center rounded-s-lg border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   Previous
                 </a>
               </li>
+              {/* Additional pagination links */}
             </ul>
           </nav>
-        </div> */}
+        </div>
       </div>
     </div>
   );
