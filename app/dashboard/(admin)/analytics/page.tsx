@@ -16,6 +16,8 @@ const Page = () => {
   // let failedDealsCount: number = 0;
 
   // Datepicker options
+
+  // Datepicker options
   const startDatepickerOptions: IOptions = {
     autoHide: true,
     todayBtn: true,
@@ -83,12 +85,156 @@ const Page = () => {
     // ]);
   };
 
-  let map: null;
+  const pieChartOptions = {
+    series: [52.8, 47.2],
+    colors: ["#1C64F2", "#16BDCA"],
+    chart: {
+      height: 352,
+      width: "100%",
+      type: "pie",
+    },
+    stroke: {
+      colors: ["white"],
+      lineCap: "",
+    },
+    plotOptions: {
+      pie: {
+        labels: {
+          show: true,
+        },
+        size: "100%",
+        dataLabels: {
+          offset: -25,
+        },
+      },
+    },
+    labels: ["Visited", "Not Visited"],
+    dataLabels: {
+      enabled: true,
+      style: {
+        fontFamily: "Inter, sans-serif",
+      },
+    },
+    legend: {
+      position: "bottom",
+      fontFamily: "Inter, sans-serif",
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value: string) {
+          return value + "%";
+        },
+      },
+    },
+    xaxis: {
+      labels: {
+        formatter: function (value: string) {
+          return value + "%";
+        },
+      },
+      axisTicks: {
+        show: false,
+      },
+      axisBorder: {
+        show: false,
+      },
+    },
+  };
+
+  const areaChartOptions = {
+    series: [
+      {
+        name: "Ongoing",
+        data: [1500, 1418, 1456, 1526, 1356, 1256],
+      },
+      {
+        name: "Successful",
+        data: [643, 413, 765, 412, 1423, 1731],
+      },
+      {
+        name: "Failed",
+        data: [43, 43, 65, 412, 423, 731],
+      },
+    ],
+    chart: {
+      height: 320,
+      width: "100%",
+      type: "area",
+      fontFamily: "Inter, sans-serif",
+      dropShadow: {
+        enabled: false,
+      },
+      toolbar: {
+        show: false,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false,
+      },
+    },
+    legend: {
+      show: true,
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        opacityFrom: 0.55,
+        opacityTo: 0,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      width: 6,
+    },
+    grid: {
+      show: false,
+    },
+    xaxis: {
+      categories: [
+        "01 February",
+        "02 February",
+        "03 February",
+        "04 February",
+        "05 February",
+        "06 February",
+        "07 February",
+      ],
+      labels: {
+        show: false,
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: {
+      show: false,
+    },
+  };
+
+  let clientInitialized = false;
 
   useEffect(() => {
-    if (map == null) {
-      const svgMap = require("svgmap");
-      map = new svgMap({
+    if (!clientInitialized) {
+      // Import client-only packages
+      const ApexCharts = require("apexcharts");
+      const SvgMap = require("svgmap");
+
+      // Area chart
+      const areaChart = new ApexCharts(document.getElementById("area-chart"), areaChartOptions);
+      areaChart.render();
+
+      // Pie chart
+      const pieChart = new ApexCharts(document.getElementById("pie-chart"), pieChartOptions);
+      pieChart.render();
+
+      new SvgMap({
         targetElementID: "svgMap",
         data: {
           data: {
@@ -120,6 +266,8 @@ const Page = () => {
           },
         },
       });
+
+      clientInitialized = true;
     }
   }, []);
 
@@ -129,6 +277,7 @@ const Page = () => {
 
       {/* Dropdown filters */}
       <div className="rounded-lg p-6 mb-8 shadow">
+        <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1 pb-6">Filters</h5>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           <div>
             <label
@@ -217,40 +366,57 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Numerical values */}
-      <div className="mb-8 grid gap-6 lg:grid-cols-2">
-        <div className="p-6 rounded-lg shadow grid lg:gap-6 grid-cols-3">
-          <div>
-            <div className="text-sm text-right">Companies</div>
-            <div className="text-3xl text-right">0</div>
-          </div>
-          <div>
-            <div className="text-sm text-right">Visited</div>
-            <div className="text-3xl text-right">0</div>
-          </div>
-          <div>
-            <div className="text-sm text-right">Not Visited</div>
-            <div className="text-3xl text-right">0</div>
+      {/* Charts */}
+      <div className="mb-8 grid gap-6 md:grid-cols-2">
+        {/* Pie chart */}
+        <div className="p-6 rounded-lg shadow">
+          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
+            Companies Status
+          </h5>
+          <div id="pie-chart"></div>
+          <div className="grid gap-2 grid-cols-3 mt-4">
+            <div>
+              <div className="text-sm text-center">Total</div>
+              <div className="text-3xl text-center">0</div>
+            </div>
+            <div>
+              <div className="text-sm text-center">Visited</div>
+              <div className="text-3xl text-center">0</div>
+            </div>
+            <div>
+              <div className="text-sm text-center">Not Visited</div>
+              <div className="text-3xl text-center">0</div>
+            </div>
           </div>
         </div>
-        <div className="p-6 rounded-lg shadow grid lg:gap-6 grid-cols-3">
-          <div>
-            <div className="text-sm text-right">Ongoing Deals</div>
-            <div className="text-3xl text-right">0</div>
-          </div>
-          <div>
-            <div className="text-sm text-right">Successful Deals</div>
-            <div className="text-3xl text-right">0</div>
-          </div>
-          <div>
-            <div className="text-sm text-right">Failed Deals</div>
-            <div className="text-3xl text-right">0</div>
+        {/* Area chart */}
+        <div className="p-6 rounded-lg shadow">
+          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
+            Deals Status
+          </h5>
+          <div id="area-chart"></div>
+          <div className="grid gap-2 grid-cols-3 mt-4">
+            <div>
+              <div className="text-sm text-center">Ongoing Deals</div>
+              <div className="text-3xl text-center">0</div>
+            </div>
+            <div>
+              <div className="text-sm text-center">Successful Deals</div>
+              <div className="text-3xl text-center">0</div>
+            </div>
+            <div>
+              <div className="text-sm text-center">Failed Deals</div>
+              <div className="text-3xl text-center">0</div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Choropleth Map */}
-      <div className="rounded-lg shadow mb-8 p-2 sm:p-6">
+      <div className="rounded-lg shadow mb-8 p-6">
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
+          World Overview
+        </h5>
         <div id="svgMap"></div>
       </div>
 
