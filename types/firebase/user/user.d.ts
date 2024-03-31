@@ -1,4 +1,5 @@
 import { Sexes } from "@/constants/enums/sexes";
+import { AccountRole } from "../account_role";
 
 // Collection path: /users/{uuid}
 export type User = {
@@ -12,6 +13,8 @@ export type User = {
     };
     birthdate: Date;
     sex: Sexes;
+
+    accountRolesRefs: AccountRole['uuid'][];
 
     // Metadata
     addedAt: Date;

@@ -1,14 +1,11 @@
-/**
- * Collection path: /users/{user_uuid}/phoneNumbers/{userPhoneNumber_uuid}
- */
-export type UserPhoneNumber = {
+import { Company } from "./company/company";
+
+export type CompanyEmailAddress = {
     uuid: string;
-    phoneNumber: string;
+    email: string;
+    ownedByRef: Company['uuid'];
     isPrimary: boolean;
-    isSecondary: boolean;
     isVerified: boolean;
-    isPublic: boolean;
-    isDeleted: boolean;
 
     // Metadata
     addedAt: Date;

@@ -10,7 +10,6 @@ export type UserSocialMedia = {
     username: string;
     isVerified: boolean;
     isPublic: boolean;
-    isDeleted: boolean;
 
     // Metadata
     addedAt: Date;

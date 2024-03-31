@@ -1,15 +1,13 @@
-/**
- * Collection path: /users/{user_uuid}/emailAddresses/{userEmailAddress_uuid}
- */
-export type UserEmailAddress = {
-    uuid: string;
-    email: string;
-    isPrimary: boolean;
-    isSecondary: boolean;
-    isVerified: boolean;
-    isPublic: boolean;
-    isDeleted: boolean;
+import { Company } from "./company/company";
 
+export type CompanyFaxNumber = {
+    uuid: string;
+    faxNumber: string;
+    ownedByRef: Company['uuid'];
+    isPrimary: boolean;
+    isVerified: boolean;
+
+    // Metadata
     addedAt: Date;
     addedByRef: string;
     updatedAt: Date;
