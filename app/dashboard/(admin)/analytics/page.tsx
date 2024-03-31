@@ -94,8 +94,6 @@ const Page = () => {
           data: {
             companies: {
               name: "Companies",
-              thresholdMax: 100000,
-              thresholdMin: 1000,
             },
             visited: {
               name: "Visited",
@@ -113,7 +111,7 @@ const Page = () => {
               name: "Failed Deals",
             },
           },
-          applyData: "companies",
+          applyData: "visited",
           values: {
             AF: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
             AL: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
