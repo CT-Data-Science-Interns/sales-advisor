@@ -281,19 +281,19 @@ const Page = () => {
       <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">Analytics</h1>
 
       {/* Dropdown filters */}
-      <div className="rounded-lg p-6 mb-8 shadow">
+      <div className="mb-8 rounded-lg p-6 shadow">
         <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1 pb-6">Filters</h5>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           <div>
             <label
               htmlFor="salesperson"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Salesperson:
             </label>
             <select
               id="salesperson"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               <option>All</option>
               <option>Salesperson 1</option>
@@ -304,13 +304,13 @@ const Page = () => {
           <div>
             <label
               htmlFor="salesperson"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Deal Status:
             </label>
             <select
               id="salesperson"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               <option>All</option>
               <option>Ongoing</option>
@@ -322,14 +322,14 @@ const Page = () => {
           <div className="sm:col-span-2">
             <label
               htmlFor="datetype"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Date:
             </label>
             <select
               id="datetype"
               onChange={setDateType}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 mb-2"
             >
               <option value={0}>All</option>
               <option value={1}>Today</option>
@@ -374,51 +374,51 @@ const Page = () => {
       {/* Charts */}
       <div className="mb-8 grid gap-6 md:grid-cols-2">
         {/* Pie chart */}
-        <div className="p-6 rounded-lg shadow">
+        <div className="rounded-lg p-6 shadow">
           <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
             Companies Status
           </h5>
           <div id="pie-chart"></div>
           <div className="grid gap-2 grid-cols-3 mt-4">
             <div>
-              <div className="text-sm text-center">Total</div>
-              <div className="text-3xl text-center">0</div>
+              <div className="text-center text-sm">Total</div>
+              <div className="text-center text-3xl">0</div>
             </div>
             <div>
-              <div className="text-sm text-center">Visited</div>
-              <div className="text-3xl text-center">0</div>
+              <div className="text-center text-sm">Visited</div>
+              <div className="text-center text-3xl">0</div>
             </div>
             <div>
-              <div className="text-sm text-center">Not Visited</div>
-              <div className="text-3xl text-center">0</div>
+              <div className="text-center text-sm">Not Visited</div>
+              <div className="text-center text-3xl">0</div>
             </div>
           </div>
         </div>
         {/* Area chart */}
-        <div className="p-6 rounded-lg shadow">
+        <div className="rounded-lg p-6 shadow">
           <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
             Deals Status
           </h5>
           <div id="area-chart"></div>
           <div className="grid gap-2 grid-cols-3 mt-4">
             <div>
-              <div className="text-sm text-center">Ongoing Deals</div>
-              <div className="text-3xl text-center">0</div>
+              <div className="text-center text-sm">Ongoing Deals</div>
+              <div className="text-center text-3xl">0</div>
             </div>
             <div>
-              <div className="text-sm text-center">Successful Deals</div>
-              <div className="text-3xl text-center">0</div>
+              <div className="text-center text-sm">Successful Deals</div>
+              <div className="text-center text-3xl">0</div>
             </div>
             <div>
-              <div className="text-sm text-center">Failed Deals</div>
-              <div className="text-3xl text-center">0</div>
+              <div className="text-center text-sm">Failed Deals</div>
+              <div className="text-center text-3xl">0</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Choropleth Map */}
-      <div className="rounded-lg shadow mb-8 p-6">
+      <div className="mb-8 rounded-lg p-6 shadow">
         <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white me-1">
           World Overview
         </h5>
@@ -426,7 +426,7 @@ const Page = () => {
       </div>
 
       {/* Client List */}
-      <div className="rounded-lg shadow mb-8">
+      <div className="mb-8 rounded-lg p-6 shadow">
         <h5 className="p-6 text-xl font-bold text-gray-900 dark:text-white me-1">Client List</h5>
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -450,14 +450,14 @@ const Page = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
               </tr>
-              <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
