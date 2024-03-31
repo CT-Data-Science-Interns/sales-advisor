@@ -130,22 +130,22 @@ const Page = () => {
   };
 
   return (
-    <div className="container mx-auto sm:p-8 p-2">
+    <div className="container mx-auto p-2 sm:p-8">
       {/* <div className="h-screen">Analytics Page</div> */}
 
       {/* Dropdown filters */}
-      <div className="p-6 rounded-lg shadow mb-8">
-        <div className="grid gap-6 md:grid-cols-3 mb-6">
+      <div className="mb-8 rounded-lg p-6 shadow">
+        <div className="mb-6 grid gap-6 md:grid-cols-3">
           <div>
             <label
               htmlFor="salesperson"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Salesperson:
             </label>
             <select
               id="salesperson"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               <option>All</option>
               <option>Salesperson 1</option>
@@ -156,13 +156,13 @@ const Page = () => {
           <div>
             <label
               htmlFor="salesperson"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Deal Status:
             </label>
             <select
               id="salesperson"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               <option>All</option>
               <option>Ongoing</option>
@@ -173,14 +173,14 @@ const Page = () => {
           <div>
             <label
               htmlFor="datetype"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Date:
             </label>
             <select
               id="datetype"
               onChange={setDate}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               <option value={0}>All</option>
               <option value={1}>Specific</option>
@@ -192,7 +192,7 @@ const Page = () => {
           <button
             type="button"
             onClick={applyFilters}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Apply Filters
           </button>
@@ -201,43 +201,43 @@ const Page = () => {
 
       {/* Numerical values */}
       <div className="mb-8 grid gap-6 lg:grid-cols-2">
-        <div className="p-6 rounded-lg shadow grid lg:gap-6 grid-cols-3">
+        <div className="grid grid-cols-3 rounded-lg p-6 shadow lg:gap-6">
           <div>
-            <div className="text-sm text-right">Companies</div>
-            <div className="text-3xl text-right">0</div>
+            <div className="text-right text-sm">Companies</div>
+            <div className="text-right text-3xl">0</div>
           </div>
           <div>
-            <div className="text-sm text-right">Visited</div>
-            <div className="text-3xl text-right">0</div>
+            <div className="text-right text-sm">Visited</div>
+            <div className="text-right text-3xl">0</div>
           </div>
           <div>
-            <div className="text-sm text-right">Not Visited</div>
-            <div className="text-3xl text-right">0</div>
+            <div className="text-right text-sm">Not Visited</div>
+            <div className="text-right text-3xl">0</div>
           </div>
         </div>
-        <div className="p-6 rounded-lg shadow grid lg:gap-6 grid-cols-3">
+        <div className="grid grid-cols-3 rounded-lg p-6 shadow lg:gap-6">
           <div>
-            <div className="text-sm text-right">Ongoing Deals</div>
-            <div className="text-3xl text-right">0</div>
+            <div className="text-right text-sm">Ongoing Deals</div>
+            <div className="text-right text-3xl">0</div>
           </div>
           <div>
-            <div className="text-sm text-right">Successful Deals</div>
-            <div className="text-3xl text-right">0</div>
+            <div className="text-right text-sm">Successful Deals</div>
+            <div className="text-right text-3xl">0</div>
           </div>
           <div>
-            <div className="text-sm text-right">Failed Deals</div>
-            <div className="text-3xl text-right">0</div>
+            <div className="text-right text-sm">Failed Deals</div>
+            <div className="text-right text-3xl">0</div>
           </div>
         </div>
       </div>
 
       <div className="mb-8 grid gap-6 lg:grid-cols-2">
         {/* Visited pie chart */}
-        <div className="bg-white rounded-lg shadow dark:bg-gray-800 p-6">
-          <div className="flex justify-between items-start w-full">
+        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <div className="flex w-full items-start justify-between">
             <div className="flex-col items-center">
-              <div className="flex items-center mb-1">
-                <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1">
+              <div className="mb-1 flex items-center">
+                <h5 className="me-1 text-xl font-bold text-gray-900 dark:text-white">
                   Visit Progress
                 </h5>
               </div>
@@ -247,11 +247,11 @@ const Page = () => {
         </div>
 
         {/* Deal status pie chart */}
-        <div className="bg-white rounded-lg shadow dark:bg-gray-800 p-6">
-          <div className="flex justify-between items-start w-full">
+        <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <div className="flex w-full items-start justify-between">
             <div className="flex-col items-center">
-              <div className="flex items-center mb-1">
-                <h5 className="text-xl font-bold text-gray-900 dark:text-white me-1">
+              <div className="mb-1 flex items-center">
+                <h5 className="me-1 text-xl font-bold text-gray-900 dark:text-white">
                   Deal Status
                 </h5>
               </div>
@@ -261,13 +261,13 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="rounded-lg shadow mb-8">
-        <h5 className="p-6 text-xl font-bold text-gray-900 dark:text-white me-1">
+      <div className="mb-8 rounded-lg shadow">
+        <h5 className="me-1 p-6 text-xl font-bold text-gray-900 dark:text-white">
           Client List
         </h5>
         <div className="relative overflow-x-auto">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Company
@@ -287,14 +287,14 @@ const Page = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
               </tr>
-              <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
                 <td className="px-6 py-4">Test</td>
