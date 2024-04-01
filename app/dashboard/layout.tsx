@@ -1,3 +1,4 @@
+import SimpleDashboardFooter from "@/components/simple-dashboard-footer";
 import React from "react";
 import DashboardNavbar from "./components/dashboard-navbar";
 // import DashboardSidenav from "./components/dashboard-sidenav";
@@ -8,7 +9,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <DashboardNavbar />
       {/* <DashboardSidenav /> */}
       {children}
-      {/* <SimpleDashboardFooter /> */}
+      <SimpleDashboardFooter />
     </main>
   );
 };

@@ -1,5 +1,4 @@
-import Link from "next/link.js";
-import Image from "next/image.js";
+import Link from "next/link";
 
 const StaticPageNavbar = () => {
   return (
@@ -10,14 +9,9 @@ const StaticPageNavbar = () => {
             href="/dashboard"
             className="flex items-center space-x-3 rtl:space-x-reverse w-10 h-10"
           >
-            <Image
-              src="/nidec-all-for-dreams.webp"
-              width={150}
-              height={150}
-              className="absolute left-15 top-5"
-              alt="Sales image"
-            />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap text-black"></span>
+            <span className="self-center text-2xl font-semibold whitespace-nowrap text-black">
+              Nidec
+            </span>
           </a>
           <button
             data-collapse-toggle="navbar-default"
@@ -68,14 +62,6 @@ const StaticPageNavbar = () => {
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   FAQs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/dashboard/update-progress"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Progress Tracker
                 </Link>
               </li>
             </ul>
