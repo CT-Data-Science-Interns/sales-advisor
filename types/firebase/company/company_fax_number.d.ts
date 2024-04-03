@@ -6,7 +6,7 @@ import { Company } from "./company";
 export type CompanyFaxNumber = {
     uuid: string;
     faxNumber: string;
-    companyRef: Company['uuid'];
+    companiesRefs: Company['uuid'][];
     isPrimary: boolean;
     isVerified: boolean;
 

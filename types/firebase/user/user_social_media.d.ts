@@ -1,11 +1,13 @@
 import { SupportedSocialMediaPlatforms } from "@/constants/enums/supported_social_media_platforms";
+import { User } from "./user";
 
 /**
- * Collection path: /users/{user_uuid}/socialMedias/{userSocialMedia_uuid}
+ * Collection path: /usersSocialMedias/{uuid}
  */
 export type UserSocialMedia = {
     uuid: string;
     profileURL: string;
+    userRef: User['uuid'];
     platform: SupportedSocialMediaPlatforms;
     username: string;
     isVerified: boolean;

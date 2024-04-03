@@ -1,3 +1,6 @@
+/**
+ * Collection path: /businessModels/{uuid}
+ */
 export type BusinessModel = {
     uuid: BusinessModel['uuid'];
     name: string;

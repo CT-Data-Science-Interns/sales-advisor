@@ -1,5 +1,8 @@
 import { Company } from "./company/company"
 
+/**
+ * Collection path: /annualSales/{uuid}
+ */
 export type AnnualSale = {
     uuid: string
     sale: number

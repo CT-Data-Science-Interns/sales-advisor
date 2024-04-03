@@ -1,9 +1,14 @@
+import { ContactNumberTypes } from "@/constants/enums/contact_number_types";
+import { User } from "./user";
+
 /**
- * Collection path: /users/{user_uuid}/phoneNumbers/{userPhoneNumber_uuid}
+ * Collection path: usersContactNumbers/{uuid}
  */
-export type UserPhoneNumber = {
+export type UserContactNumber = {
     uuid: string;
     phoneNumber: string;
+    userRef: User['uuid'];
+    type: ContactNumberTypes;
     isPrimary: boolean;
     isSecondary: boolean;
     isVerified: boolean;

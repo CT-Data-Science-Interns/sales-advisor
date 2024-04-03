@@ -1,3 +1,6 @@
+/**
+ * Collection path: /employeesCount/{uuid}
+ */
 export type EmployeeCount = {
     uuid: string;
     count: number;

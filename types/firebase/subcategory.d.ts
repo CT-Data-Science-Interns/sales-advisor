@@ -1,3 +1,6 @@
+/**
+ * Collection path: /subcategories/{uuid}
+ */
 export type Subcategory = {
     uuid: Subcategory['uuid'];
     name: string;

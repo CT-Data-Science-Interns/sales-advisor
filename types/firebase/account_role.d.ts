@@ -1,5 +1,5 @@
 /**
- * Collection path: /account_roles/{uuid}
+ * Collection path: /accountRoles/{uuid}
  */
 export type AccountRole = {
     uuid: string;
