@@ -1,4 +1,5 @@
 import { Category } from "../../category"
+import { User } from "./user/user";
 
 /**
  * Collection path: /companies/{company_uuid}/categoriesMetadata/{uuid}
@@ -8,7 +9,7 @@ export type CategoryMetadata = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: User['uuid'];
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: User['uuid'] | null;
 }

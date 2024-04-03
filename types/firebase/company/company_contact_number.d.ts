@@ -1,5 +1,6 @@
 import { ContactNumberTypes } from "@/constants/enums/contact_number_types";
 import { Company } from "./company";
+import { User } from "./user/user";
 
 /**
  * Collection path: /companiesContactNumbers/{uuid}
@@ -14,9 +15,9 @@ export type CompanyContactNumber = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: User['uuid'];
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: User['uuid'];
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: User['uuid'] | null;
 }

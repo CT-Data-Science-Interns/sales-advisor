@@ -1,6 +1,7 @@
 import { Country } from "../country";
 import { State } from "../state";
 import { Company } from "./company";
+import { User } from "./user/user";
 
 /**
  * Collection path: /companiesAddresses/{uuid}
@@ -17,9 +18,9 @@ export type CompanyAddress = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: User['uuid'];
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: User['uuid'];
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: User['uuid'] | null;
 }

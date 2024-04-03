@@ -1,4 +1,5 @@
 import { CompanyEmailAddress } from "../company_email_address";
+import { User } from "./user/user";
 
 /**
  * Collection path: /companies/{company_uuid}/companyEmailAddressesMetadata/{uuid}
@@ -8,7 +9,7 @@ export type CompanyEmailAddressMetadata = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: User['uuid'];
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: User['uuid'] | null;
 }

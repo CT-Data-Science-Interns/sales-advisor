@@ -1,4 +1,5 @@
 import { CompanyFaxNumber } from "../company_fax_number";
+import { User } from "./user/user";
 
 /**
  * Collection path: /companies/{company_uuid}/companyFaxNumbersMetadata/{uuid}
@@ -8,7 +9,7 @@ export type CompanyFaxNumberMetadata = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: User['uuid'];
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: User['uuid'] | null;
 }

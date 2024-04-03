@@ -16,9 +16,9 @@ export type UserContactNumber = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: User['uuid'];
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: User['uuid'];
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: User['uuid'] | null;
 }

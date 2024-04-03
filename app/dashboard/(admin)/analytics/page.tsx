@@ -229,11 +229,17 @@ const Page = () => {
       const svgMap = require("svgmap");
 
       // Pie chart
-      pieChart = new ApexCharts(document.getElementById("pie-chart"), pieChartOptions);
+      pieChart = new ApexCharts(
+        document.getElementById("pie-chart"),
+        pieChartOptions
+      );
       pieChart.render();
 
       // Area chart
-      areaChart = new ApexCharts(document.getElementById("area-chart"), areaChartOptions);
+      areaChart = new ApexCharts(
+        document.getElementById("area-chart"),
+        areaChartOptions
+      );
       areaChart.render();
 
       // Choropleth Map
@@ -264,9 +270,30 @@ const Page = () => {
             },
             applyData: "visited",
             values: {
-              AF: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
-              AL: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
-              DZ: { companies: 587, visited: 4, notVisited: 7, onGoing: 2, success: 3, failed: 4 },
+              AF: {
+                companies: 587,
+                visited: 4,
+                notVisited: 7,
+                onGoing: 2,
+                success: 3,
+                failed: 4,
+              },
+              AL: {
+                companies: 587,
+                visited: 4,
+                notVisited: 7,
+                onGoing: 2,
+                success: 3,
+                failed: 4,
+              },
+              DZ: {
+                companies: 587,
+                visited: 4,
+                notVisited: 7,
+                onGoing: 2,
+                success: 3,
+                failed: 4,
+              },
               // ...
             },
           },
@@ -279,11 +306,15 @@ const Page = () => {
 
   return (
     <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
-      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">
+        Analytics
+      </h1>
 
       {/* Dropdown filters */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">Filters</h5>
+        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
+          Filters
+        </h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label
@@ -428,7 +459,9 @@ const Page = () => {
 
       {/* Client List */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 p-6 text-xl font-bold text-gray-900 dark:text-white">Client List</h5>
+        <h5 className="me-1 p-6 text-xl font-bold text-gray-900 dark:text-white">
+          Client List
+        </h5>
         <div className="relative overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
             <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">

@@ -17,7 +17,7 @@ const StarRating: React.FC<StarRatingProps> = ({ onChange }) => {
       {[...Array(5)].map((_, index) => (
         <svg
           key={index}
-          className={`w-6 h-6 text-yellow-300 ms-1 ${index !== 0 ? "ml-1" : ""} ${rating > index ? "fill-current" : "stroke-current"}`}
+          className={`ms-1 size-6 text-yellow-300 ${index !== 0 ? "ml-1" : ""} ${rating > index ? "fill-current" : "stroke-current"}`}
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 22 20"

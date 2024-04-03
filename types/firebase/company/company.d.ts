@@ -8,6 +8,7 @@ import { Subcategory } from "../subcategory";
 import { EmployeeCount } from "../employee_count";
 import { AnnualSale } from "../annual_sale";
 import { CompanyAddress } from "./company_address";
+import { User } from "./user/user";
 
 /**
  * Collection path: /companies/{uuid}
@@ -32,9 +33,9 @@ export type Company = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: User['uuid'];
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: User['uuid'];
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: User['uuid'] | null;
 }
