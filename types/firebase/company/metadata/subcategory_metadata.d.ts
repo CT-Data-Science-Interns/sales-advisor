@@ -1,5 +1,8 @@
 import { Subcategory } from "../../subcategory";
 
+/**
+ * Collection path: /companies/{company_uuid}/subcategoriesMetadata/{uuid}
+ */
 export type SubcategoryMetadata = {
     uuid: Subcategory['uuid'];
 

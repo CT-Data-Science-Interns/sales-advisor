@@ -1,5 +1,8 @@
 import { CompanyEmailAddress } from "../company_email_address";
 
+/**
+ * Collection path: /companies/{company_uuid}/companiesEmailAddressesMetadata/{uuid}
+ */
 export type CompanyEmailAddressMetadata = {
     uuid: CompanyEmailAddress['uuid'];
 

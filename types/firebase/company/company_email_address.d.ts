@@ -1,5 +1,8 @@
 import { Company } from "./company";
 
+/**
+ * Collection path: /companiesEmailAddresses/{uuid}
+ */
 export type CompanyEmailAddress = {
     uuid: string;
     email: string;

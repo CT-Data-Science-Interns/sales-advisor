@@ -1,6 +1,9 @@
 import { ContactNumberTypes } from "@/constants/enums/contact_number_types";
 import { Company } from "./company";
 
+/**
+ * Collection path: /companiesContactNumbers/{uuid}
+ */
 export type CompanyContactNumber = {
     uuid: string;
     number: string;

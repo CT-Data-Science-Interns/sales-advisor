@@ -1,5 +1,8 @@
 import { BusinessModel } from "../../business_model"
 
+/**
+ * Collection path: /companies/{company_uuid}/businessModelsMetadata/{uuid}
+ */
 export type BusinessModelMetadata = {
     uuid: BusinessModel['uuid'];
 

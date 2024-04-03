@@ -1,5 +1,8 @@
 import { Company } from "./company";
 
+/**
+ * Collection path: /companiesFaxNumbers/{uuid}
+ */
 export type CompanyFaxNumber = {
     uuid: string;
     faxNumber: string;

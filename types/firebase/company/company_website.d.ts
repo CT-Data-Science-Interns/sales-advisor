@@ -1,9 +1,12 @@
 import { Company } from "./company";
 
+/**
+ * Collection path: /companiesWebsites/{uuid}
+ */
 export type CompanyWebsite = {
     uuid: string;
     url: string;
-    ownedByRef: Company['uuid'];
+    companyRef: Company['uuid'];
     isPrimary: boolean;
     isVerified: boolean;
 
