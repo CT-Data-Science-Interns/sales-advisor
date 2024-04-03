@@ -6,7 +6,7 @@ import { Company } from "./company";
 export type CompanyEmailAddress = {
     uuid: string;
     email: string;
-    companiesRefs: Company['uuid'][];
+    companyRef: Company['uuid'];
     isPrimary: boolean;
     isVerified: boolean;
 

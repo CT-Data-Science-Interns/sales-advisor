@@ -7,6 +7,7 @@ import { CompanyWebsite } from "./company_website";
 import { Subcategory } from "../subcategory";
 import { EmployeeCount } from "../employee_count";
 import { AnnualSale } from "../annual_sale";
+import { CompanyAddress } from "./company_address";
 
 /**
  * Collection path: /companies/{uuid}
@@ -16,6 +17,7 @@ export type Company = {
     name: string;
     description: string;
 
+    companyAddressesRefs: CompanyAddress['uuid'][];
     contactNumbersRefs: CompanyContactNumber['uuid'][];
     faxNumbersRefs: CompanyFaxNumber['uuid'][];
     websitesRefs: CompanyWebsite['uuid'][];
