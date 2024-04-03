@@ -1,5 +1,5 @@
 export type Subcategory = {
-    uuid: string;
+    uuid: Subcategory['uuid'];
     name: string;
 
     // Metadata

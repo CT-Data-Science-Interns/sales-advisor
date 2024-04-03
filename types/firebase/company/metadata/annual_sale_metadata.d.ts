@@ -1,7 +1,7 @@
-import { Subcategory } from "../subcategory";
+import { AnnualSale } from "../../annual_sale";
 
-export type CompanySubcategory = {
-    uuid: Subcategory['uuid'];
+export type AnnualSaleMetadata = {
+    uuid: AnnualSale['uuid'];
 
     // Metadata
     addedAt: Date;

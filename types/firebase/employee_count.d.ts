@@ -1,11 +1,8 @@
-import { Company } from "./company/company";
-
-export type CompanyEmailAddress = {
+export type EmployeeCount = {
     uuid: string;
-    email: string;
-    ownedByRef: Company['uuid'];
-    isPrimary: boolean;
-    isVerified: boolean;
+    count: number;
+    year: number;
+    companyRef: string;
 
     // Metadata
     addedAt: Date;

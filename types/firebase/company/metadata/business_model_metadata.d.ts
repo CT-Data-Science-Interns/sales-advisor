@@ -1,6 +1,6 @@
-import { BusinessModel } from "../business_model"
+import { BusinessModel } from "../../business_model"
 
-export type CompanyBusinessModel = {
+export type BusinessModelMetadata = {
     uuid: BusinessModel['uuid'];
 
     // Metadata

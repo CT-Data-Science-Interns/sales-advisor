@@ -1,6 +1,7 @@
-export type BusinessModel = {
-    uuid: BusinessModel['uuid'];
-    name: string;
+import { Category } from "../../category"
+
+export type CategoryMetadata = {
+    uuid: Category['uuid'];
 
     // Metadata
     addedAt: Date;

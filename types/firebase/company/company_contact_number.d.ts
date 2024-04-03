@@ -1,9 +1,11 @@
-import { Company } from "./company/company";
+import { ContactNumberTypes } from "@/constants/enums/contact_number_types";
+import { Company } from "./company";
 
-export type CompanyWebsite = {
+export type CompanyContactNumber = {
     uuid: string;
-    url: string;
-    ownedByRef: Company['uuid'];
+    number: string;
+    companyRef: Company['uuid'];
+    type: ContactNumberTypes;
     isPrimary: boolean;
     isVerified: boolean;
 

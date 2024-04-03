@@ -1,7 +1,7 @@
-import { Category } from "../category"
+import { Subcategory } from "../../subcategory";
 
-export type CompanyCategory = {
-    uuid: Category['uuid'];
+export type SubcategoryMetadata = {
+    uuid: Subcategory['uuid'];
 
     // Metadata
     addedAt: Date;

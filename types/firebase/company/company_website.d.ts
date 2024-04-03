@@ -1,8 +1,8 @@
-import { Company } from "./company/company";
+import { Company } from "./company";
 
-export type CompanyFaxNumber = {
+export type CompanyWebsite = {
     uuid: string;
-    faxNumber: string;
+    url: string;
     ownedByRef: Company['uuid'];
     isPrimary: boolean;
     isVerified: boolean;

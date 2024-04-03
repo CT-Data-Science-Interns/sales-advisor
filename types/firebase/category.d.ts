@@ -1,12 +1,10 @@
 export type Category = {
-    uuid: string;
+    uuid: Category['uuid'];
     name: string;
 
     // Metadata
     addedAt: Date;
     addedByRef: string;
-    updatedAt: Date;
-    updatedByRef: string;
     deletedAt: Date | null;
     deletedByRef: string | null;
 }
