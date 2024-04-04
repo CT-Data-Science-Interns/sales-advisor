@@ -1,3 +1,4 @@
+import { AnnualSalesGroups } from "@/constants/enums/annual_sales_groups";
 import { BusinessModel } from "./business_model";
 import { Category } from "./category";
 import { Country } from "./country";
@@ -14,6 +15,7 @@ export type Delegation = {
     countriesRefs: Country['uuid'][] | null;
     statesRefs: State['uuid'][] | null;
     businessModelsRefs: BusinessModel['uuid'][] | null;
+    annualSalesGroupsRefs: AnnualSalesGroups | null;
     categoriesRefs: Category['uuid'][] | null;
     subcategoriesRefs: Category['uuid'][] | null;
 
