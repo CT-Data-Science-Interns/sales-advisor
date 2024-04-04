@@ -1,17 +1,13 @@
+import { Country } from "./country";
 import { User } from "./user/user";
 
 /**
- * Collection path: /categories/{uuid}
+ * Collection path: /states/{uuid}
  */
-export type Category = {
-    uuid: Category['uuid'];
+export type State = {
+    uuid: string;
     name: string;
-
-    // Metadata
-    addedAt: Date;
-    addedByRef: string;
-    deletedAt: Date | null;
-    deletedByRef: string | null;
+    countryRef: Country['uuid'];
 
     // Metadata
     addedAt: Date;

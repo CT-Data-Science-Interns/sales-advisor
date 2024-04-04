@@ -1,18 +1,15 @@
+import { Subcategory } from "../../subcategory";
 import { User } from "./user/user";
 
-
 /**
- * Collection path: /subcategories/{uuid}
+ * Collection path: /companies/{company_uuid}/subcategoriesMetadata/{uuid}
  */
-export type Subcategory = {
+export type SubcategoryMetadata = {
     uuid: Subcategory['uuid'];
-    name: string;
 
     // Metadata
     addedAt: Date;
     addedByRef: User['uuid'];
-    updatedAt: Date;
-    updatedByRef: User['uuid'];
     deletedAt: Date | null;
     deletedByRef: User['uuid'] | null;
 }

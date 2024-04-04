@@ -44,7 +44,7 @@ const DynamicMap = ({
         if (marker == null) {
           marker = new google.maps.Marker({
             position: mapsMouseEvent.latLng,
-            map: map,
+            map,
           });
           map.panTo(mapsMouseEvent.latLng ?? { lat: 37.7749, lng: -122.4194 });
         } else marker.setPosition(mapsMouseEvent.latLng);

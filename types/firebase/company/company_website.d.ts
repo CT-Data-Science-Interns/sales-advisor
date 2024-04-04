@@ -1,17 +1,15 @@
+import { Company } from "./company";
 import { User } from "./user/user";
 
 /**
- * Collection path: /categories/{uuid}
+ * Collection path: /companiesWebsites/{uuid}
  */
-export type Category = {
-    uuid: Category['uuid'];
-    name: string;
-
-    // Metadata
-    addedAt: Date;
-    addedByRef: string;
-    deletedAt: Date | null;
-    deletedByRef: string | null;
+export type CompanyWebsite = {
+    uuid: string;
+    url: string;
+    companyRef: Company['uuid'];
+    isPrimary: boolean;
+    isVerified: boolean;
 
     // Metadata
     addedAt: Date;

@@ -1,17 +1,14 @@
+import { Company } from "./company/company"
 import { User } from "./user/user";
 
 /**
- * Collection path: /categories/{uuid}
+ * Collection path: /annualSales/{uuid}
  */
-export type Category = {
-    uuid: Category['uuid'];
-    name: string;
-
-    // Metadata
-    addedAt: Date;
-    addedByRef: string;
-    deletedAt: Date | null;
-    deletedByRef: string | null;
+export type AnnualSale = {
+    uuid: string
+    sale: number
+    year: number
+    companyRef: Company['uuid'],
 
     // Metadata
     addedAt: Date;

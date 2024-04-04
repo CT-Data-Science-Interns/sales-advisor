@@ -9,22 +9,22 @@ const StaticPageFooter = () => {
           </a>
           . All Rights Reserved.
         </span>
-        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+        <ul className="mt-3 flex flex-wrap items-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
           <li>
-            <a href="/about" className="hover:underline me-4 md:me-6">
+            <a href="/about" className="me-4 hover:underline md:me-6">
               About
             </a>
           </li>
           <li>
             <a
               href="/frequently-asked-questions"
-              className="hover:underline me-4 md:me-6"
+              className="me-4 hover:underline md:me-6"
             >
               FAQs
             </a>
           </li>
           <li>
-            <a href="/feedback" className="hover:underline me-4 md:me-6">
+            <a href="/feedback" className="me-4 hover:underline md:me-6">
               Rate Us
             </a>
           </li>

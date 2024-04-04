@@ -1,16 +1,15 @@
-import { User } from "./user";
+import { Company } from "./company";
+import { User } from "./user/user";
 
 /**
- * Collection path: /usersEmailAddresses/{uuid}
+ * Collection path: /companiesEmailAddresses/{uuid}
  */
-export type UserEmailAddress = {
+export type CompanyEmailAddress = {
     uuid: string;
     email: string;
-    userRef: User['uuid'];
+    companyRef: Company['uuid'];
     isPrimary: boolean;
-    isSecondary: boolean;
     isVerified: boolean;
-    isPublic: boolean;
 
     // Metadata
     addedAt: Date;

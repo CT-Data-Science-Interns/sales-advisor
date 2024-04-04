@@ -1,11 +1,11 @@
+import { Category } from "../../category"
 import { User } from "./user/user";
 
 /**
- * Collection path: /businessModels/{uuid}
+ * Collection path: /companies/{company_uuid}/categoriesMetadata/{uuid}
  */
-export type BusinessModel = {
-    uuid: BusinessModel['uuid'];
-    name: string;
+export type CategoryMetadata = {
+    uuid: Category['uuid'];
 
     // Metadata
     addedAt: Date;

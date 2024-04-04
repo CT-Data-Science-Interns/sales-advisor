@@ -1,15 +1,16 @@
-import { SupportedSocialMediaPlatforms } from "@/constants/enums/supported_social_media_platforms";
+import { ContactNumberTypes } from "@/constants/enums/contact_number_types";
 import { User } from "./user";
 
 /**
- * Collection path: /usersSocialMedias/{uuid}
+ * Collection path: usersContactNumbers/{uuid}
  */
-export type UserSocialMedia = {
+export type UserContactNumber = {
     uuid: string;
-    profileURL: string;
+    phoneNumber: string;
     userRef: User['uuid'];
-    platform: SupportedSocialMediaPlatforms;
-    username: string;
+    type: ContactNumberTypes;
+    isPrimary: boolean;
+    isSecondary: boolean;
     isVerified: boolean;
     isPublic: boolean;
 
@@ -20,4 +21,4 @@ export type UserSocialMedia = {
     updatedByRef: User['uuid'];
     deletedAt: Date | null;
     deletedByRef: User['uuid'] | null;
-};
+}
