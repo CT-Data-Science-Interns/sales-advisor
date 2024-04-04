@@ -1,6 +1,6 @@
 "use client";
 
-import SimpleMainFooter from "@/components/simple-main-footer";
+import SimpleMainFooter from "@/components/simple-main-footer.tsx";
 
 const Page = () => {
   return (

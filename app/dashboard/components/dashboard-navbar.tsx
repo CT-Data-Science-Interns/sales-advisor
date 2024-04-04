@@ -50,13 +50,13 @@ const DashboardNavbar = () => {
               <span className="sr-only">Toggle sidebar</span>
             </button>
             <a href="https://flowbite.com" className="mr-4 flex">
-              <img
+              {/* <img
                 src="https://flowbite.s3.amazonaws.com/logo.svg"
                 className="mr-3 h-8"
                 alt="FlowBite Logo"
-              />
+              /> */}
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-                Flowbite
+                Nidec
               </span>
             </a>
             <form action="#" method="GET" className="hidden lg:block lg:pl-2">

@@ -1,3 +1,9 @@
+export interface KanbanBoard {
+  id: number;
+  title: string;
+  tasks: KanbanBoardTask[];
+}
+
 export interface KanbanBoardTask {
   id: number;
   name: string;
@@ -5,12 +11,6 @@ export interface KanbanBoardTask {
   businessCategory: string;
   completed: boolean;
   daysLeft: number;
-}
-
-export interface KanbanBoard {
-  id: number;
-  title: string;
-  tasks: KanbanBoardTask[];
 }
 
 export interface KanbanBoardTaskMember {

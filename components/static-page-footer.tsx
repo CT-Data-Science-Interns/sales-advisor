@@ -1,8 +1,8 @@
 const StaticPageFooter = () => {
   return (
-    <footer className="m-4 rounded-lg bg-white shadow dark:bg-gray-800">
-      <div className="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-        <span className="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
+    <footer className="bg-white rounded-lg shadow m-4 dark:bg-gray-800">
+      <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between mr-40">
+        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © 2024{" "}
           <a href="https://flowbite.com/" className="hover:underline">
             Nidec™
@@ -29,8 +29,13 @@ const StaticPageFooter = () => {
             </a>
           </li>
           <li>
-            <a href="/bug-report" className="hover:underline">
+            <a href="/bug-report" className="hover:underline me-4 md:me-6">
               Report
+            </a>
+          </li>
+          <li>
+            <a href="/dashboard/update-progress" className="hover:underline">
+              Progress Tracker
             </a>
           </li>
         </ul>
