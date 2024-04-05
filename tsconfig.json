@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true, // To allow tsx import in update-progress
     "forceConsistentCasingInFileNames": true, // ? Custom line addition
     "lib": [
       "dom",

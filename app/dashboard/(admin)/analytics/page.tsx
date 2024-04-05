@@ -6,6 +6,12 @@ import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
 
 import "svgmap/dist/svgMap.min.css";
+import React, { useEffect, useState } from "react";
+
+import DatePicker from "tailwind-datepicker-react";
+import { IOptions } from "tailwind-datepicker-react/types/Options";
+
+import "svgmap/dist/svgMap.min.css";
 
 const Page = () => {
   // let companiesCount: number = 0;

@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import React from "react";
+import App from "./(root)/app";
 
 // const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Nidec Force",
+  title: "Sales Advisor",
   description: "Your AI companion for productivity and sales",
 };
 
@@ -18,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <App>
+        <body>{children}</body>
+      </App>
     </html>
   );
 }
