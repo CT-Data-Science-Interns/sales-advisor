@@ -1,5 +1,6 @@
 "use client";
 
+import FormSelect from "@/components/form-select";
 import React, { useEffect, useState } from "react";
 
 import DatePicker from "tailwind-datepicker-react";
@@ -8,18 +9,27 @@ import { IOptions } from "tailwind-datepicker-react/types/Options";
 import "svgmap/dist/svgMap.min.css";
 
 const Page = () => {
-  // let companiesCount: number = 0;
-  // let visitedCount: number = 0;
-  // let notVisitedCount: number = 0;
-  // let onGoingDealsCount: number = 0;
-  // let successfulDealsCount: number = 0;
-  // let failedDealsCount: number = 0;
+  // Dropdown filters value
+  // eslint-disable-next-line no-unused-vars
+  const [salesperson, setSalesPerson] = useState<string>();
+  // eslint-disable-next-line no-unused-vars
+  const [dealStatus, setDealStatus] = useState<string>();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(startDate);
 
-  let pieChart: any;
-  let areaChart: any;
-  let choroplethMap: null;
-
-  let clientInitialized = false;
+  // eslint-disable-next-line no-unused-vars
+  enum DateType {
+    // eslint-disable-next-line no-unused-vars
+    All = "All",
+    // eslint-disable-next-line no-unused-vars
+    Today = "Today",
+    // eslint-disable-next-line no-unused-vars
+    Last7Days = "Last 7 days",
+    // eslint-disable-next-line no-unused-vars
+    Last30Days = "Last 30 days",
+    // eslint-disable-next-line no-unused-vars
+    Custom = "Custom",
+  }
 
   // Datepicker options
   const startDatepickerOptions: IOptions = {
@@ -44,24 +54,30 @@ const Page = () => {
     },
   };
 
-  // Datepicker useStates
-  const [startDate, setStartDate] = useState(new Date(Date.now()));
-  const [endDate, setEndDate] = useState(startDate);
+  // Datepicker states
   const [showDatepickers, setShowDatePickers] = useState<boolean>(false);
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
 
   // Datepicker functions
-  const setDateType = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const option = event.target.value;
+  const setDateType = (dateType: DateType) => {
+    setShowDatePickers(dateType === DateType.Custom);
 
-    setShowDatePickers(option === "4");
+    // if (dateType === DateType.All) {
+    //   setStartDate(new Date(0));
+    //   setEndDate(new Date());
+    // } else if (dateType === DateType.Today) {
+    //   // eslint-disable-next-line prefer-const
+    //   let startToday = new Date();
+    //   startToday.setHours(0, 0, 0, 0);
 
-    if (option === "1") {
-      // Show date picker
-    } else if (option === "2") {
-      // Show daterange picker
-    }
+    //   // eslint-disable-next-line prefer-const
+    //   let endToday = startToday;
+    //   endToday.setHours(24);
+
+    //   setStartDate(startToday);
+    //   setEndDate(endDate);
+    // }
   };
   const onSelectedStartDateChanged = (date: Date) => {
     // Adjust end date if start date is greater
@@ -222,6 +238,11 @@ const Page = () => {
     },
   };
 
+  let pieChart: any;
+  let areaChart: any;
+  let choroplethMap: null;
+  let clientInitialized = false;
+
   useEffect(() => {
     if (!clientInitialized) {
       // Import client-only packages
@@ -285,59 +306,30 @@ const Page = () => {
       <div className="mb-8 rounded-lg p-6 shadow">
         <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">Filters</h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <label
-              htmlFor="salesperson"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Salesperson:
-            </label>
-            <select
-              id="salesperson"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              <option>All</option>
-              <option>Salesperson 1</option>
-              <option>Salesperson 2</option>
-              <option>Salesperson 3</option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="salesperson"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Deal Status:
-            </label>
-            <select
-              id="salesperson"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              <option>All</option>
-              <option>Ongoing</option>
-              <option>Failed</option>
-              <option>Successful</option>
-            </select>
-          </div>
+          <FormSelect
+            title="Salesperson:"
+            onSelectChange={setSalesPerson}
+            options={["Salesperson 1", "Salesperson 2", "Salesperson 3"]}
+          />
+          <FormSelect
+            title="Deal Status:"
+            onSelectChange={setDealStatus}
+            options={["All", "Ongoing", "Failed", "Successful"]}
+          />
           {/* Dates */}
           <div className="sm:col-span-2">
-            <label
-              htmlFor="datetype"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Date:
-            </label>
-            <select
-              id="datetype"
-              onChange={setDateType}
-              className="mb-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              <option value={0}>All</option>
-              <option value={1}>Today</option>
-              <option value={2}>Last 7 days</option>
-              <option value={3}>Last 30 days</option>
-              <option value={4}>Custom</option>
-            </select>
+            <FormSelect
+              className="mb-2"
+              title="Date:"
+              onSelectChange={setDateType}
+              options={[
+                DateType.All,
+                DateType.Today,
+                DateType.Last7Days,
+                DateType.Last30Days,
+                DateType.Custom,
+              ]}
+            />
             {showDatepickers && (
               <div className="flex">
                 <DatePicker
