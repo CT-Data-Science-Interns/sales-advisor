@@ -1,101 +1,57 @@
 "use client";
 
-"use client";
-
-import React from "react";
+import FormSelect from "@/components/form-select";
+import React, { useState } from "react";
 
 const Page = () => {
+  // eslint-disable-next-line no-unused-vars
+  const [salesperson, setSalesPerson] = useState<string>();
+
+  // eslint-disable-next-line no-unused-vars
+  const [country, setCountry] = useState<string>();
+  // eslint-disable-next-line no-unused-vars
+  const [state, setState] = useState<string>();
+  // eslint-disable-next-line no-unused-vars
+  const [businessModel, setBusinessModel] = useState<string>();
+  // eslint-disable-next-line no-unused-vars
+  const [businessCategory, setBusinessCategory] = useState<string>();
+
   return (
     <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
       <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">User Management</h1>
 
       <div className="mb-8 rounded-lg p-6 shadow">
-        <div>
-          <label
-            htmlFor="salesperson"
-            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Salesperson:
-          </label>
-          <select
-            id="salesperson"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-          >
-            <option>Salesperson 1</option>
-            <option>Salesperson 2</option>
-            <option>Salesperson 3</option>
-          </select>
-        </div>
+        <FormSelect
+          title="Salesperson:"
+          onSelectChange={setSalesPerson}
+          options={["Salesperson 1", "Salesperson 2", "Salesperson 3"]}
+        />
       </div>
 
       {/* Delegations dropdown */}
       <div className="mb-8 rounded-lg p-6 shadow">
         <h5 className="mb-6 me-1 text-xl font-bold text-gray-900 dark:text-white">Delegations</h5>
-        <div className="mb-6 grid gap-6  sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="country"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Country:
-            </label>
-            <select
-              id="country"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              <option>Country 1</option>
-              <option>Country 2</option>
-              <option>Country 3</option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="state"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              State:
-            </label>
-            <select
-              id="state"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              <option>State 1</option>
-              <option>State 2</option>
-              <option>State 3</option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="business-model"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Business Model:
-            </label>
-            <select
-              id="business-model"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              <option value={0}>Business Model 1</option>
-              <option value={1}>Business Model 2</option>
-              <option value={2}>Business Model 3</option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="business-category"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Business Category:
-            </label>
-            <select
-              id="business-category"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              <option value={0}>Business Category 1</option>
-              <option value={1}>Business Category 2</option>
-              <option value={2}>Business Category 3</option>
-            </select>
-          </div>
+        <div className="mb-6 grid gap-6 sm:grid-cols-2">
+          <FormSelect
+            title="Country:"
+            onSelectChange={setCountry}
+            options={["Country 1", "Country 2", "Country 3"]}
+          />
+          <FormSelect
+            title="State:"
+            onSelectChange={setState}
+            options={["State 1", "State 2", "State 3"]}
+          />
+          <FormSelect
+            title="Business Model:"
+            onSelectChange={setBusinessModel}
+            options={["Business Model 1", "Business Model 2", "Business Model 3"]}
+          />
+          <FormSelect
+            title="Business Category:"
+            onSelectChange={setBusinessCategory}
+            options={["Business Category 1", "Business Category 2", "Business Category 3"]}
+          />
         </div>
         <div className="flex justify-end">
           <button
