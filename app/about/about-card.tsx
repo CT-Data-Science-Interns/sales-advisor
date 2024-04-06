@@ -12,13 +12,13 @@ export function AboutCard({
   imageUrl,
 }: AboutCardProps) {
   return (
-    <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
+    <div className="items-center rounded-lg bg-gray-50 shadow dark:border-gray-700 dark:bg-gray-800 sm:flex">
       <div className="p-5">
         <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
           <a href="#">{name}</a>
         </h3>
         <span className="text-gray-500 dark:text-gray-400">{role}</span>
-        <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
+        <p className="mb-4 mt-3 font-light text-gray-500 dark:text-gray-400">
           {description}
         </p>
         {/* <ul className="flex space-x-4 sm:mt-0">

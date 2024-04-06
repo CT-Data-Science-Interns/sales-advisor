@@ -28,14 +28,14 @@ const KanbanPageContent: FC<KanbanPageData> = function ({ kanbanBoards }) {
   return (
     <div className="overflow-x-auto">
       <div className="inline-block min-w-full align-middle">
-        <div className="mb-6 flex flex-wrap md:flex-nowrap items-start justify-start space-x-1 px-1 flex-shrink-0">
+        <div className="mb-6 flex shrink-0 flex-wrap items-start justify-start space-x-1 px-1 md:flex-nowrap">
           {list.map((board) => (
             <div
               key={board.id}
-              className="mb-8 bg-white rounded-lg border border-gray-300 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+              className="mb-8 rounded-lg border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             >
               <div className="py-4 text-base font-semibold text-gray-900 dark:text-gray-300">
-                <p className="text-4xl ml-6">{board.title}</p>
+                <p className="ml-6 text-4xl">{board.title}</p>
               </div>
               <div className="m-6 space-y-4">
                 <ReactSortable
@@ -54,7 +54,7 @@ const KanbanPageContent: FC<KanbanPageData> = function ({ kanbanBoards }) {
                   {board.tasks.map((task) => (
                     <div
                       key={task.id}
-                      className="mb-4 w-[28rem] cursor-grab rounded-lg p-5 shadow bg-gray-500 dark:bg-gray-500"
+                      className="mb-4 w-[28rem] cursor-grab rounded-lg bg-gray-500 p-5 shadow dark:bg-gray-500"
                       style={{ backgroundColor: "#93C5FD" }}
                     >
                       <div className="flex items-center justify-between pb-4 ">
@@ -66,18 +66,18 @@ const KanbanPageContent: FC<KanbanPageData> = function ({ kanbanBoards }) {
                         <div className="pb-4 text-sm font-normal text-gray-700 dark:text-gray-400">
                           {task.address}
                         </div>
-                        <div className="pb-4 text-sm font-normal text-black-700 dark:text-black-400">
+                        <div className="text-black-700 dark:text-black-400 pb-4 text-sm font-normal">
                           Business Category: {task.businessCategory}
                         </div>
                         <div className="flex justify-between">
                           <div className="flex items-center justify-center rounded-lg text-sm font-medium">
                             <a
                               href="#"
-                              className="inline-flex items-center px-3 mt-6 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                              className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             >
                               Read more
                               <svg
-                                className="rtl:rotate-180 w-3.5 h-3.5 ms-5"
+                                className="ms-5 size-3.5 rtl:rotate-180"
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -106,13 +106,13 @@ const KanbanPageContent: FC<KanbanPageData> = function ({ kanbanBoards }) {
           {unsavedChanges && (
             <button
               onClick={handleSave}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow"
+              className="rounded bg-blue-500 px-4 py-2 font-semibold text-white shadow hover:bg-blue-600"
             >
               Save
             </button>
           )}
           {changesSaved && (
-            <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow">
+            <button className="rounded bg-green-500 px-4 py-2 font-semibold text-white shadow hover:bg-green-600">
               Changes Saved
             </button>
           )}
