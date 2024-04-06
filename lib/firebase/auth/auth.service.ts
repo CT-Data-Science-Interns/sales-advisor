@@ -16,14 +16,15 @@ import {
  * A Singleton class that provides authentication services.
  */
 export default class AuthService {
-    private constructor({ authProvider }: { authProvider: Auth }) {
-        this.authProvider = authProvider;
-    }
-
+    // * FIELDS
     // eslint-disable-next-line no-use-before-define
     private static instance: AuthService | null = null;
+    private _authProvider: Auth;
 
-    private authProvider: Auth;
+    // * CONSTRUCTOR
+    private constructor({ authProvider }: { authProvider: Auth }) {
+        this._authProvider = authProvider;
+    }
 
     static getInstance({ authProvider }: { authProvider: Auth }): AuthService {
         if (!AuthService.instance) {
@@ -33,12 +34,13 @@ export default class AuthService {
         return AuthService.instance;
     }
 
+    // * UTILITIES
     public async createUserWithEmailAndPassword({ email, password }: {
         email: string, password: string
     }): Promise<Either<AuthException, UserCredential>> {
         try {
             const userCredential: UserCredential = await createUserWithEmailAndPassword(
-                this.authProvider, email, password
+                this._authProvider, email, password
             );
 
             return { right: userCredential };
@@ -59,7 +61,7 @@ export default class AuthService {
     }): Promise<Either<AuthException, UserCredential>> {
         try {
             const userCredential: UserCredential = await signInWithEmailAndPassword(
-                this.authProvider, email, password
+                this._authProvider, email, password
             );
 
             return { right: userCredential };
@@ -93,7 +95,7 @@ export default class AuthService {
 
     public async sendPasswordResetEmail(email: string): Promise<Either<AuthException, null>> {
         try {
-            await sendPasswordResetEmail(this.authProvider, email);
+            await sendPasswordResetEmail(this._authProvider, email);
             return { right: null };
         } catch (error: any) {
             const _error = error as FirebaseError;
@@ -109,7 +111,7 @@ export default class AuthService {
 
     public async signOut(): Promise<Either<AuthException, null>> {
         try {
-            await this.authProvider.signOut();
+            await this._authProvider.signOut();
             return { right: null };
         } catch (error: any) {
             const _error = error as FirebaseError;
@@ -128,7 +130,7 @@ export default class AuthService {
     // }
 
     public getCurrentUser(): Either<AuthException, User> {
-        const user: User | null = this.authProvider.currentUser;
+        const user: User | null = this._authProvider.currentUser;
         if (user) {
             return { right: user };
         } else {
@@ -211,8 +213,4 @@ export default class AuthService {
             return { left: authException };
         }
     }
-
-
-
-
 }

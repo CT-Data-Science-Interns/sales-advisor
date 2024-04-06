@@ -1,6 +1,6 @@
 import Exception from "../interfaces/exception.interface";
 
-export default class AuthException extends Error implements Exception {
+export default class FirestoreException extends Error implements Exception {
     // * Fields
     private _code: string;
     private _message: string;
