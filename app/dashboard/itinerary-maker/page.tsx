@@ -2,6 +2,7 @@
 
 import StartingLocationForm from "./components/starting-location-form";
 import FilterCompaniesForm from "./components/filter-companies-form";
+import GenerateAndSave from "./components/generate-and-save";
 import ItineraryStageProgress, {
   ItineraryStage,
 } from "./components/itinerary-stage-progress";
@@ -14,7 +15,7 @@ const Page = () => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
-        <h1 className="mb-10 text-center text-5xl font-bold text-gray-900 dark:text-white">
+        <h1 className="mb-6 text-center text-5xl font-bold text-gray-900 dark:text-white">
           Itinerary Maker
         </h1>
         <ItineraryStageProgress currentItineraryStage={currentItineraryStage} />
@@ -22,7 +23,10 @@ const Page = () => {
           <StartingLocationForm currentPageHandler={setCurrentItineraryStage} />
         )}
         {currentItineraryStage === ItineraryStage.FILTER_COMPANIES && (
-          <FilterCompaniesForm />
+          <FilterCompaniesForm currentPageHandler={setCurrentItineraryStage} />
+        )}
+        {currentItineraryStage === ItineraryStage.GENERATE_AND_SAVE && (
+          <GenerateAndSave currentPageHandler={setCurrentItineraryStage} />
         )}
       </div>
     </section>
