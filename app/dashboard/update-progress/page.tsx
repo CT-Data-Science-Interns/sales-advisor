@@ -14,24 +14,24 @@ async function getData() {
 export default async function KanbanPage() {
   return (
     <div>
-      <div className="flex flex-col items-center mt-10 max-w-screen h-screen">
-        <h1 className="text-5xl font-bold text-center text-gray-900 dark:text-white mt- 6 mb-4">
+      <div className="max-w-screen mt-10 flex h-screen flex-col items-center">
+        <h1 className="mt- 6 mb-4 text-center text-5xl font-bold text-gray-900 dark:text-white">
           Sales Visit Progress Tracker
         </h1>
 
         <section className="bg-white dark:bg-gray-900">
-          <div className="py-16 px-8 lg:py-20 lg:px-10 flex flex-col lg:flex-row lg:justify-start">
+          <div className="flex flex-col px-8 py-16 lg:flex-row lg:justify-start lg:px-10 lg:py-20">
             <div className="grid grid-cols-3 gap-10 lg:gap-16">
               <form>
                 <label
                   htmlFor="dates"
-                  className="block mb-4 text-base font-medium text-gray-900 dark:text-white"
+                  className="mb-4 block text-base font-medium text-gray-900 dark:text-white"
                 >
                   Select Date option
                 </label>
                 <select
                   id="dates"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                   defaultValue=""
                 >
                   <option disabled value="">
@@ -43,26 +43,26 @@ export default async function KanbanPage() {
                 </select>
               </form>
 
-              <div className="flex items-center space-x-4 my-6">
+              <div className="my-6 flex items-center space-x-4">
                 <input
                   name="start"
                   type="date"
                   id="start"
                   placeholder="Select start date"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                 />
-                <span className="text-gray-500 text-xl">to</span>
+                <span className="text-xl text-gray-500">to</span>
                 <input
                   name="end"
                   type="date"
                   placeholder="Select end date"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                 />
               </div>
 
               <div className="ml-5">
                 <div>
-                  <div className="flex justify-between mb-1">
+                  <div className="mb-1 flex justify-between">
                     <span className="text-base font-medium text-blue-700 dark:text-white">
                       Your Progress
                     </span>
@@ -70,9 +70,9 @@ export default async function KanbanPage() {
                       45%
                     </span>
                   </div>
-                  <div className="w-full h-10 bg-gray-200 rounded-full dark:bg-gray-700">
+                  <div className="h-10 w-full rounded-full bg-gray-200 dark:bg-gray-700">
                     <div
-                      className="h-10 bg-blue-600 rounded-full dark:bg-blue-500"
+                      className="h-10 rounded-full bg-blue-600 dark:bg-blue-500"
                       style={{ width: "45%" }}
                     ></div>
                   </div>
@@ -84,21 +84,21 @@ export default async function KanbanPage() {
         <section className="bg-white dark:bg-gray-900">
           <div
             style={{ maxWidth: "75%", margin: "0 auto" }}
-            className="mb-8 lg:mb-16 text-center"
+            className="mb-8 text-center lg:mb-16"
           >
             <h3 className="mb-8 font-bold text-gray-900 dark:text-gray-400 sm:text-xl">
               Search below to find the projects you are looking for.
             </h3>
             <label
               htmlFor="email-adress-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
+              className="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
             >
               Your Email
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg
-                  className="w-6 h-6 text-gray-500 dark:text-gray-400"
+                  className="size-6 text-gray-500 dark:text-gray-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg"
@@ -113,25 +113,25 @@ export default async function KanbanPage() {
               <input
                 type="text"
                 id="email-adress-icon"
-                className="block w-full p-4 pl-12 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-12 text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                 placeholder="Type keywords to find answers"
               />
             </div>
           </div>
-          <div className="py-16 px-8 mx-auto max-w-screen-3xl lg:py-20 lg:px-10">
+          <div className="max-w-screen-3xl mx-auto px-8 py-16 lg:px-10 lg:py-20">
             <KanbanPageContent {...await getData()} />
           </div>
         </section>
 
-        <div className="mt-8 inline-flex items-center px-3 py-2 text-sm font-medium text-center">
+        <div className="mt-8 inline-flex items-center px-3 py-2 text-center text-sm font-medium">
           <a
             href="/dashboard/progress-schedule"
             title=""
-            className="inline-flex items-center text-lg font-medium hover:underline text-primary-600 dark:text-primary-500"
+            className="inline-flex items-center text-lg font-medium text-primary-600 hover:underline dark:text-primary-500"
           >
             View Schedule
             <svg
-              className="w-6 h-6 hover:underline text-primary-600 dark:text-primary-500 ml-3"
+              className="ml-3 size-6 text-primary-600 hover:underline dark:text-primary-500"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="24"

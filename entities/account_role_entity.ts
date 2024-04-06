@@ -1,11 +1,10 @@
 import { Entity } from "../constants/interfaces/entity.interface";
 
-// TODO: [P3] Add documentation to AccountRole entity type.
-// TODO: [P3] Simplify the AccountRole entity type.
-export class AccountRole implements Entity {
+export default class AccountRoleEntity implements Entity {
     constructor({
         uuid,
-        name,
+        fullName,
+        shortName,
         weight,
         addedAt,
         addedByRef,
@@ -15,7 +14,8 @@ export class AccountRole implements Entity {
         deletedByRef
     }: {
         uuid: string,
-        name: string,
+        fullName: string,
+        shortName: string,
         weight: number,
         addedAt: Date,
         addedByRef: string,
@@ -25,7 +25,8 @@ export class AccountRole implements Entity {
         deletedByRef: string | null
     }) {
         this.uuid = uuid;
-        this.name = name;
+        this.fullName = fullName;
+        this.shortName = shortName;
         this.weight = weight;
         this.addedAt = addedAt;
         this.addedByRef = addedByRef;
@@ -37,7 +38,8 @@ export class AccountRole implements Entity {
 
     // * PROPERTIES
     private uuid: string;
-    private name: string;
+    private fullName: string;
+    private shortName: string;
     private weight: number;
 
     // Metadata properties
@@ -50,7 +52,8 @@ export class AccountRole implements Entity {
 
     // * GETTERS
     get getUUID(): string { return this.uuid; }
-    get getName(): string { return this.name; }
+    get getFullName(): string { return this.fullName; }
+    get getShortName(): string { return this.shortName; }
     get getWeight(): number { return this.weight; }
     get getAddedAt(): Date { return this.addedAt; }
     get getAddedByRef(): string { return this.addedByRef; }
@@ -60,9 +63,10 @@ export class AccountRole implements Entity {
     get getDeletedByRef(): string | null { return this.deletedByRef; }
 
     // * UTILITIES
-    public copyWith({
+    public copyWith<AccountRoleEntity>({
         uuid,
-        name,
+        fullName,
+        shortName,
         weight,
         addedAt,
         addedByRef,
@@ -72,7 +76,8 @@ export class AccountRole implements Entity {
         deletedByRef
     }: {
         uuid?: string,
-        name?: string,
+        fullName?: string,
+        shortName?: string,
         weight?: number,
         addedAt?: Date,
         addedByRef?: string,
@@ -80,10 +85,11 @@ export class AccountRole implements Entity {
         updatedByRef?: string,
         deletedAt?: Date | null,
         deletedByRef?: string | null
-    }): AccountRole {
-        return new AccountRole({
+    }): AccountRoleEntity {
+        return new AccountRoleEntity({
             uuid: uuid ?? this.uuid,
-            name: name ?? this.name,
+            fullName: fullName ?? this.fullName,
+            shortName: shortName ?? this.shortName,
             weight: weight ?? this.weight,
             addedAt: addedAt ?? this.addedAt,
             addedByRef: addedByRef ?? this.addedByRef,
@@ -91,6 +97,6 @@ export class AccountRole implements Entity {
             updatedByRef: updatedByRef ?? this.updatedByRef,
             deletedAt: deletedAt ?? this.deletedAt,
             deletedByRef: deletedByRef ?? this.deletedByRef
-        });
+        }) as AccountRoleEntity;
     }
 }

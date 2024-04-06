@@ -14,7 +14,7 @@ const Page = () => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
-        <h1 className="mb-10 text-5xl font-bold text-gray-900 dark:text-white text-center">
+        <h1 className="mb-10 text-center text-5xl font-bold text-gray-900 dark:text-white">
           Itinerary Maker
         </h1>
         <ItineraryStageProgress currentItineraryStage={currentItineraryStage} />

@@ -1,3 +1,3 @@
 export interface Entity {
-    copyWith(object: any): Entity;
+    copyWith<T extends Entity>(params: any): T;
 }
