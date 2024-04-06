@@ -46,7 +46,7 @@ export default class AuthService {
             return { right: userCredential };
         } catch (error: any) {
             const _error = error as FirebaseError;
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: _error.code,
                 message: _error.message,
                 stackTrace: _error.stack || null
@@ -67,7 +67,7 @@ export default class AuthService {
             return { right: userCredential };
         } catch (error: any) {
             const _error = error as FirebaseError;
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: _error.code,
                 message: _error.message,
                 stackTrace: _error.stack || null
@@ -83,7 +83,7 @@ export default class AuthService {
             return { right: null };
         } catch (error: any) {
             const _error = error as FirebaseError;
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: _error.code,
                 message: _error.message,
                 stackTrace: _error.stack || null
@@ -99,7 +99,7 @@ export default class AuthService {
             return { right: null };
         } catch (error: any) {
             const _error = error as FirebaseError;
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: _error.code,
                 message: _error.message,
                 stackTrace: _error.stack || null
@@ -115,7 +115,7 @@ export default class AuthService {
             return { right: null };
         } catch (error: any) {
             const _error = error as FirebaseError;
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: _error.code,
                 message: _error.message,
                 stackTrace: _error.stack || null
@@ -134,7 +134,7 @@ export default class AuthService {
         if (user) {
             return { right: user };
         } else {
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: "auth/user-not-found",
                 message: "No user is currently signed in.",
                 stackTrace: null
@@ -153,7 +153,7 @@ export default class AuthService {
             return { right: null };
         } catch (error: any) {
             const _error = error as FirebaseError;
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: _error.code,
                 message: _error.message,
                 stackTrace: _error.stack || null
@@ -176,7 +176,7 @@ export default class AuthService {
     //         return { right: newUserCredential };
     //     } catch (error: any) {
     //         const _error = error as FirebaseError;
-    //         const authException: AuthException = new AuthException({
+    //         const authException = new AuthException({
     //             code: _error.code,
     //             message: _error.message,
     //             stackTrace: _error.stack || null
@@ -204,7 +204,7 @@ export default class AuthService {
             return { right: user };
         } catch (error: any) {
             const _error = error as FirebaseError;
-            const authException: AuthException = new AuthException({
+            const authException = new AuthException({
                 code: _error.code,
                 message: _error.message,
                 stackTrace: _error.stack || null
@@ -213,4 +213,11 @@ export default class AuthService {
             return { left: authException };
         }
     }
+
+    // TODO: [p1] Implement utility methods for:
+    // 1. updating user data object that is bound to the user in auth service.
+    // 2. Real-time user data updates.
+    // 3. User data persistence.
+    // 4. User data synchronization
+    // 5. User data validation.
 }
