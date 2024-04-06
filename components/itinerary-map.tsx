@@ -93,7 +93,7 @@ const Directions = () => {
   if (!leg) return null;
 
   return (
-    <div className="directions">
+    <div>
       <h2>{selected.summary}</h2>
       <p>
         {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
