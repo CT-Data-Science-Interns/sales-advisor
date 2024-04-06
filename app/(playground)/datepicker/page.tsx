@@ -1,7 +1,6 @@
 "use client";
 
-import FirebaseServicesContext from "@/contexts/firebase_services_context";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
 
@@ -28,10 +27,6 @@ const Page = () => {
       selected: "",
     },
   };
-
-  // Test FirebaseServicesContext if it is being read here.
-  const firebaseServicesContext = useContext(FirebaseServicesContext);
-  console.log(firebaseServicesContext?.auth);
 
   return (
     <div className="mt-20 flex size-full flex-col items-center gap-5">
