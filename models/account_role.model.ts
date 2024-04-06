@@ -1,4 +1,4 @@
-import { Model } from "@/constants/interfaces/model.interface";
+import { Model } from "@/core/interfaces/model.interface";
 import AccountRoleEntity from "@/entities/account_role_entity";
 import firebase from "firebase/compat/app";
 

@@ -1,4 +1,4 @@
-import { Entity } from "../constants/interfaces/entity.interface";
+import { Entity } from "../core/interfaces/entity.interface";
 
 export default class AccountRoleEntity implements Entity {
     constructor({

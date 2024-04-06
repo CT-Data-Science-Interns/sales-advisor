@@ -1,4 +1,4 @@
-import FirebaseConfig from "@/constants/interfaces/firebase_config.interface";
+import FirebaseConfig from "@/core/interfaces/firebase_config.interface";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig: FirebaseConfig = {
