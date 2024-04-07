@@ -1,6 +1,7 @@
 "use client";
 
 import SimpleMainFooter from "@/components/simple-main-footer.tsx";
+import Image from "next/image";
 
 const Page = () => {
   return (
@@ -18,7 +19,7 @@ const Page = () => {
                   src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
                   alt="logo"
                 />
-                Flowbite
+                Nidec Force
               </a>
               <h1 className="mb-2 text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
                 Welcome back
@@ -189,10 +190,17 @@ const Page = () => {
             </div>
           </div>
           <div className="mr-auto place-self-center lg:col-span-6">
-            <img
+            {/* <img
               className="mx-auto hidden lg:flex"
               src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/authentication/illustration.svg"
               alt="illustration"
+            /> */}
+            <Image
+              className="mx-auto hidden lg:flex"
+              src="illustrations/girl-sitting-on-a-chair-with-style.svg"
+              width={600}
+              height={500}
+              alt="Girl sitting on a chair with style."
             />
           </div>
         </div>
