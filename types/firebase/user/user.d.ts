@@ -10,13 +10,13 @@ export type User = {
         middleName: string | null;
         suffix: string | null;
     };
-    birthdate: Date;
-    sex: string; // From the Sexes enum.
+    birthdate: Date | null;
+    sex: string | null; // From the Sexes enum.
     accountRolesRefs: string[]; // AccountRole['uuid'][]
 
     emailAddressesRefs: string[]; // UserEmailAddress['uuid'][]
-    contactNumbersRefs: string[]; // UserContactNumber['uuid'][]
-    socialMediasRefs: string[]; // UserSocialMedia['uuid'][]
+    contactNumbersRefs: string[] | null; // UserContactNumber['uuid'][] | null
+    socialMediasRefs: string[] | null; // UserSocialMedia['uuid'][] | null
 
     managedUsersRefs: string[] | null; // User['uuid'][] | null;
     managedByRefs: string[] | null; // User['uuid'][] | null;

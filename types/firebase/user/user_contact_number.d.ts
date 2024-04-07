@@ -7,7 +7,6 @@ export type UserContactNumber = {
     userRef: string; // User['uuid']
     type: string; // From the ContactNumberTypes enum.
     isPrimary: boolean;
-    isSecondary: boolean;
     isVerified: boolean;
     isPublic: boolean;
 

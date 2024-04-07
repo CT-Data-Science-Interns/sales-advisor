@@ -7,17 +7,17 @@ export type Company = {
     description: string;
 
     companyAddressesRefs: string[]; // CompanyAddress['uuid'][]
-    contactNumbersRefs: string[]; // CompanyContactNumber['uuid'][]
-    faxNumbersRefs: string[]; // CompanyFaxNumber['uuid'][]
-    websitesRefs: string[]; // CompanyWebsite['uuid'][]
-    emailAddressesRefs: string[]; // CompanyEmailAddress['uuid'][]
+    contactNumbersRefs: string[] | null; // CompanyContactNumber['uuid'][] | null
+    faxNumbersRefs: string[] | null; // CompanyFaxNumber['uuid'][] | null
+    websitesRefs: string[] | null; // CompanyWebsite['uuid'][] | null
+    emailAddressesRefs: string[] | null; // CompanyEmailAddress['uuid'][] | null
 
     businessModelsRefs: string[]; // BusinessModel['uuid'][]
     categoriesRefs: string[]; // Category['uuid'][]
     subcategoriesRefs: string[]; // Subcategory['uuid'][]
 
-    employeesCountsRefs: string[]; // EmployeeCount['uuid'][]
-    annualSalesRefs: string[]; // AnnualSale['uuid'][]
+    employeesCountsRefs: string[] | null; // EmployeeCount['uuid'][] | null
+    annualSalesRefs: string[] | null; // AnnualSale['uuid'][] | null
 
     // Metadata
     addedAt: Date;

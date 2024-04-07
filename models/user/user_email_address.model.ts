@@ -1,15 +1,16 @@
-import { AccountRole } from "@/types/firebase/account_role";
 import { Model } from "@/core/interfaces/model.interface";
-
+import UserModel from "./user.model";
 import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
-import UserModel from "./user/user.model";
+import { UserEmailAddress } from "@/types/firebase/user/user_email_address";
 
-export default class AccountRoleModel implements Model {
+export default class UserEmailAddressModel implements Model {
     // * FIELDS
     private _uuid: string;
-    private _fullName: string;
-    private _shortName: string;
-    private _weight: number;
+    private _email: string;
+    private _userRef: UserModel | string;
+    private _isPrimary: boolean;
+    private _isVerified: boolean;
+    private _isPublic: boolean;
 
     // METADATA FIELDS
     private _addedAt: Date;
@@ -22,9 +23,11 @@ export default class AccountRoleModel implements Model {
     // * CONSTRUCTOR
     constructor({
         uuid,
-        fullName,
-        shortName,
-        weight,
+        email,
+        userRef,
+        isPrimary = true,
+        isVerified = false,
+        isPublic = true,
         addedAt,
         addedByRef,
         updatedAt,
@@ -33,9 +36,11 @@ export default class AccountRoleModel implements Model {
         deletedByRef = null
     }: {
         uuid: string,
-        fullName: string,
-        shortName: string,
-        weight: number,
+        email: string,
+        userRef: UserModel | string,
+        isPrimary?: boolean,
+        isVerified?: boolean,
+        isPublic?: boolean,
         addedAt: Date,
         addedByRef: UserModel | string,
         updatedAt: Date,
@@ -44,22 +49,26 @@ export default class AccountRoleModel implements Model {
         deletedByRef?: UserModel | string | null
     }) {
         this._uuid = uuid;
-        this._fullName = fullName;
-        this._shortName = shortName;
-        this._weight = weight;
+        this._email = email;
+        this._userRef = userRef;
+        this._isPrimary = isPrimary;
+        this._isVerified = isVerified;
+        this._isPublic = isPublic;
         this._addedAt = addedAt;
         this._addedByRef = addedByRef;
         this._updatedAt = updatedAt;
         this._updatedByRef = updatedByRef;
         this._deletedAt = deletedAt;
         this._deletedByRef = deletedByRef;
-    };
+    }
 
     // * GETTERS
     get uuid(): string { return this._uuid; }
-    get fullName(): string { return this._fullName; }
-    get shortName(): string { return this._shortName; }
-    get weight(): number { return this._weight; }
+    get email(): string { return this._email; }
+    get userRef(): UserModel | string { return this._userRef; }
+    get isPrimary(): boolean { return this._isPrimary; }
+    get isVerified(): boolean { return this._isVerified; }
+    get isPublic(): boolean { return this._isPublic; }
     get addedAt(): Date { return this._addedAt; }
     get addedByRef(): UserModel | string { return this._addedByRef; }
     get updatedAt(): Date { return this._updatedAt; }
@@ -68,11 +77,13 @@ export default class AccountRoleModel implements Model {
     get deletedByRef(): UserModel | string | null { return this._deletedByRef; }
 
     // * UTILITIES
-    public copyWith<AccountRoleModel>({
+    public copyWith<UserEmailAddressModel>({
         uuid,
-        fullName,
-        shortName,
-        weight,
+        email,
+        userRef,
+        isPrimary,
+        isVerified,
+        isPublic,
         addedAt,
         addedByRef,
         updatedAt,
@@ -81,59 +92,63 @@ export default class AccountRoleModel implements Model {
         deletedByRef
     }: {
         uuid?: string,
-        fullName?: string,
-        shortName?: string,
-        weight?: number,
+        email?: string,
+        userRef?: UserModel | string,
+        isPrimary?: boolean,
+        isVerified?: boolean,
+        isPublic?: boolean,
         addedAt?: Date,
         addedByRef?: UserModel | string,
         updatedAt?: Date,
         updatedByRef?: UserModel | string,
         deletedAt?: Date | null,
         deletedByRef?: UserModel | string | null
-    }): AccountRoleModel {
-        return new AccountRoleModel({
+    }): UserEmailAddressModel {
+        return new UserEmailAddressModel({
             uuid: uuid ?? this.uuid,
-            fullName: fullName ?? this.fullName,
-            shortName: shortName ?? this.shortName,
-            weight: weight ?? this.weight,
+            email: email ?? this.email,
+            userRef: userRef ?? this.userRef,
+            isPrimary: isPrimary ?? this.isPrimary,
+            isVerified: isVerified ?? this.isVerified,
+            isPublic: isPublic ?? this.isPublic,
             addedAt: addedAt ?? this.addedAt,
             addedByRef: addedByRef ?? this.addedByRef,
             updatedAt: updatedAt ?? this.updatedAt,
             updatedByRef: updatedByRef ?? this.updatedByRef,
             deletedAt: deletedAt ?? this.deletedAt,
             deletedByRef: deletedByRef ?? this.deletedByRef
-        }) as AccountRoleModel;
+        }) as UserEmailAddressModel;
     }
 
-    public fromFirestore<AccountRoleModel>({ snapshot, options }: {
+    public fromFirestore<UserEmailAddressModel>({ snapshot, options }: {
         snapshot: DocumentSnapshot, options?: SnapshotOptions
-    }): AccountRoleModel {
-        const data = snapshot.data(options) as AccountRole;
+    }): UserEmailAddressModel {
+        const data = snapshot.data(options) as UserEmailAddress;
 
-        return new AccountRoleModel({
+        return new UserEmailAddressModel({
             uuid: data.uuid,
-            fullName: data.fullName,
-            shortName: data.shortName,
-            weight: data.weight,
-
-            // Metadata
+            email: data.email,
+            userRef: data.userRef,
+            isPrimary: data.isPrimary,
+            isVerified: data.isVerified,
+            isPublic: data.isPublic,
             addedAt: data.addedAt,
             addedByRef: data.addedByRef,
             updatedAt: data.updatedAt,
             updatedByRef: data.updatedByRef,
             deletedAt: data.deletedAt,
             deletedByRef: data.deletedByRef
-        }) as AccountRoleModel;
+        }) as UserEmailAddressModel;
     }
 
-    public toFirestore(): AccountRole {
+    public toFirestore(): UserEmailAddress {
         return {
             uuid: this.uuid,
-            fullName: this.fullName,
-            shortName: this.shortName,
-            weight: this.weight,
-
-            // Metadata
+            email: this.email,
+            userRef: this.userRef instanceof UserModel ? this.userRef.uuid : this.userRef,
+            isPrimary: this.isPrimary,
+            isVerified: this.isVerified,
+            isPublic: this.isPublic,
             addedAt: this.addedAt,
             addedByRef: this.addedByRef instanceof UserModel ? this.addedByRef.uuid : this.addedByRef,
             updatedAt: this.updatedAt,

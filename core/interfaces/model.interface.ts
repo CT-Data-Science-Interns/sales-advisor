@@ -1,14 +1,14 @@
-import firebase from "firebase/compat/app";
+import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 
 export interface Model {
     // toJSON(): string;
     // fromJSON<T>(json: string): T;
 
-    copyWith<T extends Model>(params: any): T;
+    copyWith<T>(params: any): T;
 
-    fromFirestore<T extends Model>({ snapshot, options }: {
-        snapshot: firebase.firestore.DocumentSnapshot, options: any
+    fromFirestore<T>({ snapshot, options }: {
+        snapshot: DocumentSnapshot, options?: SnapshotOptions
     }): T;
 
-    toFirestore(): { [key: string]: any };
+    toFirestore<T>(): T | { [key: string]: any };
 }

@@ -48,5 +48,6 @@
     "trpc",
     "webp",
     "WLDMGQ"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

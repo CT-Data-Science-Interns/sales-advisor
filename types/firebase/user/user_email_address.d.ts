@@ -6,7 +6,6 @@ export type UserEmailAddress = {
     email: string;
     userRef: string; // User['uuid']
     isPrimary: boolean;
-    isSecondary: boolean;
     isVerified: boolean;
     isPublic: boolean;
 

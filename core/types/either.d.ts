@@ -1,4 +1,4 @@
-// TODO: [p2] Refactor Either type and its utility functions to a class.
+// TODO: [p2] Refactor Either type and its utility functions into a class.
 
 export type Either<L, R> = { left: L } | { right: R };
 
