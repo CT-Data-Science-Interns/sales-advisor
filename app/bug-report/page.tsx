@@ -1,24 +1,36 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import StaticPageNavbar from "@/components/static-page-navbar";
 import StaticPageFooter from "@/components/static-page-footer";
 import FormModal from "@/components/form-modal";
-import FirebaseServicesContext from "@/contexts/firebase_services_context";
-import FirestoreService from "@/lib/firebase/firestore/firestore.service";
-import { Firestore } from "firebase/firestore";
+import firebaseConfig from "@/configs/firebase_config";
+import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
-const Page = () => {
+// eslint-disable-next-line @next/next/no-async-client-component
+const Page = async () => {
   const [rating, setRating] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const db: Firestore = useContext(FirebaseServicesContext)?.db as Firestore;
-  const firestoreService = FirestoreService.getInstance({ dbProvider: db });
-  console.log(firestoreService);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const someFunction = async () => {
+    const querySnapshot = await getDocs(collection(db, "test"));
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+    });
+  };
+
+  await someFunction();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // Submit rating to your backend or handle as needed
+
+    someFunction();
     console.log("Submitted rating:", rating);
     setRating(rating);
     setIsModalOpen(true);
@@ -105,5 +117,23 @@ const Page = () => {
     </div>
   );
 };
+
+// // This function gets called at build time on server-side.
+// // It won't be called on client-side, so you can even do
+// // direct database queries.
+// export async function getStaticProps() {
+//   // Call an external API endpoint to get posts.
+//   // You can use any data fetching library
+//   const res = await fetch("https://.../posts");
+//   const posts = await res.json();
+
+//   // By returning { props: { posts } }, the Blog component
+//   // will receive `posts` as a prop at build time
+//   return {
+//     props: {
+//       posts,
+//     },
+//   };
+// }
 
 export default Page;
