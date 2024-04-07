@@ -1,15 +1,12 @@
-import { CompanyWebsite } from "../company_website";
-import { User } from "./user/user";
-
 /**
  * Collection path: /companies/{company_uuid}/companyWebsitesMetadata/{uuid}
  */
 export type CompanyWebsiteMetadata = {
-    uuid: CompanyWebsite['uuid'];
+    uuid: string; // CompanyWebsite['uuid']
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

@@ -1,15 +1,15 @@
-import { User } from "./user/user";
-
 /**
  * Collection path: /businessModels/{uuid}
  */
 export type BusinessModel = {
-    uuid: BusinessModel['uuid'];
+    uuid: string; // BusinessModelMetadata['uuid']
     name: string;
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
+    updatedAt: Date;
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

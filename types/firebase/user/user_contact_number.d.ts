@@ -1,14 +1,11 @@
-import { ContactNumberTypes } from "@/constants/enums/contact_number_types";
-import { User } from "./user";
-
 /**
  * Collection path: usersContactNumbers/{uuid}
  */
 export type UserContactNumber = {
     uuid: string;
     phoneNumber: string;
-    userRef: User['uuid'];
-    type: ContactNumberTypes;
+    userRef: string; // User['uuid']
+    type: string; // From the ContactNumberTypes enum.
     isPrimary: boolean;
     isSecondary: boolean;
     isVerified: boolean;
@@ -16,9 +13,9 @@ export type UserContactNumber = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: User['uuid'];
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }
