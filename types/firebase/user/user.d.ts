@@ -1,9 +1,8 @@
-import { Sexes } from "@/constants/enums/sexes";
-import { AccountRole } from "../account_role";
-
-// Collection path: /users/{uuid}
+/**
+ * Collection path: /users/{uuid}
+ */
 export type User = {
-    uuid: string;
+    uuid: string; // Must be a valid uuid returned by firebase' auth service.
     username: string;
     name: {
         firstName: string;
@@ -11,16 +10,23 @@ export type User = {
         middleName: string | null;
         suffix: string | null;
     };
-    birthdate: Date;
-    sex: Sexes;
+    birthdate: Date | null;
+    sex: string | null; // From the Sexes enum.
+    accountRolesRefs: string[]; // AccountRole['uuid'][]
 
-    accountRolesRefs: AccountRole['uuid'][];
+    emailAddressesRefs: string[]; // UserEmailAddress['uuid'][]
+    contactNumbersRefs: string[] | null; // UserContactNumber['uuid'][] | null
+    socialMediasRefs: string[] | null; // UserSocialMedia['uuid'][] | null
+
+    managedUsersRefs: string[] | null; // User['uuid'][] | null;
+    managedByRefs: string[] | null; // User['uuid'][] | null;
+    delegationsRefs: string[] | null; // Delegation['uuid'][] | null;
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

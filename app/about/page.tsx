@@ -10,7 +10,7 @@ export default function Page() {
 
       <div style={{ background: "white " }}>
         <main className="flex min-h-screen flex-col p-6">
-          <div className="flex flex-col justify-center items-center bg-cover bg-center text-black p-10 text-center w-full h-screen">
+          <div className="flex h-screen w-full flex-col items-center justify-center bg-cover bg-center p-10 text-center text-black">
             <Image
               src="/Ai-Site-Logo.webp"
               width={600}
@@ -62,9 +62,9 @@ export default function Page() {
           </div>
 
           <section className="bg-white dark:bg-gray-900">
-            <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-              <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
-                <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+            <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
+              <div className="mx-auto mb-8 max-w-screen-sm text-center lg:mb-16">
+                <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
                   Our Goals are to:
                 </h2>
                 {/* <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
@@ -72,7 +72,7 @@ export default function Page() {
             elements built with the utility classes from Tailwind
           </p> */}
               </div>
-              <div className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
+              <div className="mb-6 grid gap-8 md:grid-cols-2 lg:mb-16">
                 {/* Replace the details below with your team members */}
                 <AboutCard
                   name="Itinerary Maker"
@@ -135,10 +135,10 @@ export default function Page() {
             </div>
           </div>
 
-          <section className="bg-white dark:bg-gray-900 p-20">
-            <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+          <section className="bg-white p-20 dark:bg-gray-900">
+            <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-16 lg:px-6">
               <div className="mx-auto max-w-screen-sm text-center">
-                <h2 className="mb-4 text-4xl tracking-tight font-extrabold leading-tight text-gray-900 dark:text-white">
+                <h2 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
                   Try Nidec AI Sales Assistant.
                 </h2>
                 <p className="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">
@@ -147,7 +147,7 @@ export default function Page() {
                 </p>
                 <a
                   href="/dashboard"
-                  className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                  className="mb-2 mr-2 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Get Started
                 </a>

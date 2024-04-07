@@ -1,5 +1,5 @@
 /**
- * Collection path: /account_roles/{uuid}
+ * Collection path: /accountRoles/{uuid}
  */
 export type AccountRole = {
     uuid: string;
@@ -9,9 +9,9 @@ export type AccountRole = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: string | null; // User['uuid'] | null
 };

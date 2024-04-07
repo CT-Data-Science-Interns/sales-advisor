@@ -17,10 +17,13 @@
   },
   "cSpell.words": [
     "apexcharts",
+    "appspot",
+    "choropleth",
     "classname",
     "datepicker",
     "Docstrings",
     "dribbble",
+    "firebaseapp",
     "Firestore",
     "Flowbite",
     "Glassmorphism",
@@ -37,9 +40,14 @@
     "Roboto",
     "Segoe",
     "Sidenav",
+    "sortablejs",
     "Supabase",
+    "svgmap",
     "tailwindcss",
     "topbar",
-    "trpc"
-  ]
+    "trpc",
+    "webp",
+    "WLDMGQ"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

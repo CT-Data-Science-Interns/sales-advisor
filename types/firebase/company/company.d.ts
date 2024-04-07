@@ -1,11 +1,3 @@
-import { BusinessModel } from "../business_model";
-import { Category } from "../category";
-import { CompanyContactNumber } from "../company_contact_number";
-import { CompanyEmailAddress } from "../company_email_address";
-import { CompanyFaxNumber } from "../company_fax_number";
-import { CompanyWebsite } from "../company_website";
-import { Subcategory } from "../subcategory";
-
 /**
  * Collection path: /companies/{uuid}
  */
@@ -14,27 +6,24 @@ export type Company = {
     name: string;
     description: string;
 
-    contactNumbers: CompanyContactNumber['uuid'][];
-    faxNumbers: CompanyFaxNumber['uuid'][];
-    websites: CompanyWebsite['uuid'][];
-    emailAddresses: CompanyEmailAddress['uuid'][];
+    companyAddressesRefs: string[]; // CompanyAddress['uuid'][]
+    contactNumbersRefs: string[] | null; // CompanyContactNumber['uuid'][] | null
+    faxNumbersRefs: string[] | null; // CompanyFaxNumber['uuid'][] | null
+    websitesRefs: string[] | null; // CompanyWebsite['uuid'][] | null
+    emailAddressesRefs: string[] | null; // CompanyEmailAddress['uuid'][] | null
 
-    businessModel: BusinessModel['uuid'][];
-    category: Category['uuid'][];
-    subcategory: Subcategory['uuid'][];
+    businessModelsRefs: string[]; // BusinessModel['uuid'][]
+    categoriesRefs: string[]; // Category['uuid'][]
+    subcategoriesRefs: string[]; // Subcategory['uuid'][]
 
-    employeesCount: {
-        [year: string]: number;
-    };
-    annualSales: {
-        [year: string]: number;
-    };
+    employeesCountsRefs: string[] | null; // EmployeeCount['uuid'][] | null
+    annualSalesRefs: string[] | null; // AnnualSale['uuid'][] | null
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

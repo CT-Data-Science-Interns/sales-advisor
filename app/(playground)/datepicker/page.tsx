@@ -27,6 +27,7 @@ const Page = () => {
       selected: "",
     },
   };
+
   return (
     <div className="mt-20 flex size-full flex-col items-center gap-5">
       <h1 className="text-2xl font-bold">Date Picker Demo</h1>

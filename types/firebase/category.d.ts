@@ -1,12 +1,15 @@
+/**
+ * Collection path: /categories/{uuid}
+ */
 export type Category = {
-    uuid: string;
+    uuid: string; // CategoryMetadata['uuid']
     name: string;
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: string;
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: string | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

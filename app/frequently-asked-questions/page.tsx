@@ -18,9 +18,9 @@ const Page = () => {
     <div>
       <StaticPageNavbar />
       <section className="bg-white dark:bg-gray-900">
-        <div className="max-w-screen-xl px-4 py-8 mx-auto sm:py-16 lg:px-6">
-          <div className="max-w-screen-md mx-auto text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-16 lg:px-6">
+          <div className="mx-auto mb-8 max-w-screen-md text-center lg:mb-16">
+            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
               What questions do you have in mind?
             </h2>
             <p className="mb-8 font-light text-gray-500 dark:text-gray-400 sm:text-xl">
@@ -30,14 +30,14 @@ const Page = () => {
             </p>
             <label
               htmlFor="email-adress-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
+              className="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300"
             >
               Your Email
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg
-                  className="w-6 h-6 text-gray-500 dark:text-gray-400"
+                  className="size-6 text-gray-500 dark:text-gray-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ const Page = () => {
               <input
                 type="text"
                 id="email-adress-icon"
-                className="block w-full p-4 pl-12 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-12 text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                 placeholder="Type keywords to find answers"
               />
             </div>
@@ -182,9 +182,9 @@ const Page = () => {
           </div>
         </div>
       </section>
-      <div className="bg-white min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8">
+      <div className="min-h-screen bg-white px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="mb-8 text-3xl font-bold text-gray-800">
             Frequently Asked Questions
           </h1>
           <div className="space-y-8">
@@ -194,12 +194,12 @@ const Page = () => {
                 {/* Question */}
                 <button
                   onClick={() => toggleAnswer(index)}
-                  className="flex justify-between items-center w-full px-4 py-2 text-left text-xl font-semibold text-gray-800 bg-gray-100 rounded-lg focus:outline-none"
+                  className="flex w-full items-center justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-xl font-semibold text-gray-800 focus:outline-none"
                 >
                   {faq.question}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`h-6 w-6 transition-transform ${isOpen[index] ? "transform rotate-180" : ""}`}
+                    className={`size-6 transition-transform ${isOpen[index] ? "rotate-180" : ""}`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
