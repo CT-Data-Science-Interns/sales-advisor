@@ -1,5 +1,4 @@
 import { Model } from "@/core/interfaces/model.interface";
-import UserModel from "../user.model";
 import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 import { AccountRoleMetadata } from "@/types/firebase/user/metadata/account_role_metadata";
 
@@ -9,9 +8,9 @@ export default class AccountRoleMetadataModel implements Model {
 
     // METADATA FIELDS
     private _addedAt: Date;
-    private _addedByRef: UserModel | string;
+    private _addedByRef: string;
     private _deletedAt: Date | null;
-    private _deletedByRef: UserModel | string | null;
+    private _deletedByRef: string | null;
 
     // * CONSTRUCTOR
     constructor({
@@ -23,9 +22,9 @@ export default class AccountRoleMetadataModel implements Model {
     }: {
         uuid: string,
         addedAt: Date,
-        addedByRef: UserModel | string,
+        addedByRef: string,
         deletedAt?: Date | null,
-        deletedByRef?: UserModel | string | null
+        deletedByRef?: string | null
     }) {
         this._uuid = uuid;
         this._addedAt = addedAt;
@@ -37,9 +36,9 @@ export default class AccountRoleMetadataModel implements Model {
     // * GETTERS
     get uuid(): string { return this._uuid; }
     get addedAt(): Date { return this._addedAt; }
-    get addedByRef(): UserModel | string { return this._addedByRef; }
+    get addedByRef(): string { return this._addedByRef; }
     get deletedAt(): Date | null { return this._deletedAt; }
-    get deletedByRef(): UserModel | string | null { return this._deletedByRef; }
+    get deletedByRef(): string | null { return this._deletedByRef; }
 
     // * UTILITIES
     public copyWith<AccountRoleMetadataModel>({
@@ -51,16 +50,16 @@ export default class AccountRoleMetadataModel implements Model {
     }: {
         uuid?: string,
         addedAt?: Date,
-        addedByRef?: UserModel | string,
+        addedByRef?: string,
         deletedAt?: Date | null,
-        deletedByRef?: UserModel | string | null
+        deletedByRef?: string | null
     }): AccountRoleMetadataModel {
         return new AccountRoleMetadataModel({
-            uuid: uuid || this.uuid,
-            addedAt: addedAt || this.addedAt,
-            addedByRef: addedByRef || this.addedByRef,
-            deletedAt: deletedAt || this.deletedAt,
-            deletedByRef: deletedByRef || this.deletedByRef
+            uuid: uuid ?? this.uuid,
+            addedAt: addedAt ?? this.addedAt,
+            addedByRef: addedByRef ?? this.addedByRef,
+            deletedAt: deletedAt ?? this.deletedAt,
+            deletedByRef: deletedByRef ?? this.deletedByRef
         }) as AccountRoleMetadataModel;
     }
 
@@ -82,9 +81,9 @@ export default class AccountRoleMetadataModel implements Model {
         return {
             uuid: this.uuid,
             addedAt: this.addedAt,
-            addedByRef: this.addedByRef instanceof UserModel ? this.addedByRef.uuid : this.addedByRef,
+            addedByRef: this.addedByRef,
             deletedAt: this.deletedAt,
-            deletedByRef: this.deletedByRef instanceof UserModel ? this.deletedByRef.uuid : this.deletedByRef
+            deletedByRef: this.deletedByRef
         };
     }
 }

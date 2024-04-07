@@ -1,6 +1,5 @@
 import { SupportedSocialMediaPlatforms } from "@/core/enums/supported_social_media_platforms.enum";
 import { Model } from "@/core/interfaces/model.interface";
-import UserModel from "./user.model";
 import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 import { UserSocialMedia } from "@/types/firebase/user/user_social_media";
 import Utilities from "@/lib/utils";
@@ -9,7 +8,7 @@ export default class UserSocialMediaModel implements Model {
     // * FIELDS
     private _uuid: string;
     private _profileURL: string;
-    private _userRef: UserModel | string;
+    private _userRef: string;
     private _platform: SupportedSocialMediaPlatforms;
     private _username: string;
     private _isVerified: boolean;
@@ -17,11 +16,11 @@ export default class UserSocialMediaModel implements Model {
 
     // METADATA FIELDS
     private _addedAt: Date;
-    private _addedByRef: UserModel | string;
+    private _addedByRef: string;
     private _updatedAt: Date;
-    private _updatedByRef: UserModel | string;
+    private _updatedByRef: string;
     private _deletedAt: Date | null;
-    private _deletedByRef: string | UserModel | null;
+    private _deletedByRef: string | null;
 
     // * CONSTRUCTOR
     constructor({
@@ -41,17 +40,17 @@ export default class UserSocialMediaModel implements Model {
     }: {
         uuid: string,
         profileURL: string,
-        userRef: UserModel | string,
+        userRef: string,
         platform: SupportedSocialMediaPlatforms,
         username: string,
         isVerified?: boolean,
         isPublic?: boolean,
         addedAt: Date,
-        addedByRef: UserModel | string,
+        addedByRef: string,
         updatedAt: Date,
-        updatedByRef: UserModel | string,
+        updatedByRef: string,
         deletedAt?: Date | null,
-        deletedByRef?: string | UserModel | null
+        deletedByRef?: string | null
     }) {
         this._uuid = uuid;
         this._profileURL = profileURL;
@@ -71,17 +70,17 @@ export default class UserSocialMediaModel implements Model {
     // * GETTERS
     get uuid(): string { return this._uuid; }
     get profileURL(): string { return this._profileURL; }
-    get userRef(): UserModel | string { return this._userRef; }
+    get userRef(): string { return this._userRef; }
     get platform(): SupportedSocialMediaPlatforms { return this._platform; }
     get username(): string { return this._username; }
     get isVerified(): boolean { return this._isVerified; }
     get isPublic(): boolean { return this._isPublic; }
     get addedAt(): Date { return this._addedAt; }
-    get addedByRef(): UserModel | string { return this._addedByRef; }
+    get addedByRef(): string { return this._addedByRef; }
     get updatedAt(): Date { return this._updatedAt; }
-    get updatedByRef(): UserModel | string { return this._updatedByRef; }
+    get updatedByRef(): string { return this._updatedByRef; }
     get deletedAt(): Date | null { return this._deletedAt; }
-    get deletedByRef(): string | UserModel | null { return this._deletedByRef; }
+    get deletedByRef(): string | null { return this._deletedByRef; }
 
     // * UTILITIES
     public copyWith<UserSocialMediaModel>({
@@ -101,17 +100,17 @@ export default class UserSocialMediaModel implements Model {
     }: {
         uuid?: string,
         profileURL?: string,
-        userRef?: UserModel | string,
+        userRef?: string,
         platform?: SupportedSocialMediaPlatforms,
         username?: string,
         isVerified?: boolean,
         isPublic?: boolean,
         addedAt?: Date,
-        addedByRef?: UserModel | string,
+        addedByRef?: string,
         updatedAt?: Date,
-        updatedByRef?: UserModel | string,
+        updatedByRef?: string,
         deletedAt?: Date | null,
-        deletedByRef?: string | UserModel | null
+        deletedByRef?: string | null
     }): UserSocialMediaModel {
         return new UserSocialMediaModel({
             uuid: uuid ?? this.uuid,
@@ -156,17 +155,17 @@ export default class UserSocialMediaModel implements Model {
         return {
             uuid: this.uuid,
             profileURL: this.profileURL,
-            userRef: this.userRef instanceof UserModel ? this.userRef.uuid : this.userRef,
+            userRef: this.userRef,
             platform: this.platform,
             username: this.username,
             isVerified: this.isVerified,
             isPublic: this.isPublic,
             addedAt: this.addedAt,
-            addedByRef: this.addedByRef instanceof UserModel ? this.addedByRef.uuid : this.addedByRef,
+            addedByRef: this.addedByRef,
             updatedAt: this.updatedAt,
-            updatedByRef: this.updatedByRef instanceof UserModel ? this.updatedByRef.uuid : this.updatedByRef,
+            updatedByRef: this.updatedByRef,
             deletedAt: this.deletedAt,
-            deletedByRef: this.deletedByRef instanceof UserModel ? this.deletedByRef.uuid : this.deletedByRef
+            deletedByRef: this.deletedByRef
         }
     }
 }

@@ -1,11 +1,10 @@
 /* eslint-disable no-use-before-define */
+
 import { Model } from "@/core/interfaces/model.interface";
-import AccountRoleModel from "../account_role.model";
 import { Sexes } from "@/core/enums/sexes.enum";
-import UserEmailAddressModel from "./user_email_address.model";
-import UserContactNumberModel from "./user_contact_number.model";
-import UserSocialMediaModel from "./user_social_media.model";
-import { DocumentSnapshot, DocumentData, SnapshotOptions } from "firebase/firestore";
+import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
+import { User } from "@/types/firebase/user/user";
+import Utilities from "@/lib/utils";
 
 export default class UserModel implements Model {
     // * FIELDS
@@ -18,37 +17,37 @@ export default class UserModel implements Model {
         suffix: string | null;
     };
 
-    private _birthdate: Date;
-    private _sex: Sexes;
-    private _accountRolesRefs: AccountRoleModel[] | string[];
+    private _birthdate: Date | null;
+    private _sex: Sexes | null;
+    private _accountRolesRefs: string[];
 
-    private _emailAddressesRefs: UserEmailAddressModel[] | string[];
-    private _contactNumbersRefs: UserContactNumberModel[] | string[] | null;
-    private _socialMediaRefs: UserSocialMediaModel[] | string[] | null;
+    private _emailAddressesRefs: string[];
+    private _contactNumbersRefs: string[] | null;
+    private _socialMediasRefs: string[] | null;
 
-    private _managedUsersRefs: UserModel[] | string[] | null;
-    private _managedByRefs: UserModel[] | string[] | null;
-    private _delegationsRefs: string[] | null; // TODO: [p1] Implement Delegation model.
+    private _managedUsersRefs: string[] | null;
+    private _managedByRefs: string[] | null;
+    private _delegationsRefs: string[] | null;
 
     // METADATA FIELDS
     private _addedAt: Date;
-    private _addedByRef: UserModel | string;
+    private _addedByRef: string;
     private _updatedAt: Date;
-    private _updatedByRef: UserModel | string;
+    private _updatedByRef: string;
     private _deletedAt: Date | null;
-    private _deletedByRef: UserModel | string | null;
+    private _deletedByRef: string | null;
 
     // * CONSTRUCTOR
     constructor({
         uuid,
         username,
         name,
-        birthdate,
-        sex,
+        birthdate = null,
+        sex = null,
         accountRolesRefs,
         emailAddressesRefs,
         contactNumbersRefs = null,
-        socialMediaRefs = null,
+        socialMediasRefs = null,
         managedUsersRefs = null,
         managedByRefs = null,
         delegationsRefs = null,
@@ -62,26 +61,26 @@ export default class UserModel implements Model {
         uuid: string,
         username: string,
         name: {
-            firstName: string,
-            lastName: string,
-            middleName: string | null,
-            suffix: string | null
+            firstName: string;
+            lastName: string;
+            middleName: string | null;
+            suffix: string | null;
         },
-        birthdate: Date,
-        sex: Sexes,
-        accountRolesRefs: AccountRoleModel[] | string[],
-        emailAddressesRefs: UserEmailAddressModel[] | string[],
-        contactNumbersRefs?: UserContactNumberModel[] | string[] | null,
-        socialMediaRefs?: UserSocialMediaModel[] | string[] | null,
-        managedUsersRefs?: UserModel[] | string[] | null,
-        managedByRefs?: UserModel[] | string[] | null,
+        birthdate?: Date | null,
+        sex?: Sexes | null,
+        accountRolesRefs: string[],
+        emailAddressesRefs: string[],
+        contactNumbersRefs?: string[] | null,
+        socialMediasRefs?: string[] | null,
+        managedUsersRefs?: string[] | null,
+        managedByRefs?: string[] | null,
         delegationsRefs?: string[] | null,
         addedAt: Date,
-        addedByRef: UserModel | string,
+        addedByRef: string,
         updatedAt: Date,
-        updatedByRef: UserModel | string,
+        updatedByRef: string,
         deletedAt?: Date | null,
-        deletedByRef?: string | UserModel | null
+        deletedByRef?: string | null
     }) {
         this._uuid = uuid;
         this._username = username;
@@ -91,7 +90,7 @@ export default class UserModel implements Model {
         this._accountRolesRefs = accountRolesRefs;
         this._emailAddressesRefs = emailAddressesRefs;
         this._contactNumbersRefs = contactNumbersRefs;
-        this._socialMediaRefs = socialMediaRefs;
+        this._socialMediasRefs = socialMediasRefs;
         this._managedUsersRefs = managedUsersRefs;
         this._managedByRefs = managedByRefs;
         this._delegationsRefs = delegationsRefs;
@@ -113,33 +112,158 @@ export default class UserModel implements Model {
         suffix: string | null;
     } { return this._name; }
 
-    get birthdate(): Date { return this._birthdate; }
-    get sex(): Sexes { return this._sex; }
-    get accountRolesRefs(): AccountRoleModel[] | string[] { return this._accountRolesRefs; }
-    get emailAddressesRefs(): UserEmailAddressModel[] | string[] { return this._emailAddressesRefs; }
-    get contactNumbersRefs(): UserContactNumberModel[] | string[] | null { return this._contactNumbersRefs; }
-    get socialMediaRefs(): UserSocialMediaModel[] | string[] | null { return this._socialMediaRefs; }
-    get managedUsersRefs(): UserModel[] | string[] | null { return this._managedUsersRefs; }
-    get managedByRefs(): UserModel[] | string[] | null { return this._managedByRefs; }
-    get delegationsRefs(): string[] | null { return this._delegationsRefs; }
+    get birthdate(): Date | null { return this._birthdate; }
+    get sex(): Sexes | null { return this._sex; }
+
+    get accountRolesRefs(): string[] {
+        return this._accountRolesRefs;
+    }
+
+    get emailAddressesRefs(): string[] {
+        return this._emailAddressesRefs;
+    }
+
+    get contactNumbersRefs(): string[] | null {
+        return this._contactNumbersRefs;
+    }
+
+    get socialMediasRefs(): string[] | null {
+        return this._socialMediasRefs;
+    }
+
+    get managedUsersRefs(): string[] | null {
+        return this._managedUsersRefs;
+    }
+
+    get managedByRefs(): string[] | null {
+        return this._managedByRefs;
+    }
+
+    get delegationsRefs(): string[] | null {
+        return this._delegationsRefs;
+    }
+
     get addedAt(): Date { return this._addedAt; }
-    get addedByRef(): UserModel | string { return this._addedByRef; }
+    get addedByRef(): string { return this._addedByRef; }
     get updatedAt(): Date { return this._updatedAt; }
-    get updatedByRef(): UserModel | string { return this._updatedByRef; }
-    get deletedAt(): Date | UserModel | null { return this._deletedAt; }
-    get deletedByRef(): string | UserModel | null { return this._deletedByRef; }
+    get updatedByRef(): string { return this._updatedByRef; }
+    get deletedAt(): Date | null { return this._deletedAt; }
+    get deletedByRef(): string | null { return this._deletedByRef; }
 
     // * UTILITIES
-    copyWith<T>(params: any): T {
-        throw new Error("Method not implemented.");
+    public copyWith<UserModel>({
+        uuid,
+        username,
+        name,
+        birthdate,
+        sex,
+        accountRolesRefs,
+        emailAddressesRefs,
+        contactNumbersRefs,
+        socialMediasRefs,
+        managedUsersRefs,
+        managedByRefs,
+        delegationsRefs,
+        addedAt,
+        addedByRef,
+        updatedAt,
+        updatedByRef,
+        deletedAt,
+        deletedByRef
+    }: {
+        uuid?: string,
+        username?: string,
+        name?: {
+            firstName: string;
+            lastName: string;
+            middleName: string | null;
+            suffix: string | null;
+        },
+        birthdate?: Date | null,
+        sex?: Sexes | null,
+        accountRolesRefs?: string[],
+        emailAddressesRefs?: string[],
+        contactNumbersRefs?: string[] | null,
+        socialMediasRefs?: string[] | null,
+        managedUsersRefs?: string[] | null,
+        managedByRefs?: string[] | null,
+        delegationsRefs?: string[] | null,
+        addedAt?: Date,
+        addedByRef?: string,
+        updatedAt?: Date,
+        updatedByRef?: string,
+        deletedAt?: Date | null,
+        deletedByRef?: string | null
+    }): UserModel {
+        return new UserModel({
+            uuid: uuid ?? this.uuid,
+            username: username ?? this.username,
+            name: name ?? this.name,
+            birthdate: birthdate ?? this.birthdate,
+            sex: sex ?? this.sex,
+            accountRolesRefs: accountRolesRefs ?? this.accountRolesRefs,
+            emailAddressesRefs: emailAddressesRefs ?? this.emailAddressesRefs,
+            contactNumbersRefs: contactNumbersRefs ?? this.contactNumbersRefs,
+            socialMediasRefs: socialMediasRefs ?? this.socialMediasRefs,
+            managedUsersRefs: managedUsersRefs ?? this.managedUsersRefs,
+            managedByRefs: managedByRefs ?? this.managedByRefs,
+            delegationsRefs: delegationsRefs ?? this.delegationsRefs,
+            addedAt: addedAt ?? this.addedAt,
+            addedByRef: addedByRef ?? this.addedByRef,
+            updatedAt: updatedAt ?? this.updatedAt,
+            updatedByRef: updatedByRef ?? this.updatedByRef,
+            deletedAt: deletedAt ?? this.deletedAt,
+            deletedByRef: deletedByRef ?? this.deletedByRef
+        }) as UserModel;
     }
 
-    fromFirestore<T>({ snapshot, options }: { snapshot: DocumentSnapshot<DocumentData, DocumentData>; options?: SnapshotOptions | undefined; }): T {
-        throw new Error("Method not implemented.");
+    public fromFirestore<UserModel>({ snapshot, options }: {
+        snapshot: DocumentSnapshot, options: SnapshotOptions
+    }): UserModel {
+        const data = snapshot.data(options) as User;
+
+        return new UserModel({
+            uuid: snapshot.id,
+            username: data.username,
+            name: data.name,
+            birthdate: data.birthdate,
+            sex: data.sex ? Utilities.stringToSexesEnum(data.sex) : null,
+            accountRolesRefs: data.accountRolesRefs,
+            emailAddressesRefs: data.emailAddressesRefs,
+            contactNumbersRefs: data.contactNumbersRefs,
+            socialMediasRefs: data.socialMediasRefs,
+            managedUsersRefs: data.managedUsersRefs,
+            managedByRefs: data.managedByRefs,
+            delegationsRefs: data.delegationsRefs,
+            addedAt: data.addedAt,
+            addedByRef: data.addedByRef,
+            updatedAt: data.updatedAt,
+            updatedByRef: data.updatedByRef,
+            deletedAt: data.deletedAt,
+            deletedByRef: data.deletedByRef
+        }) as UserModel;
     }
 
-    toFirestore<T>(): T | { [key: string]: any; } {
-        throw new Error("Method not implemented.");
+    public toFirestore(): User {
+        return {
+            uuid: this.uuid,
+            username: this.username,
+            name: this.name,
+            birthdate: this.birthdate,
+            sex: this.sex,
+            accountRolesRefs: this.accountRolesRefs,
+            emailAddressesRefs: this.emailAddressesRefs,
+            contactNumbersRefs: this.contactNumbersRefs,
+            socialMediasRefs: this.socialMediasRefs,
+            managedUsersRefs: this.managedUsersRefs,
+            managedByRefs: this.managedByRefs,
+            delegationsRefs: this.delegationsRefs,
+            addedAt: this.addedAt,
+            addedByRef: this.addedByRef,
+            updatedAt: this.updatedAt,
+            updatedByRef: this.updatedByRef,
+            deletedAt: this.deletedAt,
+            deletedByRef: this.deletedByRef
+        };
     }
-
 }
