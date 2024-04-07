@@ -1,13 +1,20 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useContext, useState } from "react";
 import StaticPageNavbar from "@/components/static-page-navbar";
 import StaticPageFooter from "@/components/static-page-footer";
 import FormModal from "@/components/form-modal";
+import FirebaseServicesContext from "@/contexts/firebase_services_context";
+import FirestoreService from "@/lib/firebase/firestore/firestore.service";
+import { Firestore } from "firebase/firestore";
 
 const Page = () => {
   const [rating, setRating] = useState(0);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const db: Firestore = useContext(FirebaseServicesContext)?.db as Firestore;
+  const firestoreService = FirestoreService.getInstance({ dbProvider: db });
+  console.log(firestoreService);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
