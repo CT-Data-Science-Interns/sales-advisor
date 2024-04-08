@@ -1,17 +1,44 @@
 "use client";
 
+import FirebaseServicesInitialization from "@/lib/firebase/firebase_services_initialization";
+import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Page = () => {
   const router = useRouter();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const auth = FirebaseServicesInitialization.auth as Auth;
+
+  const handleEmailOnChange = (e: Event) => {
+    setEmail((e.target as HTMLInputElement).value);
+  };
+
+  const handlePasswordOnChange = (e: Event) => {
+    setPassword((e.target as HTMLInputElement).value);
+  };
+
   const handleSignInClick = (e: Event) => {
     e.preventDefault();
-    console.log("Sign in button clicked!");
 
-    router.push("/dashboard");
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+
+        if (user) {
+          router.push("/dashboard-v2");
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
   };
 
   return (
@@ -49,6 +76,7 @@ const Page = () => {
                   id="email"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm"
                   placeholder="name@company.com"
+                  onChange={(e) => handleEmailOnChange(e as unknown as Event)}
                   required
                 />
               </div>
@@ -65,6 +93,9 @@ const Page = () => {
                   id="confirm-password"
                   placeholder="••••••••"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:text-sm"
+                  onChange={(e) =>
+                    handlePasswordOnChange(e as unknown as Event)
+                  }
                   required
                 />
               </div>

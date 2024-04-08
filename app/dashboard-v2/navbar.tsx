@@ -1,7 +1,7 @@
 "use client";
 
 import { useSidebarContext } from "@/contexts/sidebar-context";
-// import { useMediaQuery } from "@/hooks/use-media-query";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Avatar,
   DarkThemeToggle,
@@ -31,7 +31,6 @@ import {
   HiViewGrid,
   HiX,
 } from "react-icons/hi";
-import { useMediaQuery } from "../hooks/use-media-query";
 
 export function DashboardNavbar() {
   const sidebar = useSidebarContext();
