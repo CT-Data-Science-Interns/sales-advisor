@@ -76,12 +76,12 @@ export function DashboardNavbar() {
               <Image
                 className="mr-3 h-8"
                 alt=""
-                src="/images/logo.svg"
+                src="/logos/logo-1/favicon-32x32.png"
                 width={32}
                 height={32}
               />
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-                Flowbite
+                Nidec Force
               </span>
             </Navbar.Brand>
             <form className="hidden lg:block lg:pl-2">

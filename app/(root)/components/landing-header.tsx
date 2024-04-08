@@ -8,9 +8,9 @@ const LandingHeader = () => {
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
           <a href="https://flowbite.com" className="flex items-center">
             <Image
-              src="logos/logo-1.svg"
-              width={48}
-              height={48}
+              src="logos/logo-1/favicon-32x32.svg"
+              width={40}
+              height={40}
               alt="Flowbite Logo"
             />
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
