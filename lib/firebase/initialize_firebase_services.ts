@@ -28,4 +28,11 @@ const initializeFirebaseServices = (): {
     }
 }
 
+// TODO: [p1] Refactor the initialization of the Firebase services.
+// Temporary quick hack to expose the firebase services.
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app, "gs://sales-advisor-pwa-dev.appspot.com");
+
 export default initializeFirebaseServices;

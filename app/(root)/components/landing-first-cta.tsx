@@ -12,6 +12,19 @@ const LandingFirstCTA = () => {
           src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup-dark.svg"
           alt="dashboard image"
         />
+        {/* <Image
+          className="dark: hidden w-full"
+          src="landing-page/cta-dashboard-mockup.svg"
+          width={500}
+          alt="dashboard image"
+        />
+        <Image
+          className="hidden w-full dark:block"
+          src="landing-page/cta-dashboard-mockup-dark.svg"
+          width={500}
+          alt="dashboard image"
+        /> */}
+
         <div className="mt-4 md:mt-0">
           <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
             Let&apos;s create more tools and ideas that brings us together.

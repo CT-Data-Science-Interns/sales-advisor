@@ -1,23 +1,15 @@
-import { User } from "./user/user";
-
 /**
  * Collection path: /categories/{uuid}
  */
 export type Category = {
-    uuid: Category['uuid'];
+    uuid: string; // CategoryMetadata['uuid']
     name: string;
 
     // Metadata
     addedAt: Date;
-    addedByRef: string;
-    deletedAt: Date | null;
-    deletedByRef: string | null;
-
-    // Metadata
-    addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: User['uuid'];
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

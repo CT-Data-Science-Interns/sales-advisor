@@ -1,22 +1,19 @@
-import { User } from "./user";
-
 /**
  * Collection path: /usersEmailAddresses/{uuid}
  */
 export type UserEmailAddress = {
     uuid: string;
     email: string;
-    userRef: User['uuid'];
+    userRef: string; // User['uuid']
     isPrimary: boolean;
-    isSecondary: boolean;
     isVerified: boolean;
     isPublic: boolean;
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: User['uuid'];
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

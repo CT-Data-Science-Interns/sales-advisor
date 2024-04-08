@@ -1,5 +1,3 @@
-
-import { User } from "./user/user";
 /**
  * Collection path: /employeesCount/{uuid}
  */
@@ -11,9 +9,9 @@ export type EmployeeCount = {
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: User['uuid'];
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

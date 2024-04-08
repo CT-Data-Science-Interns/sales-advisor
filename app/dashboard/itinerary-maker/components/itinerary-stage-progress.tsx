@@ -23,7 +23,7 @@ const ItineraryStageItem = ({
       <div className="flex items-center">
         <div className="z-10 flex size-10 shrink-0 items-center justify-center rounded-full bg-blue-100 ring-0 ring-white dark:bg-blue-900 dark:ring-gray-900 sm:ring-8">
           <svg
-            className={`w-6 h-6  ${isCurrent ? "text-blue-800" : "text-blue-500"} ${isCurrent ? "dark:text-blue-200" : "dark:text-blue-400"}`}
+            className={`size-6  ${isCurrent ? "text-blue-800" : "text-blue-500"} ${isCurrent ? "dark:text-blue-200" : "dark:text-blue-400"}`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"

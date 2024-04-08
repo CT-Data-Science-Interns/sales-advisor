@@ -1,29 +1,22 @@
-import { AnnualSalesGroups } from "@/constants/enums/annual_sales_groups";
-import { BusinessModel } from "./business_model";
-import { Category } from "./category";
-import { Country } from "./country";
-import { State } from "./state";
-import { User } from "./user/user";
-
 /**
  * Collection path: /delegations/{uuid}
  */
 export type Delegation = {
     uuid: string;
-    delegatorRef: User['uuid'];
-    delegateeRef: User['uuid'];
-    countriesRefs: Country['uuid'][] | null;
-    statesRefs: State['uuid'][] | null;
-    businessModelsRefs: BusinessModel['uuid'][] | null;
-    annualSalesGroupsRefs: AnnualSalesGroups | null;
-    categoriesRefs: Category['uuid'][] | null;
-    subcategoriesRefs: Category['uuid'][] | null;
+    delegatorRef: string; // User['uuid']
+    delegateeRef: string; // User['uuid']
+    countriesRefs: string[] | null; // Country['uuid'][] | null
+    statesRefs: string[] | null; // State['uuid'][] | null
+    businessModelsRefs: string[] | null; // BusinessModel['uuid'][] | null
+    annualSalesGroupsRefs: string | null; // From the AnnualSalesGroups enum.
+    categoriesRefs: string[] | null; // Category['uuid'][] | null
+    subcategoriesRefs: string[] | null; // Subcategory['uuid'][] | null
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: User['uuid'];
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

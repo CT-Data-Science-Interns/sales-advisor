@@ -1,23 +1,20 @@
-import { SupportedSocialMediaPlatforms } from "@/constants/enums/supported_social_media_platforms";
-import { User } from "./user";
-
 /**
  * Collection path: /usersSocialMedias/{uuid}
  */
 export type UserSocialMedia = {
     uuid: string;
     profileURL: string;
-    userRef: User['uuid'];
-    platform: SupportedSocialMediaPlatforms;
+    userRef: string; // User['uuid']
+    platform: string; // From the SupportedSocialMediaPlatforms enum.
     username: string;
     isVerified: boolean;
     isPublic: boolean;
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: User['uuid'];
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 };

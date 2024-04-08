@@ -1,15 +1,12 @@
-import { AccountRole } from "../../account_role";
-import { User } from "./user/user";
-
 /**
- * Collection path: /users/{user_uuid}/userAccountRolesMetadata/{uuid}
+ * Collection path: /users/{user_uuid}/accountRolesMetadata/{uuid}
  */
-export type UserAccountRole = {
-    uuid: AccountRole['uuid'];
+export type AccountRoleMetadata = {
+    uuid: string; // AccountRole['uuid']
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

@@ -1,10 +1,3 @@
-import { Sexes } from "@/constants/enums/sexes";
-import { AccountRole } from "../account_role";
-import { UserEmailAddress } from "./user_email_address";
-import { UserContactNumber } from "./user_contact_number";
-import { UserSocialMedia } from "./user_social_media";
-import { Delegation } from "../delegations";
-
 /**
  * Collection path: /users/{uuid}
  */
@@ -17,23 +10,23 @@ export type User = {
         middleName: string | null;
         suffix: string | null;
     };
-    birthdate: Date;
-    sex: Sexes;
-    accountRolesRefs: AccountRole['uuid'][];
+    birthdate: Date | null;
+    sex: string | null; // From the Sexes enum.
+    accountRolesRefs: string[]; // AccountRole['uuid'][]
 
-    emailAddressesRefs: UserEmailAddress['uuid'][];
-    contactNumbersRefs: UserContactNumber['uuid'][];
-    socialMediasRefs: UserSocialMedia['uuid'][];
+    emailAddressesRefs: string[]; // UserEmailAddress['uuid'][]
+    contactNumbersRefs: string[] | null; // UserContactNumber['uuid'][] | null
+    socialMediasRefs: string[] | null; // UserSocialMedia['uuid'][] | null
 
-    managedUsersRefs: User['uuid'][] | null;
-    managedByRefs: User['uuid'][] | null;
-    delegationsRefs: Delegation['uuid'][] | null;
+    managedUsersRefs: string[] | null; // User['uuid'][] | null;
+    managedByRefs: string[] | null; // User['uuid'][] | null;
+    delegationsRefs: string[] | null; // Delegation['uuid'][] | null;
 
     // Metadata
     addedAt: Date;
-    addedByRef: User['uuid'];
+    addedByRef: string; // User['uuid']
     updatedAt: Date;
-    updatedByRef: User['uuid'];
+    updatedByRef: string; // User['uuid']
     deletedAt: Date | null;
-    deletedByRef: User['uuid'] | null;
+    deletedByRef: string | null; // User['uuid'] | null
 }

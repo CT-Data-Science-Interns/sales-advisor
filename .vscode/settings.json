@@ -18,6 +18,7 @@
   "cSpell.words": [
     "apexcharts",
     "appspot",
+    "choropleth",
     "classname",
     "datepicker",
     "Docstrings",
@@ -45,6 +46,8 @@
     "tailwindcss",
     "topbar",
     "trpc",
+    "webp",
     "WLDMGQ"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

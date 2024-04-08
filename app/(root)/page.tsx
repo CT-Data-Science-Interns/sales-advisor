@@ -119,7 +119,7 @@ const Page = () => {
                       </svg>
                     </button>
                     <span className="text-base font-medium text-gray-500 dark:text-gray-400">
-                      Android
+                      Android OS
                     </span>
                   </li>
                 </ul>
