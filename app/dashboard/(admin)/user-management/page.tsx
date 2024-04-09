@@ -21,7 +21,6 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 
-// eslint-disable-next-line @next/next/no-async-client-component
 const Page = () => {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -36,20 +35,17 @@ const Page = () => {
   const [modelOptions, setModelOptions] = useState<{ value: string; label: string }[]>([]);
   const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([]);
 
-  // Dropdown selected values
-  // eslint-disable-next-line no-unused-vars
+  // Selected salesperson values
   const [salespersonId, setSalesPersonId] = useState<string | null>(null);
-  // eslint-disable-next-line no-unused-vars
-  const [countryId, setCountryId] = useState<string | null>(null);
-  // eslint-disable-next-line no-unused-vars
-  const [stateId, setStateId] = useState<string | null>(null);
-  // eslint-disable-next-line no-unused-vars
-  const [businessModelId, setBusinessModelId] = useState<string | null>(null);
-  // eslint-disable-next-line no-unused-vars
-  const [businessCategoryId, setBusinessCategoryId] = useState<string | null>(null);
-
   const [delegationId, setDelegationId] = useState<string | null>(null);
 
+  // FormSelect delegation values
+  const [countryId, setCountryId] = useState<string | null>(null);
+  const [stateId, setStateId] = useState<string | null>(null);
+  const [businessModelId, setBusinessModelId] = useState<string | null>(null);
+  const [businessCategoryId, setBusinessCategoryId] = useState<string | null>(null);
+
+  // TODO: Move outside of this file for code reusability
   // Firebase functions
   const fetchUsers = async () => {
     const usersCol = collection(db, "users");
@@ -183,7 +179,6 @@ const Page = () => {
     const delegationSnapshot = await getDocs(
       query(delegationsCol, where("delegateeRef", "==", delegateeId))
     );
-    console.log(delegationSnapshot.docs.length);
     if (delegationSnapshot.docs.length > 0) {
       const delegationData = delegationSnapshot.docs[0].data();
       const delegation: Delegation = {
@@ -205,29 +200,30 @@ const Page = () => {
         deletedAt: delegationData.deletedAt,
         deletedByRef: delegationData.deletedByRef,
       };
-      console.log(delegation);
       return delegation;
     }
     return null;
   };
 
+  // FormSelect listeners
   const onSalesPersonChanged = (userId: string) => {
     setSalesPersonId(userId);
 
-    // TODO: get or create user delegation document
-
+    // Get delegations of the newly selected user
     fetchDelegation(userId)
       .then((data) => {
         if (data == null) return;
         setDelegationId(data.uuid);
-        console.log(data.uuid);
       })
       .catch((error) => {
         console.error("Error fetching delegations:", error);
+        setDelegationId(null);
       });
   };
   const onCountryChanged = (countryId: string) => {
     setCountryId(countryId);
+
+    // Get the states under this country and update options of the State FormSelect
     fetchStates(countryId)
       .then((data) => {
         setStateOptions(
@@ -242,6 +238,7 @@ const Page = () => {
       });
   };
 
+  // Form action buttons
   const clearForm = () => {
     // TODO: set selected form values to default values
     // setSelectedCountry("8OUR1y1QoSRO6dzpBKdv");
@@ -276,6 +273,7 @@ const Page = () => {
   };
 
   useEffect(() => {
+    // Fetch data from server and set the initial options of the FormSelects
     fetchUsers()
       .then((data) => {
         setUserOptions(
