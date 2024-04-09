@@ -16,6 +16,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "cSpell.words": [
+    "AEST",
     "apexcharts",
     "appspot",
     "choropleth",
@@ -23,6 +24,7 @@
     "datepicker",
     "Docstrings",
     "dribbble",
+    "España",
     "firebaseapp",
     "Firestore",
     "Flowbite",
@@ -36,6 +38,7 @@
     "nextjs",
     "Nidec",
     "Noto",
+    "Português",
     "rangepicker",
     "Roboto",
     "Segoe",
@@ -44,6 +47,8 @@
     "Supabase",
     "svgmap",
     "tailwindcss",
+    "themesberg",
+    "Themsberg",
     "topbar",
     "trpc",
     "webp",

@@ -220,7 +220,7 @@ function BottomMenu({ isCollapsed }: { isCollapsed: boolean }) {
       </button>
       <Tooltip content="Settings page">
         <Link
-          href="/users/settings"
+          href="/dashboard/settings"
           className="inline-flex cursor-pointer justify-center rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white"
         >
           <span className="sr-only">Settings page</span>
@@ -439,6 +439,11 @@ const pages: SidebarItem[] = [
     href: "/dashboard/progress-schedule",
     icon: HiViewGrid,
     label: "Progress Schedule",
+  },
+  {
+    href: "/dashboard/update-progress",
+    icon: HiViewGrid,
+    label: "Update Progress",
   },
   {
     icon: HiCube,
