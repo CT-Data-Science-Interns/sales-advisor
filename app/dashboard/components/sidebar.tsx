@@ -9,10 +9,11 @@ import { useEffect, useState } from "react";
 import {
   HiAdjustments,
   HiBriefcase,
-  HiChartPie,
+  HiClipboard,
   HiClipboardList,
   HiCog,
   HiCube,
+  HiHome,
   HiSearch,
   HiSupport,
   HiUser,
@@ -214,10 +215,16 @@ function BottomMenu({ isCollapsed }: { isCollapsed: boolean }) {
         isCollapsed && "flex-col"
       )}
     >
-      <button className="inline-flex cursor-pointer justify-center rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white">
-        <span className="sr-only">Tweaks</span>
-        <HiAdjustments className="size-6" />
-      </button>
+      <Tooltip content="Tweaks">
+        <Link
+          href="/work-in-progress"
+          className="inline-flex cursor-pointer justify-center rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white"
+        >
+          <span className="sr-only">Tweaks</span>
+          <HiAdjustments className="size-6" />
+        </Link>
+      </Tooltip>
+
       <Tooltip content="Settings page">
         <Link
           href="/dashboard/settings"
@@ -227,6 +234,7 @@ function BottomMenu({ isCollapsed }: { isCollapsed: boolean }) {
           <HiCog className="size-6" />
         </Link>
       </Tooltip>
+
       <div>
         <LanguageDropdown />
       </div>
@@ -424,7 +432,7 @@ function LanguageDropdown() {
 }
 
 const pages: SidebarItem[] = [
-  { href: "/dashboard", icon: HiChartPie, label: "Dashboard" },
+  { href: "/dashboard", icon: HiHome, label: "Home" },
   {
     href: "/dashboard/itinerary-builder",
     icon: HiBriefcase,
@@ -446,6 +454,27 @@ const pages: SidebarItem[] = [
     label: "Update Progress",
   },
   {
+    icon: HiClipboard,
+    label: "Progress Tracker",
+    items: [
+      {
+        href: "/dashboard/kanban-board",
+        icon: HiViewGrid,
+        label: "Kanban Board",
+      },
+      {
+        href: "/dashboard/progress-schedule",
+        icon: HiViewGrid,
+        label: "Progress Schedule",
+      },
+      {
+        href: "/dashboard/progress-tracker",
+        icon: HiViewGrid,
+        label: "Client List",
+      },
+    ],
+  },
+  {
     icon: HiCube,
     label: "Admin",
     items: [
@@ -454,6 +483,7 @@ const pages: SidebarItem[] = [
       { href: "/dashboard/user-management", label: "User Management" },
     ],
   },
+
   { href: "/dashboard/profile", icon: HiUser, label: "Profile" },
 ];
 
