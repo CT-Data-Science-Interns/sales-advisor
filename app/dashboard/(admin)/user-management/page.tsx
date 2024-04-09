@@ -5,10 +5,20 @@ import firebaseConfig from "@/configs/firebase_config";
 import { BusinessModel } from "@/types/firebase/business_model";
 import { Category } from "@/types/firebase/category";
 import { Country } from "@/types/firebase/country";
+import { Delegation } from "@/types/firebase/delegations";
 import { State } from "@/types/firebase/state";
 import { User } from "@/types/firebase/user/user";
 import { initializeApp } from "firebase/app";
-import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 
 // eslint-disable-next-line @next/next/no-async-client-component
@@ -28,15 +38,17 @@ const Page = () => {
 
   // Dropdown selected values
   // eslint-disable-next-line no-unused-vars
-  const [salesperson, setSalesPerson] = useState<string>();
+  const [salespersonId, setSalesPersonId] = useState<string | null>(null);
   // eslint-disable-next-line no-unused-vars
-  const [country, setCountry] = useState<string>();
+  const [countryId, setCountryId] = useState<string | null>(null);
   // eslint-disable-next-line no-unused-vars
-  const [state, setState] = useState<string>();
+  const [stateId, setStateId] = useState<string | null>(null);
   // eslint-disable-next-line no-unused-vars
-  const [businessModel, setBusinessModel] = useState<string>();
+  const [businessModelId, setBusinessModelId] = useState<string | null>(null);
   // eslint-disable-next-line no-unused-vars
-  const [businessCategory, setBusinessCategory] = useState<string>();
+  const [businessCategoryId, setBusinessCategoryId] = useState<string | null>(null);
+
+  const [delegationId, setDelegationId] = useState<string | null>(null);
 
   // Firebase functions
   const fetchUsers = async () => {
@@ -166,9 +178,56 @@ const Page = () => {
     });
     return categories;
   };
+  const fetchDelegation = async (delegateeId: string) => {
+    const delegationsCol = collection(db, "delegations");
+    const delegationSnapshot = await getDocs(
+      query(delegationsCol, where("delegateeRef", "==", delegateeId))
+    );
+    console.log(delegationSnapshot.docs.length);
+    if (delegationSnapshot.docs.length > 0) {
+      const delegationData = delegationSnapshot.docs[0].data();
+      const delegation: Delegation = {
+        uuid: delegationSnapshot.docs[0].id,
+        delegatorRef: delegationData.delegatorRef,
+        delegateeRef: delegationData.delegateeRef,
+        countriesRefs: delegationData.countriesRefs,
+        statesRefs: delegationData.statesRefs,
+        businessModelsRefs: delegationData.businessModelsRefs,
+        annualSalesGroupsRefs: delegationData.annualSalesGroupsRefs,
+        categoriesRefs: delegationData.categoriesRefs,
+        subcategoriesRefs: delegationData.subcategoriesRefs,
 
+        // Metadata
+        addedAt: delegationData.addedAt,
+        addedByRef: delegationData.addedByRef,
+        updatedAt: delegationData.updatedAt,
+        updatedByRef: delegationData.updatedByRef,
+        deletedAt: delegationData.deletedAt,
+        deletedByRef: delegationData.deletedByRef,
+      };
+      console.log(delegation);
+      return delegation;
+    }
+    return null;
+  };
+
+  const onSalesPersonChanged = (userId: string) => {
+    setSalesPersonId(userId);
+
+    // TODO: get or create user delegation document
+
+    fetchDelegation(userId)
+      .then((data) => {
+        if (data == null) return;
+        setDelegationId(data.uuid);
+        console.log(data.uuid);
+      })
+      .catch((error) => {
+        console.error("Error fetching delegations:", error);
+      });
+  };
   const onCountryChanged = (countryId: string) => {
-    setCountry(countryId);
+    setCountryId(countryId);
     fetchStates(countryId)
       .then((data) => {
         setStateOptions(
@@ -185,6 +244,35 @@ const Page = () => {
 
   const clearForm = () => {
     // TODO: set selected form values to default values
+    // setSelectedCountry("8OUR1y1QoSRO6dzpBKdv");
+  };
+  const applyForm = async () => {
+    if (salespersonId == null) return;
+
+    // Retrieve delegations from form-select values
+    const newDelegations = {
+      countriesRefs: [countryId],
+      statesRefs: [stateId],
+      businessModelsRefs: [businessModelId],
+      categoriesRefs: [businessCategoryId],
+    };
+
+    // Create delegation document if it doesn't exist, otherwise update it
+    if (delegationId == null) {
+      try {
+        const docRef = await addDoc(collection(db, "delegations"), newDelegations);
+        setDelegationId(docRef.id);
+      } catch (error) {
+        console.error("Error creating delegation:", error);
+      }
+    } else {
+      const delegationRef = doc(db, "delegations", delegationId);
+      try {
+        await updateDoc(delegationRef, newDelegations);
+      } catch (error) {
+        console.error("Error updating delegation:", error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -245,7 +333,11 @@ const Page = () => {
       <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">User Management</h1>
 
       <div className="mb-8 rounded-lg p-6 shadow">
-        <FormSelect title="Salesperson:" onSelectChange={setSalesPerson} options={userOptions} />
+        <FormSelect
+          title="Salesperson:"
+          onSelectChange={onSalesPersonChanged}
+          options={userOptions}
+        />
       </div>
 
       {/* Delegations dropdown */}
@@ -253,15 +345,15 @@ const Page = () => {
         <h5 className="mb-6 me-1 text-xl font-bold text-gray-900 dark:text-white">Delegations</h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2">
           <FormSelect title="Country:" onSelectChange={onCountryChanged} options={countryOptions} />
-          <FormSelect title="State:" onSelectChange={setState} options={stateOptions} />
+          <FormSelect title="State:" onSelectChange={setStateId} options={stateOptions} />
           <FormSelect
             title="Business Model:"
-            onSelectChange={setBusinessModel}
+            onSelectChange={setBusinessModelId}
             options={modelOptions}
           />
           <FormSelect
             title="Business Category:"
-            onSelectChange={setBusinessCategory}
+            onSelectChange={setBusinessCategoryId}
             options={categoryOptions}
           />
         </div>
@@ -276,6 +368,7 @@ const Page = () => {
           <button
             type="button"
             className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={applyForm}
           >
             Apply
           </button>
