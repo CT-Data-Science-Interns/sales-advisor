@@ -1,6 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter();
+
+  const handleGoBackClick = (e: Event) => {
+    e.preventDefault();
+    router.back();
+  };
+
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:py-16">
@@ -22,7 +33,7 @@ const Page = () => {
             <p className="mx-auto max-w-xl font-light text-gray-500 dark:text-gray-400 md:text-lg lg:mx-0 xl:mb-8 xl:text-xl">
               This Nidec Force Page is down for planned maintenance and
               improvements. We&apos;ll be back with the latest features and
-              products soon. Follow us on{" "}
+              updates soon. Follow us on{" "}
               <a
                 className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 href="https://github.com/Nidec-Control-Techniques-Dev/sales-advisor-pwa"
@@ -40,10 +51,19 @@ const Page = () => {
               </a>{" "}
               for latest updates.
             </p>
+            <p className="text-left text-sm font-light text-gray-500 dark:text-gray-300 sm:pt-4 sm:text-center md:pt-4 lg:text-left">
+              <Link
+                href="/sign-up"
+                className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                onClick={(e) => handleGoBackClick(e as unknown as Event)}
+              >
+                Gob back
+              </Link>
+            </p>
           </div>
           <div className="col-span-6 hidden lg:flex">
             <Image
-              src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/maintenance/maintenance.svg"
+              src="illustrations/maintenance.svg"
               alt="illustration"
               width={600}
               height={400}

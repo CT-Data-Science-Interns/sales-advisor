@@ -8,17 +8,14 @@ import type { ComponentProps, FC, HTMLAttributeAnchorTarget } from "react";
 import { useEffect, useState } from "react";
 import {
   HiAdjustments,
+  HiBriefcase,
   HiChartPie,
   HiClipboardList,
   HiCog,
-  HiCollection,
-  HiDocumentReport,
-  HiInboxIn,
-  HiLockClosed,
+  HiCube,
   HiSearch,
-  HiShoppingBag,
   HiSupport,
-  HiUsers,
+  HiUser,
   HiViewGrid,
 } from "react-icons/hi";
 import { twMerge } from "tailwind-merge";
@@ -428,48 +425,18 @@ function LanguageDropdown() {
 
 const pages: SidebarItem[] = [
   { href: "/", icon: HiChartPie, label: "Dashboard" },
-  { href: "/kanban", icon: HiViewGrid, label: "Kanban" },
-  { href: "/mailing/inbox", icon: HiInboxIn, label: "Inbox", badge: "3" },
+  { href: "/", icon: HiBriefcase, label: "Itinerary Builder" },
+  { href: "/kanban", icon: HiViewGrid, label: "Progress Tracker" },
   {
-    icon: HiShoppingBag,
-    label: "E-commerce",
+    icon: HiCube,
+    label: "Admin",
     items: [
-      { href: "/e-commerce/products", label: "Products" },
-      { href: "/e-commerce/billing", label: "Billing" },
-      { href: "/e-commerce/invoice", label: "Invoice" },
-    ],
-  },
-  {
-    icon: HiUsers,
-    label: "Users",
-    items: [
+      { href: "/", icon: HiChartPie, label: "Analytics" },
+      { href: "/users/feed", label: "Account Builder" },
       { href: "/users/list", label: "Users list" },
-      { href: "/users/profile", label: "Profile" },
-      { href: "/users/feed", label: "Feed" },
-      { href: "/users/settings", label: "Settings" },
     ],
   },
-  {
-    icon: HiDocumentReport,
-    label: "Pages",
-    items: [
-      { href: "/pages/pricing", label: "Pricing" },
-      { href: "/pages/maintenance", label: "Maintenance" },
-      { href: "/pages/404", label: "404 not found" },
-      { href: "/pages/500", label: "500 server error" },
-    ],
-  },
-  {
-    icon: HiLockClosed,
-    label: "Authentication",
-    items: [
-      { href: "/authentication/sign-in", label: "Sign in" },
-      { href: "/authentication/sign-up", label: "Sign up" },
-      { href: "/authentication/forgot-password", label: "Forgot password" },
-      { href: "/authentication/reset-password", label: "Reset password" },
-      { href: "/authentication/profile-lock", label: "Profile lock" },
-    ],
-  },
+  { href: "/users/profile", icon: HiUser, label: "Profile" },
 ];
 
 const externalPages: SidebarItem[] = [
@@ -478,12 +445,6 @@ const externalPages: SidebarItem[] = [
     target: "_blank",
     icon: HiClipboardList,
     label: "Docs",
-  },
-  {
-    href: "https://flowbite-react.com/",
-    target: "_blank",
-    icon: HiCollection,
-    label: "Components",
   },
   {
     href: "https://github.com/themesberg/flowbite-react/issues",

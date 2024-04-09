@@ -4,17 +4,15 @@ import React, { useState } from "react";
 import StaticPageNavbar from "@/components/static-page-navbar";
 import StaticPageFooter from "@/components/static-page-footer";
 import FormModal from "@/components/form-modal";
-import firebaseConfig from "@/configs/firebase_config";
-import { initializeApp } from "firebase/app";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { collection, Firestore, getDocs } from "firebase/firestore";
+import FirebaseServicesInitialization from "@/lib/firebase/firebase_services_initialization";
 
 // eslint-disable-next-line @next/next/no-async-client-component
 const Page = async () => {
   const [rating, setRating] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const db = FirebaseServicesInitialization.db as Firestore;
 
   const someFunction = async () => {
     const querySnapshot = await getDocs(collection(db, "test"));
