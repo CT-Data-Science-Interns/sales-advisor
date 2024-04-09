@@ -1,12 +1,34 @@
 "use client";
 
 import FormSelect from "@/components/form-select";
-import React, { useState } from "react";
+import firebaseConfig from "@/configs/firebase_config";
+import { BusinessModel } from "@/types/firebase/business_model";
+import { Category } from "@/types/firebase/category";
+import { Country } from "@/types/firebase/country";
+import { State } from "@/types/firebase/state";
+import { User } from "@/types/firebase/user/user";
+import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 
+// eslint-disable-next-line @next/next/no-async-client-component
 const Page = () => {
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // TODO: This value should be retrieved
+  const currentUser = "TEST"; // User['uuid'] (Retreive from logged in user)
+
+  // Dropdown options
+  const [userOptions, setUserOptions] = useState<{ value: string; label: string }[]>([]);
+  const [countryOptions, setCountryOptions] = useState<{ value: string; label: string }[]>([]);
+  const [stateOptions, setStateOptions] = useState<{ value: string; label: string }[]>([]);
+  const [modelOptions, setModelOptions] = useState<{ value: string; label: string }[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([]);
+
+  // Dropdown selected values
   // eslint-disable-next-line no-unused-vars
   const [salesperson, setSalesPerson] = useState<string>();
-
   // eslint-disable-next-line no-unused-vars
   const [country, setCountry] = useState<string>();
   // eslint-disable-next-line no-unused-vars
@@ -16,47 +38,238 @@ const Page = () => {
   // eslint-disable-next-line no-unused-vars
   const [businessCategory, setBusinessCategory] = useState<string>();
 
+  // Firebase functions
+  const fetchUsers = async () => {
+    const usersCol = collection(db, "users");
+    const userSnapshot = await getDocs(
+      query(usersCol, where("managedByRefs", "array-contains", currentUser))
+    );
+    const users: User[] = [];
+    userSnapshot.forEach((doc) => {
+      const userData = doc.data();
+      const user: User = {
+        uuid: doc.id,
+        name: {
+          firstName: userData.name.firstName,
+          lastName: userData.name.lastName,
+          middleName: userData.name.middleName,
+          suffix: userData.name.suffix,
+        },
+        username: "",
+        birthdate: null,
+        sex: null,
+        accountRolesRefs: userData.accountRolesRefs,
+        emailAddressesRefs: [],
+        contactNumbersRefs: null,
+        socialMediasRefs: null,
+        managedUsersRefs: userData.managedUsersRefs,
+        managedByRefs: userData.managedByRefs,
+        delegationsRefs: userData.delegationsRefs,
+        addedAt: userData.addedAt,
+        addedByRef: "",
+        updatedAt: userData.updatedAt,
+        updatedByRef: "",
+        deletedAt: null,
+        deletedByRef: null,
+      };
+      users.push(user);
+    });
+    return users;
+  };
+  const fetchCountries = async () => {
+    const countriesCol = collection(db, "countries");
+    const countrySnapshot = await getDocs(countriesCol);
+    const countries: Country[] = [];
+    countrySnapshot.forEach((doc) => {
+      const countryData = doc.data();
+      const country: Country = {
+        uuid: doc.id,
+        name: countryData.name,
+        code: countryData.code,
+
+        // Metadata
+        addedAt: countryData.addedAt,
+        addedByRef: countryData.addedByRef,
+        updatedAt: countryData.updatedAt,
+        updatedByRef: countryData.updatedByRef,
+        deletedAt: countryData.deletedAt,
+        deletedByRef: countryData.deletedByRef,
+      };
+      countries.push(country);
+    });
+    return countries;
+  };
+  const fetchStates = async (countryId: string) => {
+    const statesCol = collection(db, "states");
+    const stateSnapshot = await getDocs(query(statesCol, where("countryRef", "==", countryId)));
+    const states: State[] = [];
+    stateSnapshot.forEach((doc) => {
+      const stateData = doc.data();
+      const state: State = {
+        uuid: doc.id,
+        name: stateData.name,
+        countryRef: stateData.countryRef,
+
+        // Metadata
+        addedAt: stateData.addedAt,
+        addedByRef: stateData.addedByRef,
+        updatedAt: stateData.updatedAt,
+        updatedByRef: stateData.updatedByRef,
+        deletedAt: stateData.deletedAt,
+        deletedByRef: stateData.deletedByRef,
+      };
+      states.push(state);
+    });
+    return states;
+  };
+  const fetchBusinessModels = async () => {
+    const modelsCol = collection(db, "businessModels");
+    const modelSnapshot = await getDocs(modelsCol);
+    const models: BusinessModel[] = [];
+    modelSnapshot.forEach((doc) => {
+      const bmData = doc.data();
+      const model: BusinessModel = {
+        uuid: doc.id,
+        name: bmData.name,
+
+        // Metadata
+        addedAt: bmData.addedAt,
+        addedByRef: bmData.addedByRef,
+        updatedAt: bmData.updatedAt,
+        updatedByRef: bmData.updatedByRef,
+        deletedAt: bmData.deletedAt,
+        deletedByRef: bmData.deletedByRef,
+      };
+      models.push(model);
+    });
+    return models;
+  };
+  const fetchBusinessCategories = async () => {
+    const categoriesCol = collection(db, "categories");
+    const categorySnapshot = await getDocs(categoriesCol);
+    const categories: Category[] = [];
+    categorySnapshot.forEach((doc) => {
+      const categoryData = doc.data();
+      const category: Category = {
+        uuid: doc.id,
+        name: categoryData.name,
+
+        // Metadata
+        addedAt: categoryData.addedAt,
+        addedByRef: categoryData.addedByRef,
+        updatedAt: categoryData.updatedAt,
+        updatedByRef: categoryData.updatedByRef,
+        deletedAt: categoryData.deletedAt,
+        deletedByRef: categoryData.deletedByRef,
+      };
+      categories.push(category);
+    });
+    return categories;
+  };
+
+  const onCountryChanged = (countryId: string) => {
+    setCountry(countryId);
+    fetchStates(countryId)
+      .then((data) => {
+        setStateOptions(
+          data.map((model) => ({
+            value: model.uuid,
+            label: model.name,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching states:", error);
+      });
+  };
+
+  const clearForm = () => {
+    // TODO: set selected form values to default values
+  };
+
+  useEffect(() => {
+    fetchUsers()
+      .then((data) => {
+        setUserOptions(
+          data.map((user) => ({
+            value: user.uuid,
+            label: user.name.firstName + " " + user.name.lastName,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+    fetchCountries()
+      .then((data) => {
+        setCountryOptions(
+          data.map((model) => ({
+            value: model.uuid,
+            label: model.name,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching countries:", error);
+      });
+    fetchBusinessModels()
+      .then((data) => {
+        setModelOptions(
+          data.map((model) => ({
+            value: model.uuid,
+            label: model.name,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching business models:", error);
+      });
+    fetchBusinessCategories()
+      .then((data) => {
+        setCategoryOptions(
+          data.map((model) => ({
+            value: model.uuid,
+            label: model.name,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching business categories:", error);
+      });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
       <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">User Management</h1>
 
       <div className="mb-8 rounded-lg p-6 shadow">
-        <FormSelect
-          title="Salesperson:"
-          onSelectChange={setSalesPerson}
-          options={["Salesperson 1", "Salesperson 2", "Salesperson 3"]}
-        />
+        <FormSelect title="Salesperson:" onSelectChange={setSalesPerson} options={userOptions} />
       </div>
 
       {/* Delegations dropdown */}
       <div className="mb-8 rounded-lg p-6 shadow">
         <h5 className="mb-6 me-1 text-xl font-bold text-gray-900 dark:text-white">Delegations</h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2">
-          <FormSelect
-            title="Country:"
-            onSelectChange={setCountry}
-            options={["Country 1", "Country 2", "Country 3"]}
-          />
-          <FormSelect
-            title="State:"
-            onSelectChange={setState}
-            options={["State 1", "State 2", "State 3"]}
-          />
+          <FormSelect title="Country:" onSelectChange={onCountryChanged} options={countryOptions} />
+          <FormSelect title="State:" onSelectChange={setState} options={stateOptions} />
           <FormSelect
             title="Business Model:"
             onSelectChange={setBusinessModel}
-            options={["Business Model 1", "Business Model 2", "Business Model 3"]}
+            options={modelOptions}
           />
           <FormSelect
             title="Business Category:"
             onSelectChange={setBusinessCategory}
-            options={["Business Category 1", "Business Category 2", "Business Category 3"]}
+            options={categoryOptions}
           />
         </div>
         <div className="flex justify-end">
           <button
             type="button"
             className="me-4 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+            onClick={clearForm}
           >
             Reset
           </button>
