@@ -3,25 +3,43 @@ import FormSelect from "@/components/form-select";
 
 import React, { FormEvent, useState } from "react";
 import { ItineraryStage } from "./itinerary-stage-progress";
+import { DelegationObject } from "../lib/get-delegations";
+import { filterCompanies } from "../lib/filter-companies";
 
 const FilterCompaniesForm = ({
   currentPageHandler,
+  delegations,
 }: {
   currentPageHandler: CallableFunction;
+  delegations: DelegationObject | null;
 }) => {
-  const [state, setState] = useState<string[] | null>(null);
-  const [businessModel, setBusinessModel] = useState<string[] | null>(null);
-  const [category, setCategory] = useState<string[] | null>(null);
-  const [annualSalesRange, setAnnualSalesRange] = useState<string[] | null>(
+  const [states, setStates] = useState<string[] | null>(null);
+  const [businessModels, setBusinessModels] = useState<string[] | null>(null);
+  const [categories, setCategories] = useState<string[] | null>(null);
+  const [subcategories, setSubcategories] = useState<string[] | null>(null);
+  const [annualSalesRanges, setAnnualSalesRanges] = useState<string[] | null>(
     null
   );
 
   // Logging for now to remove linting errors
-  console.log(state, businessModel, category, annualSalesRange);
+  console.log(
+    states,
+    businessModels,
+    categories,
+    subcategories,
+    annualSalesRanges
+  );
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
     currentPageHandler(ItineraryStage.GENERATE_AND_SAVE);
+    filterCompanies(
+      states,
+      businessModels,
+      categories,
+      subcategories,
+      annualSalesRanges
+    );
   };
 
   return (
@@ -35,45 +53,71 @@ const FilterCompaniesForm = ({
             <div className="sm:col-span-2">
               <FormSelect
                 title="States"
-                onSelectChange={setState}
-                options={[
-                  "Pangasinan",
-                  "QC",
-                  "Manila",
-                  "Cebu",
-                  "Davao",
-                  "Cavite",
-                ]}
+                onSelectChange={setStates}
+                options={
+                  delegations?.delegatedStates.map((state) => {
+                    return {
+                      value: state.uuid,
+                      label: state.value,
+                    };
+                  }) || []
+                }
                 isMulti
               />
             </div>
             <div className="w-full">
               <FormSelect
                 title="Business Model"
-                onSelectChange={setBusinessModel}
-                options={["OEM", "ODM", "OBM", "CM"]}
+                onSelectChange={setBusinessModels}
+                options={
+                  delegations?.delegatedBusinessModels.map((businessModels) => {
+                    return {
+                      value: businessModels.uuid,
+                      label: businessModels.value,
+                    };
+                  }) || []
+                }
                 isMulti
               />
             </div>
             <div className="w-full">
               <FormSelect
                 title="Category"
-                onSelectChange={setCategory}
-                options={[
-                  "Agriculture",
-                  "Electronics",
-                  "Automotive",
-                  "Textile",
-                ]}
+                onSelectChange={setCategories}
+                options={
+                  delegations?.delegatedCategories.map((category) => {
+                    return {
+                      value: category.uuid,
+                      label: category.value,
+                    };
+                  }) || []
+                }
                 isMulti
               />
             </div>
             <div>
               <div className="w-full">
                 <FormSelect
+                  title="Subcategory"
+                  onSelectChange={setSubcategories}
+                  options={
+                    delegations?.delegatedSubcategories.map((subcategory) => {
+                      return {
+                        value: subcategory.uuid,
+                        label: subcategory.value,
+                      };
+                    }) || []
+                  }
+                  isMulti
+                />
+              </div>
+            </div>
+            <div>
+              <div className="w-full">
+                <FormSelect
                   title="Annual Sales Range"
-                  onSelectChange={setAnnualSalesRange}
-                  options={["< $1M", "$1M - $10M", "$10M - $100M", "> $100M"]}
+                  onSelectChange={setAnnualSalesRanges}
+                  options={delegations?.delegatedAnnualSalesRanges || []}
                   isMulti
                 />
               </div>
