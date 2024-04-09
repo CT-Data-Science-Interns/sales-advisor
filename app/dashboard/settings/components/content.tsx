@@ -19,7 +19,7 @@ import {
   HiOutlineDesktopComputer,
   HiOutlineDeviceMobile,
 } from "react-icons/hi";
-import type { UserSettingsPageData } from "./page";
+import type { UserSettingsPageData } from "../page";
 
 const UserSettingsPageContent: FC<UserSettingsPageData> = function ({
   languages,

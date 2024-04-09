@@ -4,7 +4,7 @@ import userProfile from "@/data/user/profile.json";
 import userSettings from "@/data/user/settings.json";
 import type { UserProfile } from "@/types/user/profile";
 import type { UserSettings } from "@/types/user/settings";
-import UserSettingsPageContent from "./content";
+import UserSettingsPageContent from "./components/content";
 
 export interface UserSettingsPageData {
   languages: string[];

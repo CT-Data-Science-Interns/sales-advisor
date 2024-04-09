@@ -1,9 +1,9 @@
 import { SidebarProvider } from "@/contexts/sidebar-context";
 import { sidebarCookie } from "@/lib/sidebar-cookie";
 import type { PropsWithChildren } from "react";
-import { LayoutContent } from "./layout-content";
-import { DashboardNavbar } from "./navbar";
-import { DashboardSidebar } from "./sidebar";
+import { LayoutContent } from "./components/layout-content";
+import { DashboardNavbar } from "./components/navbar";
+import { DashboardSidebar } from "./components/sidebar";
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
