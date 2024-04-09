@@ -414,7 +414,7 @@ function LanguageDropdown() {
                   xlinkHref="#a"
                 />
               </svg>
-              <span className="whitespace-nowrap">中文 (繁體)</span>
+              <span className="whitespace-nowrap">Marx</span>
             </div>
           </Link>
         </li>
@@ -424,30 +424,44 @@ function LanguageDropdown() {
 }
 
 const pages: SidebarItem[] = [
-  { href: "/", icon: HiChartPie, label: "Dashboard" },
-  { href: "/", icon: HiBriefcase, label: "Itinerary Builder" },
-  { href: "/kanban", icon: HiViewGrid, label: "Progress Tracker" },
+  { href: "/dashboard", icon: HiChartPie, label: "Dashboard" },
+  {
+    href: "/dashboard/itinerary-builder",
+    icon: HiBriefcase,
+    label: "Itinerary Builder",
+  },
+  {
+    href: "/dashboard/progress-tracker",
+    icon: HiViewGrid,
+    label: "Progress Tracker",
+  },
+  {
+    href: "/dashboard/progress-schedule",
+    icon: HiViewGrid,
+    label: "Progress Schedule",
+  },
   {
     icon: HiCube,
     label: "Admin",
     items: [
-      { href: "/", icon: HiChartPie, label: "Analytics" },
-      { href: "/users/feed", label: "Account Builder" },
-      { href: "/users/list", label: "Users list" },
+      { href: "/dashboard/analytics", label: "Analytics" },
+      { href: "/dashboard/delegation", label: "Delegation" },
+      { href: "/dashboard/user-management", label: "User Management" },
+      { href: "/dashboard/user-list", label: "User List" },
     ],
   },
-  { href: "/users/profile", icon: HiUser, label: "Profile" },
+  { href: "/dashboard/profile", icon: HiUser, label: "Profile" },
 ];
 
 const externalPages: SidebarItem[] = [
   {
-    href: "https://github.com/themesberg/flowbite-react/",
+    href: "https://github.com/Nidec-Control-Techniques-Dev/sales-advisor-pwa",
     target: "_blank",
     icon: HiClipboardList,
     label: "Docs",
   },
   {
-    href: "https://github.com/themesberg/flowbite-react/issues",
+    href: "https://github.com/Nidec-Control-Techniques-Dev/sales-advisor-pwa/discussions",
     target: "_blank",
     icon: HiSupport,
     label: "Help",

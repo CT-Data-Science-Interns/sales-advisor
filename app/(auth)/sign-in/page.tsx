@@ -31,7 +31,7 @@ const Page = () => {
         console.log(user);
 
         if (user) {
-          router.push("/dashboard-v2");
+          router.push("/dashboard");
         }
       })
       .catch((error) => {

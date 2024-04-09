@@ -1,16 +1,18 @@
-import React from "react";
-import DashboardNavbar from "./components/dashboard-navbar";
-// import DashboardSidenav from "./components/dashboard-sidenav";
+import { SidebarProvider } from "@/contexts/sidebar-context";
+import { sidebarCookie } from "@/lib/sidebar-cookie";
+import type { PropsWithChildren } from "react";
+import { LayoutContent } from "./layout-content";
+import { DashboardNavbar } from "./navbar";
+import { DashboardSidebar } from "./sidebar";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
-    <main>
+    <SidebarProvider initialCollapsed={sidebarCookie.get().isCollapsed}>
       <DashboardNavbar />
-      {/* <DashboardSidenav /> */}
-      {children}
-      {/* <SimpleDashboardFooter /> */}
-    </main>
+      <div className="mt-16 flex items-start">
+        <DashboardSidebar />
+        <LayoutContent>{children}</LayoutContent>
+      </div>
+    </SidebarProvider>
   );
-};
-
-export default Layout;
+}
