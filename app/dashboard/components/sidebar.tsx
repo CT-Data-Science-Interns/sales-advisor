@@ -452,7 +452,6 @@ const pages: SidebarItem[] = [
       { href: "/dashboard/analytics", label: "Analytics" },
       { href: "/dashboard/delegation", label: "Delegation" },
       { href: "/dashboard/user-management", label: "User Management" },
-      { href: "/dashboard/user-list", label: "User List" },
     ],
   },
   { href: "/dashboard/profile", icon: HiUser, label: "Profile" },
