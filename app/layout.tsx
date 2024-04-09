@@ -8,7 +8,7 @@ import App from "./(root)/app";
 // const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sales Advisor",
+  title: "Nidec Force",
   description: "Your AI companion for productivity and sales",
 };
 

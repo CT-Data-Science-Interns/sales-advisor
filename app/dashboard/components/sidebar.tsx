@@ -9,10 +9,11 @@ import { useEffect, useState } from "react";
 import {
   HiAdjustments,
   HiBriefcase,
-  HiChartPie,
+  HiClipboard,
   HiClipboardList,
   HiCog,
   HiCube,
+  HiHome,
   HiSearch,
   HiSupport,
   HiUser,
@@ -214,19 +215,26 @@ function BottomMenu({ isCollapsed }: { isCollapsed: boolean }) {
         isCollapsed && "flex-col"
       )}
     >
-      <button className="inline-flex cursor-pointer justify-center rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white">
-        <span className="sr-only">Tweaks</span>
-        <HiAdjustments className="size-6" />
-      </button>
+      <Tooltip content="Tweaks">
+        <Link
+          href="/work-in-progress"
+          className="inline-flex cursor-pointer justify-center rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white"
+        >
+          <span className="sr-only">Tweaks</span>
+          <HiAdjustments className="size-6" />
+        </Link>
+      </Tooltip>
+
       <Tooltip content="Settings page">
         <Link
-          href="/users/settings"
+          href="/dashboard/settings"
           className="inline-flex cursor-pointer justify-center rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white"
         >
           <span className="sr-only">Settings page</span>
           <HiCog className="size-6" />
         </Link>
       </Tooltip>
+
       <div>
         <LanguageDropdown />
       </div>
@@ -414,7 +422,7 @@ function LanguageDropdown() {
                   xlinkHref="#a"
                 />
               </svg>
-              <span className="whitespace-nowrap">中文 (繁體)</span>
+              <span className="whitespace-nowrap">Marx</span>
             </div>
           </Link>
         </li>
@@ -424,30 +432,70 @@ function LanguageDropdown() {
 }
 
 const pages: SidebarItem[] = [
-  { href: "/", icon: HiChartPie, label: "Dashboard" },
-  { href: "/", icon: HiBriefcase, label: "Itinerary Builder" },
-  { href: "/kanban", icon: HiViewGrid, label: "Progress Tracker" },
+  { href: "/dashboard", icon: HiHome, label: "Home" },
+  {
+    href: "/dashboard/itinerary-builder",
+    icon: HiBriefcase,
+    label: "Itinerary Builder",
+  },
+  {
+    href: "/dashboard/progress-tracker",
+    icon: HiViewGrid,
+    label: "Progress Tracker",
+  },
+  {
+    href: "/dashboard/progress-schedule",
+    icon: HiViewGrid,
+    label: "Progress Schedule",
+  },
+  {
+    href: "/dashboard/update-progress",
+    icon: HiViewGrid,
+    label: "Update Progress",
+  },
+  {
+    icon: HiClipboard,
+    label: "Progress Tracker",
+    items: [
+      {
+        href: "/dashboard/kanban-board",
+        icon: HiViewGrid,
+        label: "Kanban Board",
+      },
+      {
+        href: "/dashboard/progress-schedule",
+        icon: HiViewGrid,
+        label: "Progress Schedule",
+      },
+      {
+        href: "/dashboard/progress-tracker",
+        icon: HiViewGrid,
+        label: "Client List",
+      },
+    ],
+  },
   {
     icon: HiCube,
     label: "Admin",
     items: [
-      { href: "/", icon: HiChartPie, label: "Analytics" },
-      { href: "/users/feed", label: "Account Builder" },
-      { href: "/users/list", label: "Users list" },
+      { href: "/dashboard/analytics", label: "Analytics" },
+      { href: "/dashboard/delegation", label: "Delegation" },
+      { href: "/dashboard/user-management", label: "User Management" },
     ],
   },
-  { href: "/users/profile", icon: HiUser, label: "Profile" },
+
+  { href: "/dashboard/profile", icon: HiUser, label: "Profile" },
 ];
 
 const externalPages: SidebarItem[] = [
   {
-    href: "https://github.com/themesberg/flowbite-react/",
+    href: "https://github.com/Nidec-Control-Techniques-Dev/sales-advisor-pwa",
     target: "_blank",
     icon: HiClipboardList,
     label: "Docs",
   },
   {
-    href: "https://github.com/themesberg/flowbite-react/issues",
+    href: "https://github.com/Nidec-Control-Techniques-Dev/sales-advisor-pwa/discussions",
     target: "_blank",
     icon: HiSupport,
     label: "Help",
