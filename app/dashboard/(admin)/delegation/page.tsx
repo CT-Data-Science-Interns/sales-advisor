@@ -55,28 +55,30 @@ const Page = () => {
     const users: User[] = [];
     userSnapshot.forEach((doc) => {
       const userData = doc.data();
-      const user: User = {
-        uuid: doc.id,
-        name: userData.name,
-        username: userData.username,
-        birthdate: userData.birthdate,
-        sex: userData.sex,
-        accountRolesRefs: userData.accountRolesRefs,
-        emailAddressesRefs: userData.emailAddressesRefs,
-        contactNumbersRefs: userData.contactNumbersRefs,
-        socialMediasRefs: userData.socialMediasRefs,
-        managedUsersRefs: userData.managedUsersRefs,
-        managedByRefs: userData.managedByRefs,
-        delegationsRefs: userData.delegationsRefs,
-        addedAt: userData.addedAt,
-        addedByRef: userData.addedByRef,
-        updatedAt: userData.updatedAt,
-        updatedByRef: userData.updatedByRef,
-        deletedAt: userData.deletedAt,
-        deletedByRef: userData.deletedByRef,
-        itinerariesRefs: userData.itinerariesRefs,
-      };
-      users.push(user);
+      if (userData.username) {
+        const user: User = {
+          uuid: doc.id,
+          name: userData.name,
+          username: userData.username,
+          birthdate: userData.birthdate,
+          sex: userData.sex,
+          accountRolesRefs: userData.accountRolesRefs,
+          emailAddressesRefs: userData.emailAddressesRefs,
+          contactNumbersRefs: userData.contactNumbersRefs,
+          socialMediasRefs: userData.socialMediasRefs,
+          managedUsersRefs: userData.managedUsersRefs,
+          managedByRefs: userData.managedByRefs,
+          delegationsRefs: userData.delegationsRefs,
+          addedAt: userData.addedAt,
+          addedByRef: userData.addedByRef,
+          updatedAt: userData.updatedAt,
+          updatedByRef: userData.updatedByRef,
+          deletedAt: userData.deletedAt,
+          deletedByRef: userData.deletedByRef,
+          itinerariesRefs: userData.itinerariesRefs,
+        };
+        users.push(user);
+      }
     });
     return users;
   };
