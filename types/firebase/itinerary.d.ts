@@ -1,11 +1,21 @@
+/**
+ * Collection path: /itineraries/{uuid}
+ */
 export type Itinerary = {
     uuid: string;
     userRef: string; // User['uuid']
     companiesRefs: {
         companyRef: string; // Company['uuid']
-        schedule: Date;
-        status: string; // From the CompanyItineraryStatus enum.
+        schedule: {
+            start: Date,
+            end: Date,
+        };
+        status: "VISITED" | "NOT VISITED" | "STATUS"; // From the CompanyItineraryStatus enum.
     }[];
+
+    // group_id: string;
+    // startDate: Date;
+    // endDate: Date;
 
     // Metadata
     addedAt: Date;
