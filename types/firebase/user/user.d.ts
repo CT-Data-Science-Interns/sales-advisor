@@ -22,6 +22,8 @@ export type User = {
     managedByRefs: string[] | null; // User['uuid'][] | null;
     delegationsRefs: string[] | null; // Delegation['uuid'][] | null;
 
+    itinerariesRefs: string[] | null; // Itinerary['uuid'][] | null;
+
     // Metadata
     addedAt: Date;
     addedByRef: string; // User['uuid']
