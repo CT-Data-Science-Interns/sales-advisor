@@ -28,6 +28,7 @@ export default class UserModel implements Model {
     private _managedUsersRefs: string[] | null;
     private _managedByRefs: string[] | null;
     private _delegationsRefs: string[] | null;
+    private _itinerariesRefs: string[] | null;
 
     // METADATA FIELDS
     private _addedAt: Date;
@@ -51,6 +52,7 @@ export default class UserModel implements Model {
         managedUsersRefs = null,
         managedByRefs = null,
         delegationsRefs = null,
+        itinerariesRefs = null,
         addedAt,
         addedByRef,
         updatedAt,
@@ -75,6 +77,7 @@ export default class UserModel implements Model {
         managedUsersRefs?: string[] | null,
         managedByRefs?: string[] | null,
         delegationsRefs?: string[] | null,
+        itinerariesRefs?: string[] | null,
         addedAt: Date,
         addedByRef: string,
         updatedAt: Date,
@@ -94,6 +97,7 @@ export default class UserModel implements Model {
         this._managedUsersRefs = managedUsersRefs;
         this._managedByRefs = managedByRefs;
         this._delegationsRefs = delegationsRefs;
+        this._itinerariesRefs = itinerariesRefs;
         this._addedAt = addedAt;
         this._addedByRef = addedByRef;
         this._updatedAt = updatedAt;
@@ -143,6 +147,10 @@ export default class UserModel implements Model {
         return this._delegationsRefs;
     }
 
+    get itinerariesRefs(): string[] | null {
+        return this._itinerariesRefs;
+    }
+
     get addedAt(): Date { return this._addedAt; }
     get addedByRef(): string { return this._addedByRef; }
     get updatedAt(): Date { return this._updatedAt; }
@@ -164,6 +172,7 @@ export default class UserModel implements Model {
         managedUsersRefs,
         managedByRefs,
         delegationsRefs,
+        itinerariesRefs,
         addedAt,
         addedByRef,
         updatedAt,
@@ -188,6 +197,7 @@ export default class UserModel implements Model {
         managedUsersRefs?: string[] | null,
         managedByRefs?: string[] | null,
         delegationsRefs?: string[] | null,
+        itinerariesRefs?: string[] | null,
         addedAt?: Date,
         addedByRef?: string,
         updatedAt?: Date,
@@ -208,6 +218,7 @@ export default class UserModel implements Model {
             managedUsersRefs: managedUsersRefs ?? this.managedUsersRefs,
             managedByRefs: managedByRefs ?? this.managedByRefs,
             delegationsRefs: delegationsRefs ?? this.delegationsRefs,
+            itinerariesRefs: itinerariesRefs ?? this.itinerariesRefs,
             addedAt: addedAt ?? this.addedAt,
             addedByRef: addedByRef ?? this.addedByRef,
             updatedAt: updatedAt ?? this.updatedAt,
@@ -235,6 +246,7 @@ export default class UserModel implements Model {
             managedUsersRefs: data.managedUsersRefs,
             managedByRefs: data.managedByRefs,
             delegationsRefs: data.delegationsRefs,
+            itinerariesRefs: data.itinerariesRefs,
             addedAt: data.addedAt,
             addedByRef: data.addedByRef,
             updatedAt: data.updatedAt,
@@ -258,6 +270,7 @@ export default class UserModel implements Model {
             managedUsersRefs: this.managedUsersRefs,
             managedByRefs: this.managedByRefs,
             delegationsRefs: this.delegationsRefs,
+            itinerariesRefs: this.itinerariesRefs,
             addedAt: this.addedAt,
             addedByRef: this.addedByRef,
             updatedAt: this.updatedAt,
