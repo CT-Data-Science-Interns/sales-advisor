@@ -21,6 +21,7 @@
     "appspot",
     "choropleth",
     "classname",
+    "dataframe",
     "datepicker",
     "Docstrings",
     "dribbble",
@@ -40,11 +41,13 @@
     "Nidec",
     "Noto",
     "Português",
+    "Qawf",
     "rangepicker",
     "Roboto",
     "Segoe",
     "Sidenav",
     "sortablejs",
+    "streamlit",
     "Supabase",
     "svgmap",
     "tailwindcss",
@@ -52,8 +55,10 @@
     "Themsberg",
     "topbar",
     "trpc",
+    "uuidv",
     "webp",
-    "WLDMGQ"
+    "WLDMGQ",
+    "Xvtlj"
   ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }
