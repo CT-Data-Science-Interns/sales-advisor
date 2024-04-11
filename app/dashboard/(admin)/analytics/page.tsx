@@ -655,20 +655,30 @@ const Page = () => {
           <div id="pie-chart" ref={statusPieChartRef}></div>
           <div className="mt-4 grid grid-cols-4 gap-2">
             <div>
-              <div className="text-center text-sm">Total</div>
-              <div className="text-center text-3xl">{companyStatusData?.total}</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">Total</div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.total}
+              </div>
             </div>
             <div>
-              <div className="text-center text-sm">Visited</div>
-              <div className="text-center text-3xl">{companyStatusData?.visited}</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">Visited</div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.visited}
+              </div>
             </div>
             <div>
-              <div className="text-center text-sm">Not Visited</div>
-              <div className="text-center text-3xl">{companyStatusData?.notVisited}</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Not Visited
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.notVisited}
+              </div>
             </div>
             <div>
-              <div className="text-center text-sm">Ongoing</div>
-              <div className="text-center text-3xl">{companyStatusData?.ongoing}</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">Ongoing</div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.ongoing}
+              </div>
             </div>
           </div>
         </div>
@@ -678,16 +688,22 @@ const Page = () => {
           <div id="area-chart"></div>
           <div className="mt-4 grid grid-cols-3 gap-2">
             <div>
-              <div className="text-center text-sm">Ongoing Deals</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Ongoing Deals
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">0</div>
             </div>
             <div>
-              <div className="text-center text-sm">Successful Deals</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Successful Deals
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">0</div>
             </div>
             <div>
-              <div className="text-center text-sm">Failed Deals</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Failed Deals
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">0</div>
             </div>
           </div>
         </div>

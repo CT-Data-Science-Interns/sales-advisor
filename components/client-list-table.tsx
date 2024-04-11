@@ -14,8 +14,8 @@ export type ClientListData = {
 const ClientListTable = ({ data }: { data: ClientListData }) => {
   return (
     <div>
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-        <thead className="bg-white text-xs uppercase text-gray-700 dark:bg-gray-800 dark:text-gray-400">
+      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-300 rtl:text-right">
+        <thead className="bg-white text-xs uppercase text-gray-700 dark:bg-gray-800 dark:text-white">
           <tr>
             <th scope="col" className="px-6 py-3">
               Company
@@ -43,7 +43,7 @@ const ClientListTable = ({ data }: { data: ClientListData }) => {
               key={index}
               className="border-b odd:bg-gray-50 even:bg-white dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800"
             >
-              <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
+              <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-gray-300">
                 {client.company}
               </td>
               <td className="px-6 py-4">{client.businessModel}</td>
@@ -71,8 +71,8 @@ const ClientListTable = ({ data }: { data: ClientListData }) => {
         aria-label="Table navigation"
       >
         <span className="mb-4 block w-full text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 md:inline md:w-auto">
-          Showing <span className="font-semibold text-gray-900 dark:text-white">1-10</span> of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">1000</span>
+          Showing <span className="font-semibold text-gray-900 dark:text-gray-300">1-10</span> of{" "}
+          <span className="font-semibold text-gray-900 dark:text-gray-300">1000</span>
         </span>
         <ul className="inline-flex h-8 -space-x-px text-sm rtl:space-x-reverse">
           <li>
