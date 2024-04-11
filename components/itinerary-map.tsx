@@ -1,6 +1,7 @@
 /* global google */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { CompanyWithAddress } from "@/app/dashboard/itinerary-builder/lib/create-itinerary";
 
 import {
   APIProvider,
@@ -11,7 +12,13 @@ import {
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string;
 
-const ItineraryMap = () => (
+const ItineraryMap = ({
+  startLatLng,
+  nearestCompanies,
+}: {
+  startLatLng: { lat: number; lng: number };
+  nearestCompanies: CompanyWithAddress[];
+}) => (
   <APIProvider apiKey={API_KEY}>
     <Map
       defaultCenter={{ lat: 43.65, lng: -79.38 }}
@@ -19,18 +26,30 @@ const ItineraryMap = () => (
       gestureHandling={"greedy"}
       fullscreenControl={false}
     >
-      <Directions />
+      <Directions
+        startLatLng={startLatLng}
+        nearestCompanies={nearestCompanies}
+      />
     </Map>
   </APIProvider>
 );
 
-const Directions = () => {
+const Directions = ({
+  startLatLng,
+  nearestCompanies,
+}: {
+  startLatLng: { lat: number; lng: number };
+  nearestCompanies: CompanyWithAddress[];
+}) => {
+  console.log(startLatLng, nearestCompanies);
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService>();
   const [directionsRenderer, setDirectionsRenderer] =
     useState<google.maps.DirectionsRenderer>();
+  const [directionsMatrixService, setDirectionsMatrixService] =
+    useState<google.maps.DistanceMatrixService>();
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
   const [routeIndex, setRouteIndex] = useState(0);
   const selected = routes[routeIndex];
@@ -41,38 +60,49 @@ const Directions = () => {
     if (!routesLibrary || !map) return;
     setDirectionsService(new routesLibrary.DirectionsService());
     setDirectionsRenderer(new routesLibrary.DirectionsRenderer({ map }));
+    setDirectionsMatrixService(new routesLibrary.DistanceMatrixService());
   }, [routesLibrary, map]);
+
+  const request = useMemo(() => {
+    return {
+      origins: [new google.maps.LatLng(startLatLng.lat, startLatLng.lng)],
+      destinations: nearestCompanies.map((company) => {
+        return new google.maps.LatLng(company.latitude, company.longitude);
+      }),
+      travelMode: google.maps.TravelMode.DRIVING,
+    };
+  }, [startLatLng, nearestCompanies]);
 
   // Use directions service
   useEffect(() => {
-    if (!directionsService || !directionsRenderer) return;
+    if (
+      !directionsService ||
+      !directionsRenderer ||
+      !directionsMatrixService ||
+      nearestCompanies.length === 0
+    )
+      return;
+
+    directionsMatrixService.getDistanceMatrix(request).then((response) => {
+      console.log(response);
+    });
 
     directionsService
       .route({
-        origin: "Ateneo de Manila University",
-        destination: "SM North Edsa, Quezon City, Philippines",
-        waypoints: [
-          {
-            location: "UP Town Center, Quezon City, Philippines",
+        origin: new google.maps.LatLng(startLatLng.lat, startLatLng.lng),
+        destination: new google.maps.LatLng(
+          nearestCompanies[nearestCompanies.length - 1].latitude,
+          nearestCompanies[nearestCompanies.length - 1].longitude
+        ),
+        waypoints: nearestCompanies.slice(0, -1).map((company) => {
+          return {
+            location: new google.maps.LatLng(
+              company.latitude,
+              company.longitude
+            ),
             stopover: true,
-          },
-          {
-            location: "UP Diliman Quezon City, Philippines",
-            stopover: true,
-          },
-        ],
-        travelMode: google.maps.TravelMode.DRIVING,
-        provideRouteAlternatives: true,
-      })
-      .then((response) => {
-        directionsRenderer.setDirections(response);
-        setRoutes(response.routes);
-      });
-
-    directionsService
-      .route({
-        origin: "UP Diliman Quezon City, Philippines",
-        destination: "UP Town Center, Quezon City, Philippines",
+          };
+        }),
         travelMode: google.maps.TravelMode.DRIVING,
         provideRouteAlternatives: true,
       })
@@ -82,7 +112,14 @@ const Directions = () => {
       });
 
     return () => directionsRenderer.setMap(null);
-  }, [directionsService, directionsRenderer]);
+  }, [
+    directionsService,
+    directionsRenderer,
+    directionsMatrixService,
+    request,
+    nearestCompanies,
+    startLatLng,
+  ]);
 
   // Update direction route
   useEffect(() => {
