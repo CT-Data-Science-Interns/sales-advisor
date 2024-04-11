@@ -7,7 +7,16 @@ import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
 
 import "svgmap/dist/svgMap.min.css";
-import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "@/configs/firebase_config";
 import { User } from "@/types/firebase/user/user";
@@ -61,7 +70,11 @@ const Page = () => {
     });
     return users;
   };
-  const fetchItineraries = async (userRef: string | null = null) => {
+  const fetchItineraries = async (
+    userRef: string | null = null,
+    startDate: Date | null = null,
+    endDate: Date | null = null
+  ) => {
     const itinerariesRef = collection(db, "itineraries");
     const itinerariesSnapshot = userRef
       ? await getDocs(query(itinerariesRef, where("userRef", "==", userRef)))
@@ -73,7 +86,7 @@ const Page = () => {
       const itinerary: Itinerary = {
         uuid: doc.id,
         userRef: itineraryData.userRef,
-        companiesRefs: itineraryData.companiesRefs,
+        companiesRefs: [],
 
         // Metadata
         addedAt: itineraryData.addedAt,
@@ -83,9 +96,123 @@ const Page = () => {
         deletedAt: itineraryData.deletedAt,
         deletedByRef: itineraryData.deletedByRef,
       };
+
+      itineraryData.companiesRefs.forEach(
+        (companiesRef: {
+          companyRef: string;
+          schedule: {
+            start: Timestamp;
+            end: Timestamp;
+          };
+          status: "VISITED" | "NOT VISITED" | "ONGOING" | null;
+        }) => {
+          const itemStartDate = companiesRef.schedule.start.toDate();
+          if (
+            startDate === null ||
+            endDate === null ||
+            (itemStartDate >= startDate && itemStartDate <= endDate)
+          ) {
+            const companiesRefConverted: {
+              companyRef: string;
+              schedule: {
+                start: Date;
+                end: Date;
+              };
+              status: "VISITED" | "NOT VISITED" | "ONGOING" | null;
+            } = {
+              companyRef: companiesRef.companyRef,
+              schedule: {
+                start: companiesRef.schedule.start.toDate(),
+                end: companiesRef.schedule.end.toDate(),
+              },
+              status: companiesRef.status,
+            };
+            itinerary.companiesRefs.push(companiesRefConverted);
+          }
+        }
+        //   ({
+        //   companyRef: companiesRef.companyRef,
+        //   schedule: {
+        //     start: companiesRef.schedule.start.toDate(),
+        //     end: companiesRef.schedule.end.toDate(),
+        //   },
+        //   status: companiesRef.status,
+        // })
+      );
+
       itineraries.push(itinerary);
     });
     return itineraries;
+  };
+  const fetchClientListDataFromItineraries = async (itineraries: Itinerary[]) => {
+    // Get all company ids and status from the itineraries
+    const companyRefs: string[] = [];
+    const companyStatus: string[] = [];
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        if (
+          dealStatus === null || // No filter
+          dealStatus === "ALL" || // Select all
+          companiesRef.status === dealStatus || // Filter matches with company status
+          (dealStatus === "NOT VISITED" && companiesRef.status === null) // Not visited / Treat companies with null status as NOT VISITED
+        ) {
+          companyRefs.push(companiesRef.companyRef);
+          companyStatus.push(companiesRef.status ?? "NOT VISITED");
+        }
+      });
+    });
+
+    // Retrieve companies from the list of ids
+    const companiesSnapshot = await Promise.all(
+      companyRefs.map((ref) => getDoc(doc(db, "companies", ref)))
+    );
+    const companiesData = companiesSnapshot.map((doc) => doc.data());
+
+    // Create ClientListData object
+    const clientListData: ClientListData = { clients: [] };
+    companiesData.forEach((data, index) => {
+      if (data) {
+        clientListData.clients.push({
+          company: data.name,
+          businessModel: data.businessModel,
+          subcategory: data.subcategory,
+          address: data.address,
+          annualSales: data.annualSales,
+          visitStatus: companyStatus[index],
+        });
+      }
+    });
+    return clientListData;
+  };
+  const getCompanyStatusDataFromItineraries = (itineraries: Itinerary[]) => {
+    // Initialize counters
+    let visitedCount = 0;
+    let notVisitedCount = 0;
+    let onGoingCount = 0;
+
+    // Check all status from companiesRefs array
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        // Increment counter accordingly
+        if (companiesRef.status === "VISITED") {
+          visitedCount++;
+        } else if (companiesRef.status === "ONGOING") {
+          onGoingCount++;
+        } else {
+          notVisitedCount++;
+        }
+      });
+    });
+
+    // Create CompanyStatusData object
+    const data: CompanyStatusData = {
+      total: visitedCount + notVisitedCount + onGoingCount,
+      visited: visitedCount,
+      notVisited: notVisitedCount,
+      ongoing: onGoingCount,
+    };
+
+    return data;
   };
 
   // Dropdown options
@@ -137,29 +264,15 @@ const Page = () => {
   };
 
   // Datepicker states
+  const [dateType, setDateType] = useState<DateType>(DateType.All);
   const [showDatepickers, setShowDatePickers] = useState<boolean>(false);
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
 
   // Datepicker functions
-  const setDateType = (dateType: DateType) => {
-    setShowDatePickers(dateType === DateType.Custom);
-
-    // if (dateType === DateType.All) {
-    //   setStartDate(new Date(0));
-    //   setEndDate(new Date());
-    // } else if (dateType === DateType.Today) {
-    //   // eslint-disable-next-line prefer-const
-    //   let startToday = new Date();
-    //   startToday.setHours(0, 0, 0, 0);
-
-    //   // eslint-disable-next-line prefer-const
-    //   let endToday = startToday;
-    //   endToday.setHours(24);
-
-    //   setStartDate(startToday);
-    //   setEndDate(endDate);
-    // }
+  const onSelectedDateTypeChanged = (newDateType: DateType) => {
+    setDateType(newDateType);
+    setShowDatePickers(newDateType === DateType.Custom);
   };
   const onSelectedStartDateChanged = (date: Date) => {
     // Adjust end date if start date is greater
@@ -194,7 +307,33 @@ const Page = () => {
 
   const applyFilters = () => {
     const salesPersonIdFilter = salespersonId === "ALL" ? null : salespersonId;
-    fetchItineraries(salesPersonIdFilter).then((itineraries) => {
+
+    const newStartDate: Date = new Date();
+    const newEndDate: Date = new Date();
+
+    newStartDate.setHours(0, 0, 0, 0);
+    newEndDate.setHours(23, 59, 59, 999);
+
+    if (dateType === DateType.Custom) {
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      if (dateType === DateType.Last7Days) {
+        newStartDate.setDate(newStartDate.getDate() - 7);
+      } else if (dateType === DateType.Last30Days) {
+        newStartDate.setDate(newStartDate.getDate() - 30);
+      }
+      setStartDate(newStartDate);
+      setEndDate(newEndDate);
+    }
+
+    const fetchItinerariesParams =
+      dateType === DateType.All
+        ? [null, null]
+        : dateType === DateType.Custom
+          ? [startDate, endDate]
+          : [newStartDate, newEndDate];
+    fetchItineraries(salesPersonIdFilter, ...fetchItinerariesParams).then((itineraries) => {
       // Update company status data
       const newCompanyStatusData = getCompanyStatusDataFromItineraries(itineraries);
       setCompanyStatusData(newCompanyStatusData);
@@ -215,77 +354,6 @@ const Page = () => {
     //   successfulDealsCount,
     //   failedDealsCount,
     // ]);
-  };
-
-  const getCompanyStatusDataFromItineraries = (itineraries: Itinerary[]) => {
-    // Initialize counters
-    let visitedCount = 0;
-    let notVisitedCount = 0;
-    let onGoingCount = 0;
-
-    // Check all status from companiesRefs array
-    itineraries.forEach((itinerary) => {
-      itinerary.companiesRefs.forEach((companiesRef) => {
-        // Check if the map has a status field
-        if (companiesRef.status === "VISITED") {
-          visitedCount++;
-        } else if (companiesRef.status === "ONGOING") {
-          onGoingCount++;
-        } else {
-          notVisitedCount++;
-        }
-      });
-    });
-
-    // Create CompanyStatusData object
-    const data: CompanyStatusData = {
-      total: visitedCount + notVisitedCount + onGoingCount,
-      visited: visitedCount,
-      notVisited: notVisitedCount,
-      ongoing: onGoingCount,
-    };
-
-    return data;
-  };
-  const fetchClientListDataFromItineraries = async (itineraries: Itinerary[]) => {
-    // Get all company ids and status from the itineraries
-    const companyRefs: string[] = [];
-    const companyStatus: string[] = [];
-    itineraries.forEach((itinerary) => {
-      itinerary.companiesRefs.forEach((companiesRef) => {
-        if (
-          dealStatus === null || // No filter
-          dealStatus === "ALL" || // Select all
-          companiesRef.status === dealStatus || // Filter matches with company status
-          (dealStatus === "NOT VISITED" && companiesRef.status === null) // Not visited / Treat companies with null status as NOT VISITED
-        ) {
-          companyRefs.push(companiesRef.companyRef);
-          companyStatus.push(companiesRef.status ?? "NOT VISITED");
-        }
-      });
-    });
-
-    // Retrieve companies from the list of ids
-    const companiesSnapshot = await Promise.all(
-      companyRefs.map((ref) => getDoc(doc(db, "companies", ref)))
-    );
-    const companiesData = companiesSnapshot.map((doc) => doc.data());
-
-    // Create ClientListData object
-    const clientListData: ClientListData = { clients: [] };
-    companiesData.forEach((data, index) => {
-      if (data) {
-        clientListData.clients.push({
-          company: data.name,
-          businessModel: data.businessModel,
-          subcategory: data.subcategory,
-          address: data.address,
-          annualSales: data.annualSales,
-          visitStatus: companyStatus[index],
-        });
-      }
-    });
-    return clientListData;
   };
 
   useEffect(() => {
@@ -311,6 +379,7 @@ const Page = () => {
       // Fetch companies from itineraries to be displayed on client list
       fetchItineraries()
         .then((itineraries) => {
+          console.log(itineraries);
           const newCompanyStatusData = getCompanyStatusDataFromItineraries(itineraries);
           setCompanyStatusData(newCompanyStatusData);
 
@@ -535,7 +604,7 @@ const Page = () => {
             <FormSelect
               className="mb-2"
               title="Date:"
-              onSelectChange={setDateType}
+              onSelectChange={onSelectedDateTypeChanged}
               options={[
                 DateType.All,
                 DateType.Today,
