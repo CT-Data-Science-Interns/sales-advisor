@@ -1,3 +1,10 @@
+export type CompanyWithAddress = {
+  uuid: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+};
+
 const haversineDistance = (
   lat1: number,
   lng: number,
@@ -26,55 +33,31 @@ const haversineDistance = (
   return distance;
 };
 
-const findNearestLocations = async (
+export const findNearestLocations = async (
   startLat: number,
-  startLon: number,
-  allLocations: { latitude: number; longitude: number }[],
-  numResults: number = 2
-): Promise<{ latitude: number; longitude: number }[]> => {
-  const origin = { latitude: startLat, longitude: startLon };
+  startLng: number,
+  allLocations: CompanyWithAddress[],
+  numResults: number = 5
+): Promise<CompanyWithAddress[]> => {
   const distances: {
-    location: { latitude: number; longitude: number };
+    company: CompanyWithAddress;
     distance: number;
   }[] = [];
 
-  for (const location of allLocations) {
-    const destination = {
-      latitude: location.latitude,
-      longitude: location.longitude,
-    };
+  allLocations.forEach((company) => {
     const distance = haversineDistance(
-      origin.latitude,
-      origin.longitude,
-      destination.latitude,
-      destination.longitude
+      startLat,
+      startLng,
+      company.latitude,
+      company.longitude
     );
-    distances.push({ location, distance });
-  }
+    distances.push({ company, distance });
+  });
 
   distances.sort((a, b) => a.distance - b.distance);
   const nearestLocations = distances
     .slice(0, numResults)
-    .map((item) => item.location);
+    .map((item) => item.company);
 
   return nearestLocations;
-};
-
-export const example = async () => {
-  // Example usage
-  const startLatitude = 40.7128; // New York City
-  const startLongitude = -74.006;
-  const allLocations = [
-    { latitude: 34.0522, longitude: -118.2437 }, // Los Angeles
-    { latitude: 41.8781, longitude: -87.6298 }, // Chicago
-    { latitude: 29.7604, longitude: -95.3698 }, // Houston
-    { latitude: 33.749, longitude: -84.388 }, // Atlanta
-  ];
-  findNearestLocations(startLatitude, startLongitude, allLocations)
-    .then((nearestLocations) => {
-      console.log(nearestLocations);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
 };
