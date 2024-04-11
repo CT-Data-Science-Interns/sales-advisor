@@ -425,15 +425,6 @@ const Page = () => {
               position: "bottom",
               fontFamily: "Inter, sans-serif",
             },
-            yaxis: {
-              labels: {
-                formatter: function (value: string) {
-                  return (
-                    Math.round((parseInt(value) / companyStatusData.total) * 10000) / 100 + "%"
-                  );
-                },
-              },
-            },
           };
           const statusPieChart = new ApexCharts(
             document.getElementById("pie-chart"),
