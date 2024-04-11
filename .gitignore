@@ -37,3 +37,6 @@ next-env.d.ts
 
 # Python3 environment
 .venv/
+
+# Seeder raw data
+/seeder/raw_data/

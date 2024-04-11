@@ -6,11 +6,17 @@ import GenerateAndSave from "./components/generate-and-save";
 import ItineraryStageProgress, {
   ItineraryStage,
 } from "./components/itinerary-stage-progress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getDelegations, DelegationObject } from "./lib/get-delegations";
 
 const Page = () => {
   const [currentItineraryStage, setCurrentItineraryStage] =
     useState<ItineraryStage>(ItineraryStage.SET_LOCATION);
+  const [delegations, setDelegations] = useState<DelegationObject | null>(null);
+
+  useEffect(() => {
+    getDelegations("9nBLeN62Zo4s1Y74Phez").then((data) => setDelegations(data));
+  }, []);
 
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -23,7 +29,10 @@ const Page = () => {
           <StartingLocationForm currentPageHandler={setCurrentItineraryStage} />
         )}
         {currentItineraryStage === ItineraryStage.FILTER_COMPANIES && (
-          <FilterCompaniesForm currentPageHandler={setCurrentItineraryStage} />
+          <FilterCompaniesForm
+            currentPageHandler={setCurrentItineraryStage}
+            delegations={delegations}
+          />
         )}
         {currentItineraryStage === ItineraryStage.GENERATE_AND_SAVE && (
           <GenerateAndSave currentPageHandler={setCurrentItineraryStage} />
