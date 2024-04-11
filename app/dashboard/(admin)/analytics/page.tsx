@@ -16,6 +16,7 @@ type CompanyStatusData = {
   total: number;
   visited: number;
   notVisited: number;
+  ongoing: number;
 };
 
 const Page = () => {
@@ -65,6 +66,7 @@ const Page = () => {
     // Initialize counters
     let visitedCount = 0;
     let notVisitedCount = 0;
+    let onGoingCount = 0;
 
     // Query all documents from the collection
     itinerariesSnapshot.forEach((doc) => {
@@ -74,6 +76,8 @@ const Page = () => {
         // Check if the map has a status field
         if (scheduleItem.status && scheduleItem.status === "VISITED") {
           visitedCount++;
+        } else if (scheduleItem.status && scheduleItem.status === "ONGOING") {
+          onGoingCount++;
         } else {
           notVisitedCount++;
         }
@@ -81,9 +85,10 @@ const Page = () => {
     });
 
     const status: CompanyStatusData = {
-      total: visitedCount + notVisitedCount,
+      total: visitedCount + notVisitedCount + onGoingCount,
       visited: visitedCount,
       notVisited: notVisitedCount,
+      ongoing: onGoingCount,
     };
     return status;
   };
@@ -223,8 +228,7 @@ const Page = () => {
         setCompanyStatusData(data);
         // Pie chart
         const companyStatusChartOptions = {
-          series: [data.visited, data.notVisited],
-          colors: ["#1C64F2", "#16BDCA"],
+          series: [data.visited, data.notVisited, data.ongoing],
           chart: {
             height: 352,
             width: "100%",
@@ -245,7 +249,7 @@ const Page = () => {
               },
             },
           },
-          labels: ["Visited", "Not Visited"],
+          labels: ["Visited", "Not Visited", "Ongoing"],
           dataLabels: {
             enabled: true,
             style: {
@@ -259,10 +263,7 @@ const Page = () => {
           yaxis: {
             labels: {
               formatter: function (value: string) {
-                return (
-                  Math.round((parseInt(value) / (data.visited + data.notVisited)) * 10000) / 100 +
-                  "%"
-                );
+                return Math.round((parseInt(value) / data.total) * 10000) / 100 + "%";
               },
             },
           },
@@ -472,7 +473,7 @@ const Page = () => {
             Companies Status
           </h5>
           <div id="pie-chart" ref={statusPieChartRef}></div>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-4 gap-2">
             <div>
               <div className="text-center text-sm">Total</div>
               <div className="text-center text-3xl">{companyStatusData?.total}</div>
@@ -484,6 +485,10 @@ const Page = () => {
             <div>
               <div className="text-center text-sm">Not Visited</div>
               <div className="text-center text-3xl">{companyStatusData?.notVisited}</div>
+            </div>
+            <div>
+              <div className="text-center text-sm">Ongoing</div>
+              <div className="text-center text-3xl">{companyStatusData?.ongoing}</div>
             </div>
           </div>
         </div>

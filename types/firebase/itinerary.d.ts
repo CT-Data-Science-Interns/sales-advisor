@@ -10,7 +10,7 @@ export type Itinerary = {
       start: Date;
       end: Date;
     };
-    status: "VISITED" | "NOT VISITED" | "STATUS" | null; // From the CompanyItineraryStatus enum.
+    status: "VISITED" | "NOT VISITED" | "ONGOING" | null; // From the CompanyItineraryStatus enum.
   }[];
 
   // group_id: string;
