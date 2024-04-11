@@ -1,5 +1,4 @@
 import { Model } from "@/core/interfaces/model.interface";
-import UserModel from "./user.model";
 import { ContactNumberTypes } from "@/core/enums/contact_number_types.enum";
 import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 import { UserContactNumber } from "@/types/firebase/user/user_contact_number";
@@ -9,7 +8,7 @@ export default class UserContactNumberModel implements Model {
     // * FIELDS
     private _uuid: string;
     private _phoneNumber: string;
-    private _userRef: UserModel | string;
+    private _userRef: string;
     private _type: ContactNumberTypes;
     private _isPrimary: boolean;
     private _isVerified: boolean;
@@ -17,11 +16,11 @@ export default class UserContactNumberModel implements Model {
 
     // METADATA FIELDS
     private _addedAt: Date;
-    private _addedByRef: UserModel | string;
+    private _addedByRef: string;
     private _updatedAt: Date;
-    private _updatedByRef: UserModel | string;
+    private _updatedByRef: string;
     private _deletedAt: Date | null;
-    private _deletedByRef: UserModel | string | null;
+    private _deletedByRef: string | null;
 
     // * CONSTRUCTOR
     constructor({
@@ -41,17 +40,17 @@ export default class UserContactNumberModel implements Model {
     }: {
         uuid: string,
         phoneNumber: string,
-        userRef: UserModel | string,
+        userRef: string,
         type: ContactNumberTypes,
         isPrimary?: boolean,
         isVerified?: boolean,
         isPublic?: boolean,
         addedAt: Date,
-        addedByRef: UserModel | string,
+        addedByRef: string,
         updatedAt: Date,
-        updatedByRef: UserModel | string,
+        updatedByRef: string,
         deletedAt?: Date | null,
-        deletedByRef?: UserModel | string | null
+        deletedByRef?: string | null
     }) {
         this._uuid = uuid;
         this._phoneNumber = phoneNumber;
@@ -71,20 +70,20 @@ export default class UserContactNumberModel implements Model {
     // * GETTERS
     get uuid(): string { return this._uuid; }
     get phoneNumber(): string { return this._phoneNumber; }
-    get userRef(): UserModel | string { return this._userRef; }
+    get userRef(): string { return this._userRef; }
     get type(): ContactNumberTypes { return this._type; }
     get isPrimary(): boolean { return this._isPrimary; }
     get isVerified(): boolean { return this._isVerified; }
     get isPublic(): boolean { return this._isPublic; }
     get addedAt(): Date { return this._addedAt; }
-    get addedByRef(): UserModel | string { return this._addedByRef; }
+    get addedByRef(): string { return this._addedByRef; }
     get updatedAt(): Date { return this._updatedAt; }
-    get updatedByRef(): UserModel | string { return this._updatedByRef; }
+    get updatedByRef(): string { return this._updatedByRef; }
     get deletedAt(): Date | null { return this._deletedAt; }
-    get deletedByRef(): UserModel | string | null { return this._deletedByRef; }
+    get deletedByRef(): string | null { return this._deletedByRef; }
 
     // * UTILITIES
-    public copyWith<UserContactModel>({
+    public copyWith<UserContactNumberModel>({
         uuid,
         phoneNumber,
         userRef,
@@ -101,38 +100,38 @@ export default class UserContactNumberModel implements Model {
     }: {
         uuid?: string,
         phoneNumber?: string,
-        userRef?: UserModel | string,
+        userRef?: string,
         type?: ContactNumberTypes,
         isPrimary?: boolean,
         isVerified?: boolean,
         isPublic?: boolean,
         addedAt?: Date,
-        addedByRef?: UserModel | string,
+        addedByRef?: string,
         updatedAt?: Date,
-        updatedByRef?: UserModel | string,
+        updatedByRef?: string,
         deletedAt?: Date | null,
-        deletedByRef?: UserModel | string | null
-    }): UserContactModel {
+        deletedByRef?: string | null
+    }): UserContactNumberModel {
         return new UserContactNumberModel({
-            uuid: uuid || this.uuid,
-            phoneNumber: phoneNumber || this.phoneNumber,
-            userRef: userRef || this.userRef,
-            type: type || this.type,
-            isPrimary: isPrimary || this.isPrimary,
-            isVerified: isVerified || this.isVerified,
-            isPublic: isPublic || this.isPublic,
-            addedAt: addedAt || this.addedAt,
-            addedByRef: addedByRef || this.addedByRef,
-            updatedAt: updatedAt || this.updatedAt,
-            updatedByRef: updatedByRef || this.updatedByRef,
-            deletedAt: deletedAt || this.deletedAt,
-            deletedByRef: deletedByRef || this.deletedByRef
-        }) as UserContactModel;
+            uuid: uuid ?? this.uuid,
+            phoneNumber: phoneNumber ?? this.phoneNumber,
+            userRef: userRef ?? this.userRef,
+            type: type ?? this.type,
+            isPrimary: isPrimary ?? this.isPrimary,
+            isVerified: isVerified ?? this.isVerified,
+            isPublic: isPublic ?? this.isPublic,
+            addedAt: addedAt ?? this.addedAt,
+            addedByRef: addedByRef ?? this.addedByRef,
+            updatedAt: updatedAt ?? this.updatedAt,
+            updatedByRef: updatedByRef ?? this.updatedByRef,
+            deletedAt: deletedAt ?? this.deletedAt,
+            deletedByRef: deletedByRef ?? this.deletedByRef
+        }) as UserContactNumberModel;
     }
 
-    public fromFirestore<UserContactModel>({ snapshot, options }: {
+    public fromFirestore<UserContactNumberModel>({ snapshot, options }: {
         snapshot: DocumentSnapshot, options?: SnapshotOptions
-    }): UserContactModel {
+    }): UserContactNumberModel {
         const data = snapshot.data(options) as UserContactNumber;
 
         return new UserContactNumberModel({
@@ -149,24 +148,24 @@ export default class UserContactNumberModel implements Model {
             updatedByRef: data.updatedByRef,
             deletedAt: data.deletedAt,
             deletedByRef: data.deletedByRef
-        }) as UserContactModel;
+        }) as UserContactNumberModel;
     }
 
     public toFirestore(): UserContactNumber {
         return {
             uuid: this.uuid,
             phoneNumber: this.phoneNumber,
-            userRef: this.userRef instanceof UserModel ? this.userRef.uuid : this.userRef,
+            userRef: this.userRef,
             type: this.type,
             isPrimary: this.isPrimary,
             isVerified: this.isVerified,
             isPublic: this.isPublic,
             addedAt: this.addedAt,
-            addedByRef: this.addedByRef instanceof UserModel ? this.addedByRef.uuid : this.addedByRef,
+            addedByRef: this.addedByRef,
             updatedAt: this.updatedAt,
-            updatedByRef: this.updatedByRef instanceof UserModel ? this.updatedByRef.uuid : this.updatedByRef,
+            updatedByRef: this.updatedByRef,
             deletedAt: this.deletedAt,
-            deletedByRef: this.deletedByRef instanceof UserModel ? this.deletedByRef.uuid : this.deletedByRef
+            deletedByRef: this.deletedByRef
         };
     }
 }

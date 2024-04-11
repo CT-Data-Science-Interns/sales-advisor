@@ -1,6 +1,6 @@
 // TODO: [p2] Refactor Either type and its utility functions into a class.
 
-export type Either<L, R> = { left: L } | { right: R };
+type Either<L, R> = { left: L } | { right: R };
 
 export function resolve<L, R>(either: Either<L, R>): R | null {
     return "right" in either ? either.right : null;
@@ -38,3 +38,5 @@ export function fold<L, R, NL, NR>(
 ): NL | NR {
     return "left" in either ? leftFn(either.left) : rightFn(either.right);
 }
+
+export { Either };

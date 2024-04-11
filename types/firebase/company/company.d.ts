@@ -19,6 +19,8 @@ export type Company = {
     employeesCountsRefs: string[] | null; // EmployeeCount['uuid'][] | null
     annualSalesRefs: string[] | null; // AnnualSale['uuid'][] | null
 
+    status: "STAGING" | 'AVAILABLE' | 'UNAVAILABLE';
+
     // Metadata
     addedAt: Date;
     addedByRef: string; // User['uuid']

@@ -8,7 +8,8 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/flowbite/**/*.js",
     "./public/**/*.html",
-    "./node_modules/tailwind-datepicker-react/dist/**/*.js"
+    "./node_modules/tailwind-datepicker-react/dist/**/*.js",
+    "./node_modules/flowbite-react/lib/**/*.js"
   ],
   theme: {
     extend: {
@@ -56,7 +57,7 @@ const config: Config = {
   plugins: [
     require('flowbite/plugin')({
       charts: true,
-  }),
+    }),
   ],
 };
 export default config;

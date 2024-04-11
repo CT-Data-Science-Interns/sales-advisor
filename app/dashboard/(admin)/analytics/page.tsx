@@ -1,19 +1,101 @@
 "use client";
 
 import FormSelect from "@/components/form-select";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
 
 import "svgmap/dist/svgMap.min.css";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "@/configs/firebase_config";
+import { User } from "@/types/firebase/user/user";
+
+type CompanyStatusData = {
+  total: number;
+  visited: number;
+  notVisited: number;
+};
 
 const Page = () => {
+  // TODO: Move outside of this file for code reusability
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  // Firebase functions
+  const fetchUsers = async () => {
+    const usersCol = collection(db, "users");
+    const userSnapshot = await getDocs(usersCol);
+    const users: User[] = [];
+    userSnapshot.forEach((doc) => {
+      const userData = doc.data();
+      if (userData.username) {
+        const user: User = {
+          uuid: doc.id,
+          name: userData.name,
+          username: userData.username,
+          birthdate: userData.birthdate,
+          sex: userData.sex,
+          accountRolesRefs: userData.accountRolesRefs,
+          emailAddressesRefs: userData.emailAddressesRefs,
+          contactNumbersRefs: userData.contactNumbersRefs,
+          socialMediasRefs: userData.socialMediasRefs,
+          managedUsersRefs: userData.managedUsersRefs,
+          managedByRefs: userData.managedByRefs,
+          delegationsRefs: userData.delegationsRefs,
+          addedAt: userData.addedAt,
+          addedByRef: userData.addedByRef,
+          updatedAt: userData.updatedAt,
+          updatedByRef: userData.updatedByRef,
+          deletedAt: userData.deletedAt,
+          deletedByRef: userData.deletedByRef,
+          itinerariesRefs: userData.itinerariesRefs,
+        };
+        users.push(user);
+      }
+    });
+    return users;
+  };
+  const fetchCompaniesStatus = async (userRef: string | null = null) => {
+    const itinerariesRef = collection(db, "itineraries");
+    const itinerariesSnapshot = userRef
+      ? await getDocs(query(itinerariesRef, where("userRef", "==", userRef)))
+      : await getDocs(itinerariesRef);
+
+    // Initialize counters
+    let visitedCount = 0;
+    let notVisitedCount = 0;
+
+    // Query all documents from the collection
+    itinerariesSnapshot.forEach((doc) => {
+      const companiesRefs = doc.data().companiesRefs;
+
+      companiesRefs.forEach((scheduleItem: { status: string }) => {
+        // Check if the map has a status field
+        if (scheduleItem.status && scheduleItem.status === "VISITED") {
+          visitedCount++;
+        } else {
+          notVisitedCount++;
+        }
+      });
+    });
+
+    const status: CompanyStatusData = {
+      total: visitedCount + notVisitedCount,
+      visited: visitedCount,
+      notVisited: notVisitedCount,
+    };
+    return status;
+  };
+
+  // Dropdown options
+  const [userOptions, setUserOptions] = useState<{ value: string; label: string }[]>([]);
+
   // Dropdown filters value
   // eslint-disable-next-line no-unused-vars
-  const [salesperson, setSalesPerson] = useState<string>();
+  const [salespersonId, setSalesPersonId] = useState<string | null>(null);
   // eslint-disable-next-line no-unused-vars
-  const [dealStatus, setDealStatus] = useState<string>();
+  const [dealStatusId, setDealStatusId] = useState<string | null>(null);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(startDate);
 
@@ -96,8 +178,19 @@ const Page = () => {
     setEndDate(date);
   };
 
+  const statusPieChartRef = useRef<any>(null);
+  // let statusPieChart: any;
+  let areaChart: any;
+  let choroplethMap: null;
+  let clientInitialized = false;
+
   const applyFilters = () => {
-    // visitChart.updateSeries([visitedCount, notVisitedCount]);
+    const salesPersonIdFilter = salespersonId === "ALL" ? null : salespersonId;
+    fetchCompaniesStatus(salesPersonIdFilter).then((data) => {
+      setCompanyStatusData(data);
+      statusPieChartRef.current?.updateSeries([data.visited, data.notVisited]);
+    });
+
     // dealsChart.updateSeries([
     //   onGoingDealsCount,
     //   successfulDealsCount,
@@ -105,143 +198,7 @@ const Page = () => {
     // ]);
   };
 
-  const pieChartOptions = {
-    series: [52.8, 47.2],
-    colors: ["#1C64F2", "#16BDCA"],
-    chart: {
-      height: 352,
-      width: "100%",
-      type: "pie",
-    },
-    stroke: {
-      colors: ["white"],
-      lineCap: "",
-    },
-    plotOptions: {
-      pie: {
-        labels: {
-          show: true,
-        },
-        size: "100%",
-        dataLabels: {
-          offset: -25,
-        },
-      },
-    },
-    labels: ["Visited", "Not Visited"],
-    dataLabels: {
-      enabled: true,
-      style: {
-        fontFamily: "Inter, sans-serif",
-      },
-    },
-    legend: {
-      position: "bottom",
-      fontFamily: "Inter, sans-serif",
-    },
-    yaxis: {
-      labels: {
-        formatter: function (value: string) {
-          return value + "%";
-        },
-      },
-    },
-    xaxis: {
-      labels: {
-        formatter: function (value: string) {
-          return value + "%";
-        },
-      },
-      axisTicks: {
-        show: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-    },
-  };
-
-  const areaChartOptions = {
-    series: [
-      {
-        name: "Ongoing",
-        data: [1500, 1418, 1456, 1526, 1356, 1256],
-      },
-      {
-        name: "Successful",
-        data: [643, 413, 765, 412, 1423, 1731],
-      },
-      {
-        name: "Failed",
-        data: [43, 43, 65, 412, 423, 731],
-      },
-    ],
-    chart: {
-      height: 320,
-      width: "100%",
-      type: "area",
-      fontFamily: "Inter, sans-serif",
-      dropShadow: {
-        enabled: false,
-      },
-      toolbar: {
-        show: false,
-      },
-    },
-    tooltip: {
-      enabled: true,
-      x: {
-        show: false,
-      },
-    },
-    legend: {
-      show: true,
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        opacityFrom: 0.55,
-        opacityTo: 0,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      width: 6,
-    },
-    grid: {
-      show: false,
-    },
-    xaxis: {
-      categories: [
-        "01 February",
-        "02 February",
-        "03 February",
-        "04 February",
-        "05 February",
-        "06 February",
-        "07 February",
-      ],
-      labels: {
-        show: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-    },
-    yaxis: {
-      show: false,
-    },
-  };
-
-  let pieChart: any;
-  let areaChart: any;
-  let choroplethMap: null;
-  let clientInitialized = false;
+  const [companyStatusData, setCompanyStatusData] = useState<CompanyStatusData>();
 
   useEffect(() => {
     if (!clientInitialized) {
@@ -249,11 +206,154 @@ const Page = () => {
       const ApexCharts = require("apexcharts");
       const svgMap = require("svgmap");
 
-      // Pie chart
-      pieChart = new ApexCharts(document.getElementById("pie-chart"), pieChartOptions);
-      pieChart.render();
+      // Fetch data from server and set the initial display values
+      fetchUsers()
+        .then((data) => {
+          const newUserOptions = data.map((user) => ({
+            value: user.uuid,
+            label: user.name.firstName + " " + user.name.lastName,
+          }));
+          newUserOptions.unshift({ value: "ALL", label: "All" });
+          setUserOptions(newUserOptions);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+        });
+      fetchCompaniesStatus().then((data) => {
+        setCompanyStatusData(data);
+        // Pie chart
+        const companyStatusChartOptions = {
+          series: [data.visited, data.notVisited],
+          colors: ["#1C64F2", "#16BDCA"],
+          chart: {
+            height: 352,
+            width: "100%",
+            type: "pie",
+          },
+          stroke: {
+            colors: ["white"],
+            lineCap: "",
+          },
+          plotOptions: {
+            pie: {
+              labels: {
+                show: true,
+              },
+              size: "100%",
+              dataLabels: {
+                offset: -25,
+              },
+            },
+          },
+          labels: ["Visited", "Not Visited"],
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontFamily: "Inter, sans-serif",
+            },
+          },
+          legend: {
+            position: "bottom",
+            fontFamily: "Inter, sans-serif",
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value: string) {
+                return (
+                  Math.round((parseInt(value) / (data.visited + data.notVisited)) * 10000) / 100 +
+                  "%"
+                );
+              },
+            },
+          },
+        };
+        const statusPieChart = new ApexCharts(
+          document.getElementById("pie-chart"),
+          companyStatusChartOptions
+        );
+        statusPieChart.render();
+        statusPieChartRef.current = statusPieChart;
+      });
+
+      const areaChartOptions = {
+        series: [
+          {
+            name: "Ongoing",
+            data: [1500, 1418, 1456, 1526, 1356, 1256],
+          },
+          {
+            name: "Successful",
+            data: [643, 413, 765, 412, 1423, 1731],
+          },
+          {
+            name: "Failed",
+            data: [43, 43, 65, 412, 423, 731],
+          },
+        ],
+        chart: {
+          height: 320,
+          width: "100%",
+          type: "area",
+          fontFamily: "Inter, sans-serif",
+          dropShadow: {
+            enabled: false,
+          },
+          toolbar: {
+            show: false,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          x: {
+            show: false,
+          },
+        },
+        legend: {
+          show: true,
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            opacityFrom: 0.55,
+            opacityTo: 0,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: 6,
+        },
+        grid: {
+          show: false,
+        },
+        xaxis: {
+          categories: [
+            "01 February",
+            "02 February",
+            "03 February",
+            "04 February",
+            "05 February",
+            "06 February",
+            "07 February",
+          ],
+          labels: {
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
+          axisTicks: {
+            show: false,
+          },
+        },
+        yaxis: {
+          show: false,
+        },
+      };
 
       // Area chart
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       areaChart = new ApexCharts(document.getElementById("area-chart"), areaChartOptions);
       areaChart.render();
 
@@ -308,12 +408,12 @@ const Page = () => {
         <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <FormSelect
             title="Salesperson:"
-            onSelectChange={setSalesPerson}
-            options={["Salesperson 1", "Salesperson 2", "Salesperson 3"]}
+            onSelectChange={setSalesPersonId}
+            options={userOptions}
           />
           <FormSelect
             title="Deal Status:"
-            onSelectChange={setDealStatus}
+            onSelectChange={setDealStatusId}
             options={["All", "Ongoing", "Failed", "Successful"]}
           />
           {/* Dates */}
@@ -371,19 +471,19 @@ const Page = () => {
           <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
             Companies Status
           </h5>
-          <div id="pie-chart"></div>
+          <div id="pie-chart" ref={statusPieChartRef}></div>
           <div className="mt-4 grid grid-cols-3 gap-2">
             <div>
               <div className="text-center text-sm">Total</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-3xl">{companyStatusData?.total}</div>
             </div>
             <div>
               <div className="text-center text-sm">Visited</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-3xl">{companyStatusData?.visited}</div>
             </div>
             <div>
               <div className="text-center text-sm">Not Visited</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-3xl">{companyStatusData?.notVisited}</div>
             </div>
           </div>
         </div>

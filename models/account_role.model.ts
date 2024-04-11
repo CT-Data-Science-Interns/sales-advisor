@@ -2,7 +2,6 @@ import { AccountRole } from "@/types/firebase/account_role";
 import { Model } from "@/core/interfaces/model.interface";
 
 import { DocumentSnapshot, SnapshotOptions } from "firebase/firestore";
-import UserModel from "./user/user.model";
 
 export default class AccountRoleModel implements Model {
     // * FIELDS
@@ -13,11 +12,11 @@ export default class AccountRoleModel implements Model {
 
     // METADATA FIELDS
     private _addedAt: Date;
-    private _addedByRef: UserModel | string;
+    private _addedByRef: string;
     private _updatedAt: Date;
-    private _updatedByRef: UserModel | string;
+    private _updatedByRef: string;
     private _deletedAt: Date | null;
-    private _deletedByRef: UserModel | string | null;
+    private _deletedByRef: string | null;
 
     // * CONSTRUCTOR
     constructor({
@@ -37,11 +36,11 @@ export default class AccountRoleModel implements Model {
         shortName: string,
         weight: number,
         addedAt: Date,
-        addedByRef: UserModel | string,
+        addedByRef: string,
         updatedAt: Date,
-        updatedByRef: UserModel | string,
+        updatedByRef: string,
         deletedAt?: Date | null,
-        deletedByRef?: UserModel | string | null
+        deletedByRef?: string | null
     }) {
         this._uuid = uuid;
         this._fullName = fullName;
@@ -61,11 +60,11 @@ export default class AccountRoleModel implements Model {
     get shortName(): string { return this._shortName; }
     get weight(): number { return this._weight; }
     get addedAt(): Date { return this._addedAt; }
-    get addedByRef(): UserModel | string { return this._addedByRef; }
+    get addedByRef(): string { return this._addedByRef; }
     get updatedAt(): Date { return this._updatedAt; }
-    get updatedByRef(): UserModel | string { return this._updatedByRef; }
+    get updatedByRef(): string { return this._updatedByRef; }
     get deletedAt(): Date | null { return this._deletedAt; }
-    get deletedByRef(): UserModel | string | null { return this._deletedByRef; }
+    get deletedByRef(): string | null { return this._deletedByRef; }
 
     // * UTILITIES
     public copyWith<AccountRoleModel>({
@@ -85,11 +84,11 @@ export default class AccountRoleModel implements Model {
         shortName?: string,
         weight?: number,
         addedAt?: Date,
-        addedByRef?: UserModel | string,
+        addedByRef?: string,
         updatedAt?: Date,
-        updatedByRef?: UserModel | string,
+        updatedByRef?: string,
         deletedAt?: Date | null,
-        deletedByRef?: UserModel | string | null
+        deletedByRef?: string | null
     }): AccountRoleModel {
         return new AccountRoleModel({
             uuid: uuid ?? this.uuid,
@@ -115,8 +114,6 @@ export default class AccountRoleModel implements Model {
             fullName: data.fullName,
             shortName: data.shortName,
             weight: data.weight,
-
-            // Metadata
             addedAt: data.addedAt,
             addedByRef: data.addedByRef,
             updatedAt: data.updatedAt,
@@ -132,14 +129,12 @@ export default class AccountRoleModel implements Model {
             fullName: this.fullName,
             shortName: this.shortName,
             weight: this.weight,
-
-            // Metadata
             addedAt: this.addedAt,
-            addedByRef: this.addedByRef instanceof UserModel ? this.addedByRef.uuid : this.addedByRef,
+            addedByRef: this.addedByRef,
             updatedAt: this.updatedAt,
-            updatedByRef: this.updatedByRef instanceof UserModel ? this.updatedByRef.uuid : this.updatedByRef,
+            updatedByRef: this.updatedByRef,
             deletedAt: this.deletedAt,
-            deletedByRef: this.deletedByRef instanceof UserModel ? this.deletedByRef.uuid : this.deletedByRef
+            deletedByRef: this.deletedByRef
         };
     }
 }

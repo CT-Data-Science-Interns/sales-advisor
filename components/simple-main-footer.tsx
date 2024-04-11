@@ -152,12 +152,12 @@ const SimpleMainFooter = () => {
                   </linearGradient>
                 </defs>
               </svg>
-              Flowbite
+              Nidec Force
             </a>
             <p className="my-4 font-light text-gray-500 dark:text-gray-400">
-              Flowbite is a open-source library of over 400+ web components and
-              interactive elements built with the utility classNamees from
-              Tailwind CSS.
+              Nidec Force is a cutting-edge app leveraging AI to empower sales
+              professionals and supervisors in efficiently tracking and managing
+              deals with other companies.
             </p>
             <ul className="mt-5 flex space-x-6">
               <li>
@@ -259,7 +259,11 @@ const SimpleMainFooter = () => {
             </h2>
             <ul className="text-gray-500 dark:text-gray-400">
               <li className="mb-4">
-                <a href="#" className=" hover:underline">
+                <a
+                  href="https://acim.nidec.com/drives/control-techniques"
+                  className=" hover:underline"
+                  target="_blank"
+                >
                   About
                 </a>
               </li>
@@ -359,9 +363,9 @@ const SimpleMainFooter = () => {
         </div>
         <hr className="my-6 border-gray-200 dark:border-gray-700 sm:mx-auto lg:my-8" />
         <span className="block text-center text-sm text-gray-500 dark:text-gray-400">
-          © 2021-2022{" "}
+          © 2023-2024{" "}
           <a href="#" className="hover:underline">
-            Flowbite™
+            Nidec Force™
           </a>
           . All Rights Reserved.
         </span>

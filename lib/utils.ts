@@ -11,6 +11,42 @@ export default class Utilities {
     private constructor() { }
 
     // * UTILITIES
+    public static deepCopy<T>(obj: T, hash = new WeakMap()): T {
+        // Handle non-objects and null
+        if (typeof obj !== 'object' || obj === null) {
+            return obj;
+        }
+
+        // If object has already been processed, return it
+        if (hash.has(obj)) {
+            return hash.get(obj);
+        }
+
+        // Handle dates
+        if (obj instanceof Date) {
+            return new Date(obj) as T;
+        }
+
+        // Handle arrays
+        if (Array.isArray(obj)) {
+            const newArray = obj.map((item) => this.deepCopy(item, hash));
+            hash.set(obj, newArray);
+            return newArray as any; // Type assertion since TypeScript can't infer the type of newArray
+        }
+
+        // Handle objects
+        const newObj: any = {};
+        hash.set(obj, newObj);
+
+        for (const key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                newObj[key] = this.deepCopy(obj[key], hash);
+            }
+        }
+
+        return newObj;
+    }
+
     public static stringToContactNumberTypesEnum(value: string): ContactNumberTypes {
         switch (value) {
             case 'Mobile':
