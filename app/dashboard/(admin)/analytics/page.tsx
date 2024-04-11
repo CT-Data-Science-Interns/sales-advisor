@@ -22,13 +22,15 @@ type CompanyStatusData = {
 };
 
 const Page = () => {
+  // Firebase functions
   // TODO: Move outside of this file for code reusability
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  // Firebase functions
-  const fetchUsers = async () => {
+  const fetchUsers = async (accountRoleId: string | null = null) => {
     const usersCol = collection(db, "users");
-    const userSnapshot = await getDocs(usersCol);
+    const userSnapshot = accountRoleId
+      ? await getDocs(query(usersCol, where("accountRolesRefs", "array-contains", accountRoleId)))
+      : await getDocs(usersCol);
     const users: User[] = [];
     userSnapshot.forEach((doc) => {
       const userData = doc.data();
@@ -285,8 +287,8 @@ const Page = () => {
       const ApexCharts = require("apexcharts");
       const svgMap = require("svgmap");
 
-      // Fetch data from server and set the initial display values
-      fetchUsers()
+      // Fetch users which are salesperson and display on FormSelect options
+      fetchUsers("f83f0d9cb57849c78276")
         .then((data) => {
           const newUserOptions = data.map((user) => ({
             value: user.uuid,
@@ -298,6 +300,8 @@ const Page = () => {
         .catch((error) => {
           console.error("Error fetching users:", error);
         });
+
+      // Fetch companies from itineraries to be displayed on client list
       fetchItineraries()
         .then((itineraries) => {
           const newCompanyStatusData = getCompanyStatusDataFromItineraries(itineraries);
