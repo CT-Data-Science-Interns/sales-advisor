@@ -8,38 +8,32 @@ import { filterCompanies } from "../lib/filter-companies";
 
 const FilterCompaniesForm = ({
   currentPageHandler,
+  setFilteredCompanies,
   delegations,
 }: {
   currentPageHandler: CallableFunction;
+  setFilteredCompanies: CallableFunction;
   delegations: DelegationObject | null;
 }) => {
   const [states, setStates] = useState<string[] | null>(null);
   const [businessModels, setBusinessModels] = useState<string[] | null>(null);
   const [categories, setCategories] = useState<string[] | null>(null);
   const [subcategories, setSubcategories] = useState<string[] | null>(null);
-  const [annualSalesRanges, setAnnualSalesRanges] = useState<string[] | null>(
-    null
-  );
-
-  // Logging for now to remove linting errors
-  console.log(
-    states,
-    businessModels,
-    categories,
-    subcategories,
-    annualSalesRanges
-  );
+  // const [annualSalesRanges, setAnnualSalesRanges] = useState<string[] | null>(
+  //   null
+  // );
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
-    currentPageHandler(ItineraryStage.GENERATE_AND_SAVE);
-    filterCompanies(
+    const filteredCompanies = filterCompanies(
       states,
       businessModels,
       categories,
-      subcategories,
-      annualSalesRanges
+      subcategories
+      // annualSalesRanges
     );
+    filteredCompanies.then((data) => setFilteredCompanies(data));
+    currentPageHandler(ItineraryStage.GENERATE_AND_SAVE);
   };
 
   return (
@@ -112,7 +106,7 @@ const FilterCompaniesForm = ({
                 />
               </div>
             </div>
-            <div>
+            {/* <div>
               <div className="w-full">
                 <FormSelect
                   title="Annual Sales Range"
@@ -121,7 +115,7 @@ const FilterCompaniesForm = ({
                   isMulti
                 />
               </div>
-            </div>
+            </div> */}
           </div>
           <button
             type="submit"
