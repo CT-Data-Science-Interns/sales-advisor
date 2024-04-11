@@ -95,7 +95,7 @@ const Page = () => {
   // eslint-disable-next-line no-unused-vars
   const [salespersonId, setSalesPersonId] = useState<string | null>(null);
   // eslint-disable-next-line no-unused-vars
-  const [dealStatusId, setDealStatusId] = useState<string | null>(null);
+  const [dealStatus, setDealStatus] = useState<string | null>(null);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(startDate);
 
@@ -253,8 +253,15 @@ const Page = () => {
     const companyStatus: string[] = [];
     itineraries.forEach((itinerary) => {
       itinerary.companiesRefs.forEach((companiesRef) => {
-        companyRefs.push(companiesRef.companyRef);
-        companyStatus.push(companiesRef.status ?? "NOT VISITED");
+        if (
+          dealStatus === null || // No filter
+          dealStatus === "ALL" || // Select all
+          companiesRef.status === dealStatus || // Filter matches with company status
+          (dealStatus === "NOT VISITED" && companiesRef.status === null) // Not visited / Treat companies with null status as NOT VISITED
+        ) {
+          companyRefs.push(companiesRef.companyRef);
+          companyStatus.push(companiesRef.status ?? "NOT VISITED");
+        }
       });
     });
 
@@ -514,9 +521,14 @@ const Page = () => {
             options={userOptions}
           />
           <FormSelect
-            title="Deal Status:"
-            onSelectChange={setDealStatusId}
-            options={["All", "Ongoing", "Failed", "Successful"]}
+            title="Company Status:"
+            onSelectChange={setDealStatus}
+            options={[
+              { value: "ALL", label: "All" },
+              { value: "VISITED", label: "Visited" },
+              { value: "NOT VISITED", label: "Not Visited" },
+              { value: "ONGOING", label: "Ongoing" },
+            ]}
           />
           {/* Dates */}
           <div className="sm:col-span-2">
