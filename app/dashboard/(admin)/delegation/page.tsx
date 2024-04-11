@@ -430,7 +430,7 @@ const Page = () => {
 
   return (
     <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
-      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">User Management</h1>
+      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">Delegation</h1>
 
       <div className="mb-8 rounded-lg p-6 shadow">
         <FormSelect
@@ -442,7 +442,6 @@ const Page = () => {
 
       {/* Delegations dropdown */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="mb-6 me-1 text-xl font-bold text-gray-900 dark:text-white">Delegations</h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2">
           <FormSelect
             title="Country:"
