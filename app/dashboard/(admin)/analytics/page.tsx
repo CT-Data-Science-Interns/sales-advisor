@@ -7,10 +7,12 @@ import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
 
 import "svgmap/dist/svgMap.min.css";
-import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "@/configs/firebase_config";
 import { User } from "@/types/firebase/user/user";
+import ClientListTable, { ClientListData } from "@/components/client-list-table";
+import { Itinerary } from "@/types/firebase/itinerary";
 
 type CompanyStatusData = {
   total: number;
@@ -57,40 +59,31 @@ const Page = () => {
     });
     return users;
   };
-  const fetchCompaniesStatus = async (userRef: string | null = null) => {
+  const fetchItineraries = async (userRef: string | null = null) => {
     const itinerariesRef = collection(db, "itineraries");
     const itinerariesSnapshot = userRef
       ? await getDocs(query(itinerariesRef, where("userRef", "==", userRef)))
       : await getDocs(itinerariesRef);
 
-    // Initialize counters
-    let visitedCount = 0;
-    let notVisitedCount = 0;
-    let onGoingCount = 0;
-
-    // Query all documents from the collection
+    const itineraries: Itinerary[] = [];
     itinerariesSnapshot.forEach((doc) => {
-      const companiesRefs = doc.data().companiesRefs;
+      const itineraryData = doc.data();
+      const itinerary: Itinerary = {
+        uuid: doc.id,
+        userRef: itineraryData.userRef,
+        companiesRefs: itineraryData.companiesRefs,
 
-      companiesRefs.forEach((scheduleItem: { status: string }) => {
-        // Check if the map has a status field
-        if (scheduleItem.status && scheduleItem.status === "VISITED") {
-          visitedCount++;
-        } else if (scheduleItem.status && scheduleItem.status === "ONGOING") {
-          onGoingCount++;
-        } else {
-          notVisitedCount++;
-        }
-      });
+        // Metadata
+        addedAt: itineraryData.addedAt,
+        addedByRef: itineraryData.addedByRef,
+        updatedAt: itineraryData.updatedAt,
+        updatedByRef: itineraryData.updatedByRef,
+        deletedAt: itineraryData.deletedAt,
+        deletedByRef: itineraryData.deletedByRef,
+      };
+      itineraries.push(itinerary);
     });
-
-    const status: CompanyStatusData = {
-      total: visitedCount + notVisitedCount + onGoingCount,
-      visited: visitedCount,
-      notVisited: notVisitedCount,
-      ongoing: onGoingCount,
-    };
-    return status;
+    return itineraries;
   };
 
   // Dropdown options
@@ -189,11 +182,30 @@ const Page = () => {
   let choroplethMap: null;
   let clientInitialized = false;
 
+  const [companyStatusData, setCompanyStatusData] = useState<CompanyStatusData>({
+    total: 0,
+    visited: 0,
+    notVisited: 0,
+    ongoing: 0,
+  });
+  const [clientListData, setClientListData] = useState<ClientListData>({ clients: [] });
+
   const applyFilters = () => {
     const salesPersonIdFilter = salespersonId === "ALL" ? null : salespersonId;
-    fetchCompaniesStatus(salesPersonIdFilter).then((data) => {
-      setCompanyStatusData(data);
-      statusPieChartRef.current?.updateSeries([data.visited, data.notVisited]);
+    fetchItineraries(salesPersonIdFilter).then((itineraries) => {
+      // Update company status data
+      const newCompanyStatusData = getCompanyStatusDataFromItineraries(itineraries);
+      setCompanyStatusData(newCompanyStatusData);
+      statusPieChartRef.current.updateSeries([
+        newCompanyStatusData.visited,
+        newCompanyStatusData.notVisited,
+        newCompanyStatusData.ongoing,
+      ]);
+
+      // Update client list data
+      fetchClientListDataFromItineraries(itineraries).then((clientListData) => {
+        setClientListData(clientListData);
+      });
     });
 
     // dealsChart.updateSeries([
@@ -203,7 +215,69 @@ const Page = () => {
     // ]);
   };
 
-  const [companyStatusData, setCompanyStatusData] = useState<CompanyStatusData>();
+  const getCompanyStatusDataFromItineraries = (itineraries: Itinerary[]) => {
+    // Initialize counters
+    let visitedCount = 0;
+    let notVisitedCount = 0;
+    let onGoingCount = 0;
+
+    // Check all status from companiesRefs array
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        // Check if the map has a status field
+        if (companiesRef.status === "VISITED") {
+          visitedCount++;
+        } else if (companiesRef.status === "ONGOING") {
+          onGoingCount++;
+        } else {
+          notVisitedCount++;
+        }
+      });
+    });
+
+    // Create CompanyStatusData object
+    const data: CompanyStatusData = {
+      total: visitedCount + notVisitedCount + onGoingCount,
+      visited: visitedCount,
+      notVisited: notVisitedCount,
+      ongoing: onGoingCount,
+    };
+
+    return data;
+  };
+  const fetchClientListDataFromItineraries = async (itineraries: Itinerary[]) => {
+    // Get all company ids and status from the itineraries
+    const companyRefs: string[] = [];
+    const companyStatus: string[] = [];
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        companyRefs.push(companiesRef.companyRef);
+        companyStatus.push(companiesRef.status ?? "NOT VISITED");
+      });
+    });
+
+    // Retrieve companies from the list of ids
+    const companiesSnapshot = await Promise.all(
+      companyRefs.map((ref) => getDoc(doc(db, "companies", ref)))
+    );
+    const companiesData = companiesSnapshot.map((doc) => doc.data());
+
+    // Create ClientListData object
+    const clientListData: ClientListData = { clients: [] };
+    companiesData.forEach((data, index) => {
+      if (data) {
+        clientListData.clients.push({
+          company: data.name,
+          businessModel: data.businessModel,
+          subcategory: data.subcategory,
+          address: data.address,
+          annualSales: data.annualSales,
+          visitStatus: companyStatus[index],
+        });
+      }
+    });
+    return clientListData;
+  };
 
   useEffect(() => {
     if (!clientInitialized) {
@@ -224,57 +298,80 @@ const Page = () => {
         .catch((error) => {
           console.error("Error fetching users:", error);
         });
-      fetchCompaniesStatus().then((data) => {
-        setCompanyStatusData(data);
-        // Pie chart
-        const companyStatusChartOptions = {
-          series: [data.visited, data.notVisited, data.ongoing],
-          chart: {
-            height: 352,
-            width: "100%",
-            type: "pie",
-          },
-          stroke: {
-            colors: ["white"],
-            lineCap: "",
-          },
-          plotOptions: {
-            pie: {
-              labels: {
-                show: true,
-              },
-              size: "100%",
-              dataLabels: {
-                offset: -25,
+      fetchItineraries()
+        .then((itineraries) => {
+          const newCompanyStatusData = getCompanyStatusDataFromItineraries(itineraries);
+          setCompanyStatusData(newCompanyStatusData);
+
+          fetchClientListDataFromItineraries(itineraries).then((clientListData) => {
+            setClientListData(clientListData);
+          });
+
+          // Pie chart
+          const companyStatusChartOptions = {
+            series: [
+              newCompanyStatusData.visited,
+              newCompanyStatusData.notVisited,
+              newCompanyStatusData.ongoing,
+            ],
+            chart: {
+              height: 352,
+              width: "100%",
+              type: "pie",
+            },
+            stroke: {
+              colors: ["white"],
+              lineCap: "",
+            },
+            plotOptions: {
+              pie: {
+                labels: {
+                  show: true,
+                },
+                size: "100%",
+                dataLabels: {
+                  offset: -25,
+                },
               },
             },
-          },
-          labels: ["Visited", "Not Visited", "Ongoing"],
-          dataLabels: {
-            enabled: true,
-            style: {
+            labels: ["Visited", "Not Visited", "Ongoing"],
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontFamily: "Inter, sans-serif",
+              },
+            },
+            legend: {
+              position: "bottom",
               fontFamily: "Inter, sans-serif",
             },
-          },
-          legend: {
-            position: "bottom",
-            fontFamily: "Inter, sans-serif",
-          },
-          yaxis: {
-            labels: {
-              formatter: function (value: string) {
-                return Math.round((parseInt(value) / data.total) * 10000) / 100 + "%";
+            yaxis: {
+              labels: {
+                formatter: function (value: string) {
+                  return (
+                    Math.round((parseInt(value) / companyStatusData.total) * 10000) / 100 + "%"
+                  );
+                },
               },
             },
-          },
-        };
-        const statusPieChart = new ApexCharts(
-          document.getElementById("pie-chart"),
-          companyStatusChartOptions
-        );
-        statusPieChart.render();
-        statusPieChartRef.current = statusPieChart;
-      });
+          };
+          const statusPieChart = new ApexCharts(
+            document.getElementById("pie-chart"),
+            companyStatusChartOptions
+          );
+          statusPieChart.render();
+          statusPieChartRef.current = statusPieChart;
+        })
+        .catch((error) => {
+          console.error("Error fetching itineraries:", error);
+        });
+      // fetchClientListData()
+      //   .then((data) => {
+      //     setClientListData(data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error fetching client list data:", error);
+      //   });
 
       const areaChartOptions = {
         series: [
@@ -405,7 +502,7 @@ const Page = () => {
 
       {/* Dropdown filters */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">Filters</h5>
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Filters</h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <FormSelect
             title="Salesperson:"
@@ -469,9 +566,7 @@ const Page = () => {
       <div className="mb-8 grid gap-6 md:grid-cols-2">
         {/* Pie chart */}
         <div className="rounded-lg p-6 shadow">
-          <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
-            Companies Status
-          </h5>
+          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Companies Status</h5>
           <div id="pie-chart" ref={statusPieChartRef}></div>
           <div className="mt-4 grid grid-cols-4 gap-2">
             <div>
@@ -494,9 +589,7 @@ const Page = () => {
         </div>
         {/* Area chart */}
         <div className="rounded-lg p-6 shadow">
-          <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
-            Deals Status
-          </h5>
+          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Deals Status</h5>
           <div id="area-chart"></div>
           <div className="mt-4 grid grid-cols-3 gap-2">
             <div>
@@ -517,54 +610,14 @@ const Page = () => {
 
       {/* Choropleth Map */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
-          World Overview
-        </h5>
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">World Overview</h5>
         <div id="choropleth-map"></div>
       </div>
 
       {/* Client List */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 p-6 text-xl font-bold text-gray-900 dark:text-white">Client List</h5>
-        <div className="relative overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Company
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Business Model
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Category
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Address
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Contact No.
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-              </tr>
-              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Client List</h5>
+        <ClientListTable data={clientListData}></ClientListTable>
       </div>
     </div>
   );
