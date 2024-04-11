@@ -23,12 +23,15 @@ const FormSelect = ({
 }: Props & {
   title: string;
   onSelectChange: CallableFunction;
-  options: string[];
+  options: string[] | { value: string; label: string }[];
 }) => {
-  const labeledOptions = options.map((option) => ({
-    value: option,
-    label: option,
-  }));
+  const labeledOptions =
+    typeof options[0] === "string"
+      ? options.map((option) => ({
+          value: option,
+          label: option,
+        }))
+      : options;
   const handleChange = (selectedOption: Option | null) => {
     onSelectChange(selectedOption?.value);
   };
