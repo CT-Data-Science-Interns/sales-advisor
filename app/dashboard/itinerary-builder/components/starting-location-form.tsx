@@ -3,31 +3,81 @@ import SelectLocationMap from "@/components/select-location-map";
 
 import React, { FormEvent, useState } from "react";
 import { ItineraryStage } from "./itinerary-stage-progress";
+import DatePicker from "tailwind-datepicker-react";
+import { IOptions } from "tailwind-datepicker-react/types/Options";
+
+// Datepicker options
+const startDatepickerOptions: IOptions = {
+  autoHide: true,
+  todayBtn: true,
+  clearBtn: false,
+  inputDateFormatProp: {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  },
+};
+const endDatepickerOptions: IOptions = {
+  autoHide: true,
+  todayBtn: true,
+  clearBtn: false,
+  datepickerClassNames: "right-0",
+  inputDateFormatProp: {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  },
+};
 
 const StartingLocationForm = ({
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  address,
+  setAddress,
+  latLng,
+  setLatLng,
   currentPageHandler,
 }: {
+  startDate: Date;
+  setStartDate: CallableFunction;
+  endDate: Date;
+  setEndDate: CallableFunction;
+  address: string | null;
+  setAddress: CallableFunction;
+  latLng: { lat: number; lng: number } | null;
+  setLatLng: CallableFunction;
   currentPageHandler: CallableFunction;
 }) => {
-  // const [date, setDate] = useState<{
-  //   startDate: Date;
-  //   endDate: Date;
-  // } | null>(null);
-  // const [country, setCountry] = useState<string | null>(null);
-  // const [state, setState] = useState<string | null>(null);
-  const [address, setAddress] = useState<string | null>(null);
-  const [latLng, setLatLng] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+  const [showStartDate, setShowStartDate] = useState<boolean>(false);
+  const [showEndDate, setShowEndDate] = useState<boolean>(false);
+
+  const onSelectedStartDateChanged = (date: Date) => {
+    // Adjust end date if start date is greater
+    if (date > endDate) {
+      setEndDate(date);
+    }
+    setStartDate(date);
+  };
+  const onSelectedEndDateChanged = (date: Date) => {
+    // Adjust start date if end date is greater
+    if (startDate > date) {
+      setStartDate(date);
+    }
+    setEndDate(date);
+  };
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
+    if (!address || !latLng) {
+      // Temporary alert for now
+      // Use a modal or a toast notification
+      alert("Please select a location on the map");
+      return;
+    }
     currentPageHandler(ItineraryStage.FILTER_COMPANIES);
   };
-
-  // Logging for now to remove linting errors
-  console.log(address, latLng);
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -48,15 +98,33 @@ const StartingLocationForm = ({
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
               Selected starting location
             </h2>
-
-            <div>
+            <div className="flex">
+              <DatePicker
+                value={startDate}
+                options={startDatepickerOptions}
+                classNames="relative"
+                show={showStartDate}
+                setShow={setShowStartDate}
+                selectedDateState={[startDate, onSelectedStartDateChanged]}
+              />
+              <span className="mx-4 my-auto text-gray-500">to</span>
+              <DatePicker
+                value={endDate}
+                options={endDatepickerOptions}
+                classNames="relative"
+                show={showEndDate}
+                setShow={setShowEndDate}
+                selectedDateState={[endDate, onSelectedEndDateChanged]}
+              />
+            </div>
+            <div className="text-gray-900 dark:text-white">
               <span className="font-semibold">Address: </span>
               {address}
             </div>
-            <div>
+            <div className="text-gray-900 dark:text-white">
               <span className="font-semibold">Latitude:</span> {latLng?.lat}
             </div>
-            <div>
+            <div className="text-gray-900 dark:text-white">
               <span className="font-semibold">Longitude:</span> {latLng?.lng}
             </div>
           </div>
