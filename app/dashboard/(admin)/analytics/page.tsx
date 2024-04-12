@@ -7,25 +7,39 @@ import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
 
 import "svgmap/dist/svgMap.min.css";
-import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "@/configs/firebase_config";
 import { User } from "@/types/firebase/user/user";
+import ClientListTable, { ClientListData } from "@/components/client-list-table";
+import { Itinerary } from "@/types/firebase/itinerary";
 
 type CompanyStatusData = {
   total: number;
   visited: number;
   notVisited: number;
+  ongoing: number;
 };
 
 const Page = () => {
+  // Firebase functions
   // TODO: Move outside of this file for code reusability
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  // Firebase functions
-  const fetchUsers = async () => {
+  const fetchUsers = async (accountRoleId: string | null = null) => {
     const usersCol = collection(db, "users");
-    const userSnapshot = await getDocs(usersCol);
+    const userSnapshot = accountRoleId
+      ? await getDocs(query(usersCol, where("accountRolesRefs", "array-contains", accountRoleId)))
+      : await getDocs(usersCol);
     const users: User[] = [];
     userSnapshot.forEach((doc) => {
       const userData = doc.data();
@@ -56,36 +70,149 @@ const Page = () => {
     });
     return users;
   };
-  const fetchCompaniesStatus = async (userRef: string | null = null) => {
+  const fetchItineraries = async (
+    userRef: string | null = null,
+    startDate: Date | null = null,
+    endDate: Date | null = null
+  ) => {
     const itinerariesRef = collection(db, "itineraries");
     const itinerariesSnapshot = userRef
       ? await getDocs(query(itinerariesRef, where("userRef", "==", userRef)))
       : await getDocs(itinerariesRef);
 
+    const itineraries: Itinerary[] = [];
+    itinerariesSnapshot.forEach((doc) => {
+      const itineraryData = doc.data();
+      const itinerary: Itinerary = {
+        uuid: doc.id,
+        userRef: itineraryData.userRef,
+        companiesRefs: [],
+
+        // Metadata
+        addedAt: itineraryData.addedAt,
+        addedByRef: itineraryData.addedByRef,
+        updatedAt: itineraryData.updatedAt,
+        updatedByRef: itineraryData.updatedByRef,
+        deletedAt: itineraryData.deletedAt,
+        deletedByRef: itineraryData.deletedByRef,
+      };
+
+      itineraryData.companiesRefs.forEach(
+        (companiesRef: {
+          companyRef: string;
+          schedule: {
+            start: Timestamp;
+            end: Timestamp;
+          };
+          status: "VISITED" | "NOT VISITED" | "ONGOING" | null;
+        }) => {
+          const itemStartDate = companiesRef.schedule.start.toDate();
+          if (
+            startDate === null ||
+            endDate === null ||
+            (itemStartDate >= startDate && itemStartDate <= endDate)
+          ) {
+            const companiesRefConverted: {
+              companyRef: string;
+              schedule: {
+                start: Date;
+                end: Date;
+              };
+              status: "VISITED" | "NOT VISITED" | "ONGOING" | null;
+            } = {
+              companyRef: companiesRef.companyRef,
+              schedule: {
+                start: companiesRef.schedule.start.toDate(),
+                end: companiesRef.schedule.end.toDate(),
+              },
+              status: companiesRef.status,
+            };
+            itinerary.companiesRefs.push(companiesRefConverted);
+          }
+        }
+        //   ({
+        //   companyRef: companiesRef.companyRef,
+        //   schedule: {
+        //     start: companiesRef.schedule.start.toDate(),
+        //     end: companiesRef.schedule.end.toDate(),
+        //   },
+        //   status: companiesRef.status,
+        // })
+      );
+
+      itineraries.push(itinerary);
+    });
+    return itineraries;
+  };
+  const fetchClientListDataFromItineraries = async (itineraries: Itinerary[]) => {
+    // Get all company ids and status from the itineraries
+    const companyRefs: string[] = [];
+    const companyStatus: string[] = [];
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        if (
+          dealStatus === null || // No filter
+          dealStatus === "ALL" || // Select all
+          companiesRef.status === dealStatus || // Filter matches with company status
+          (dealStatus === "NOT VISITED" && companiesRef.status === null) // Not visited / Treat companies with null status as NOT VISITED
+        ) {
+          companyRefs.push(companiesRef.companyRef);
+          companyStatus.push(companiesRef.status ?? "NOT VISITED");
+        }
+      });
+    });
+
+    // Retrieve companies from the list of ids
+    const companiesSnapshot = await Promise.all(
+      companyRefs.map((ref) => getDoc(doc(db, "companies", ref)))
+    );
+    const companiesData = companiesSnapshot.map((doc) => doc.data());
+
+    // Create ClientListData object
+    const clientListData: ClientListData = { clients: [] };
+    companiesData.forEach((data, index) => {
+      if (data) {
+        clientListData.clients.push({
+          company: data.name,
+          businessModel: data.businessModel,
+          subcategory: data.subcategory,
+          address: data.address,
+          annualSales: data.annualSales,
+          visitStatus: companyStatus[index],
+        });
+      }
+    });
+    return clientListData;
+  };
+  const getCompanyStatusDataFromItineraries = (itineraries: Itinerary[]) => {
     // Initialize counters
     let visitedCount = 0;
     let notVisitedCount = 0;
+    let onGoingCount = 0;
 
-    // Query all documents from the collection
-    itinerariesSnapshot.forEach((doc) => {
-      const companiesRefs = doc.data().companiesRefs;
-
-      companiesRefs.forEach((scheduleItem: { status: string }) => {
-        // Check if the map has a status field
-        if (scheduleItem.status && scheduleItem.status === "VISITED") {
+    // Check all status from companiesRefs array
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        // Increment counter accordingly
+        if (companiesRef.status === "VISITED") {
           visitedCount++;
+        } else if (companiesRef.status === "ONGOING") {
+          onGoingCount++;
         } else {
           notVisitedCount++;
         }
       });
     });
 
-    const status: CompanyStatusData = {
-      total: visitedCount + notVisitedCount,
+    // Create CompanyStatusData object
+    const data: CompanyStatusData = {
+      total: visitedCount + notVisitedCount + onGoingCount,
       visited: visitedCount,
       notVisited: notVisitedCount,
+      ongoing: onGoingCount,
     };
-    return status;
+
+    return data;
   };
 
   // Dropdown options
@@ -95,7 +222,7 @@ const Page = () => {
   // eslint-disable-next-line no-unused-vars
   const [salespersonId, setSalesPersonId] = useState<string | null>(null);
   // eslint-disable-next-line no-unused-vars
-  const [dealStatusId, setDealStatusId] = useState<string | null>(null);
+  const [dealStatus, setDealStatus] = useState<string | null>(null);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(startDate);
 
@@ -137,29 +264,15 @@ const Page = () => {
   };
 
   // Datepicker states
+  const [dateType, setDateType] = useState<DateType>(DateType.All);
   const [showDatepickers, setShowDatePickers] = useState<boolean>(false);
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
 
   // Datepicker functions
-  const setDateType = (dateType: DateType) => {
-    setShowDatePickers(dateType === DateType.Custom);
-
-    // if (dateType === DateType.All) {
-    //   setStartDate(new Date(0));
-    //   setEndDate(new Date());
-    // } else if (dateType === DateType.Today) {
-    //   // eslint-disable-next-line prefer-const
-    //   let startToday = new Date();
-    //   startToday.setHours(0, 0, 0, 0);
-
-    //   // eslint-disable-next-line prefer-const
-    //   let endToday = startToday;
-    //   endToday.setHours(24);
-
-    //   setStartDate(startToday);
-    //   setEndDate(endDate);
-    // }
+  const onSelectedDateTypeChanged = (newDateType: DateType) => {
+    setDateType(newDateType);
+    setShowDatePickers(newDateType === DateType.Custom);
   };
   const onSelectedStartDateChanged = (date: Date) => {
     // Adjust end date if start date is greater
@@ -184,11 +297,56 @@ const Page = () => {
   let choroplethMap: null;
   let clientInitialized = false;
 
+  const [companyStatusData, setCompanyStatusData] = useState<CompanyStatusData>({
+    total: 0,
+    visited: 0,
+    notVisited: 0,
+    ongoing: 0,
+  });
+  const [clientListData, setClientListData] = useState<ClientListData>({ clients: [] });
+
   const applyFilters = () => {
     const salesPersonIdFilter = salespersonId === "ALL" ? null : salespersonId;
-    fetchCompaniesStatus(salesPersonIdFilter).then((data) => {
-      setCompanyStatusData(data);
-      statusPieChartRef.current?.updateSeries([data.visited, data.notVisited]);
+
+    const newStartDate: Date = new Date();
+    const newEndDate: Date = new Date();
+
+    newStartDate.setHours(0, 0, 0, 0);
+    newEndDate.setHours(23, 59, 59, 999);
+
+    if (dateType === DateType.Custom) {
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      if (dateType === DateType.Last7Days) {
+        newStartDate.setDate(newStartDate.getDate() - 7);
+      } else if (dateType === DateType.Last30Days) {
+        newStartDate.setDate(newStartDate.getDate() - 30);
+      }
+      setStartDate(newStartDate);
+      setEndDate(newEndDate);
+    }
+
+    const fetchItinerariesParams =
+      dateType === DateType.All
+        ? [null, null]
+        : dateType === DateType.Custom
+          ? [startDate, endDate]
+          : [newStartDate, newEndDate];
+    fetchItineraries(salesPersonIdFilter, ...fetchItinerariesParams).then((itineraries) => {
+      // Update company status data
+      const newCompanyStatusData = getCompanyStatusDataFromItineraries(itineraries);
+      setCompanyStatusData(newCompanyStatusData);
+      statusPieChartRef.current.updateSeries([
+        newCompanyStatusData.visited,
+        newCompanyStatusData.notVisited,
+        newCompanyStatusData.ongoing,
+      ]);
+
+      // Update client list data
+      fetchClientListDataFromItineraries(itineraries).then((clientListData) => {
+        setClientListData(clientListData);
+      });
     });
 
     // dealsChart.updateSeries([
@@ -198,16 +356,14 @@ const Page = () => {
     // ]);
   };
 
-  const [companyStatusData, setCompanyStatusData] = useState<CompanyStatusData>();
-
   useEffect(() => {
     if (!clientInitialized) {
       // Import client-only packages
       const ApexCharts = require("apexcharts");
       const svgMap = require("svgmap");
 
-      // Fetch data from server and set the initial display values
-      fetchUsers()
+      // Fetch users which are salesperson and display on FormSelect options
+      fetchUsers("f83f0d9cb57849c78276")
         .then((data) => {
           const newUserOptions = data.map((user) => ({
             value: user.uuid,
@@ -219,61 +375,74 @@ const Page = () => {
         .catch((error) => {
           console.error("Error fetching users:", error);
         });
-      fetchCompaniesStatus().then((data) => {
-        setCompanyStatusData(data);
-        // Pie chart
-        const companyStatusChartOptions = {
-          series: [data.visited, data.notVisited],
-          colors: ["#1C64F2", "#16BDCA"],
-          chart: {
-            height: 352,
-            width: "100%",
-            type: "pie",
-          },
-          stroke: {
-            colors: ["white"],
-            lineCap: "",
-          },
-          plotOptions: {
-            pie: {
-              labels: {
-                show: true,
-              },
-              size: "100%",
-              dataLabels: {
-                offset: -25,
+
+      // Fetch companies from itineraries to be displayed on client list
+      fetchItineraries()
+        .then((itineraries) => {
+          console.log(itineraries);
+          const newCompanyStatusData = getCompanyStatusDataFromItineraries(itineraries);
+          setCompanyStatusData(newCompanyStatusData);
+
+          fetchClientListDataFromItineraries(itineraries).then((clientListData) => {
+            setClientListData(clientListData);
+          });
+
+          // Pie chart
+          const companyStatusChartOptions = {
+            series: [
+              newCompanyStatusData.visited,
+              newCompanyStatusData.notVisited,
+              newCompanyStatusData.ongoing,
+            ],
+            chart: {
+              height: 352,
+              width: "100%",
+              type: "pie",
+            },
+            stroke: {
+              colors: ["white"],
+              lineCap: "",
+            },
+            plotOptions: {
+              pie: {
+                labels: {
+                  show: true,
+                },
+                size: "100%",
+                dataLabels: {
+                  offset: -25,
+                },
               },
             },
-          },
-          labels: ["Visited", "Not Visited"],
-          dataLabels: {
-            enabled: true,
-            style: {
+            labels: ["Visited", "Not Visited", "Ongoing"],
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontFamily: "Inter, sans-serif",
+              },
+            },
+            legend: {
+              position: "bottom",
               fontFamily: "Inter, sans-serif",
             },
-          },
-          legend: {
-            position: "bottom",
-            fontFamily: "Inter, sans-serif",
-          },
-          yaxis: {
-            labels: {
-              formatter: function (value: string) {
-                return (
-                  Math.round((parseInt(value) / (data.visited + data.notVisited)) * 10000) / 100 +
-                  "%"
-                );
-              },
-            },
-          },
-        };
-        const statusPieChart = new ApexCharts(
-          document.getElementById("pie-chart"),
-          companyStatusChartOptions
-        );
-        statusPieChart.render();
-        statusPieChartRef.current = statusPieChart;
-      });
+          };
+          const statusPieChart = new ApexCharts(
+            document.getElementById("pie-chart"),
+            companyStatusChartOptions
+          );
+          statusPieChart.render();
+          statusPieChartRef.current = statusPieChart;
+        })
+        .catch((error) => {
+          console.error("Error fetching itineraries:", error);
+        });
+      // fetchClientListData()
+      //   .then((data) => {
+      //     setClientListData(data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error fetching client list data:", error);
+      //   });
 
       const areaChartOptions = {
         series: [
@@ -404,7 +573,7 @@ const Page = () => {
 
       {/* Dropdown filters */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">Filters</h5>
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Filters</h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <FormSelect
             title="Salesperson:"
@@ -412,16 +581,21 @@ const Page = () => {
             options={userOptions}
           />
           <FormSelect
-            title="Deal Status:"
-            onSelectChange={setDealStatusId}
-            options={["All", "Ongoing", "Failed", "Successful"]}
+            title="Company Status:"
+            onSelectChange={setDealStatus}
+            options={[
+              { value: "ALL", label: "All" },
+              { value: "VISITED", label: "Visited" },
+              { value: "NOT VISITED", label: "Not Visited" },
+              { value: "ONGOING", label: "Ongoing" },
+            ]}
           />
           {/* Dates */}
           <div className="sm:col-span-2">
             <FormSelect
               className="mb-2"
               title="Date:"
-              onSelectChange={setDateType}
+              onSelectChange={onSelectedDateTypeChanged}
               options={[
                 DateType.All,
                 DateType.Today,
@@ -468,43 +642,59 @@ const Page = () => {
       <div className="mb-8 grid gap-6 md:grid-cols-2">
         {/* Pie chart */}
         <div className="rounded-lg p-6 shadow">
-          <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
-            Companies Status
-          </h5>
+          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Companies Status</h5>
           <div id="pie-chart" ref={statusPieChartRef}></div>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-4 gap-2">
             <div>
-              <div className="text-center text-sm">Total</div>
-              <div className="text-center text-3xl">{companyStatusData?.total}</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">Total</div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.total}
+              </div>
             </div>
             <div>
-              <div className="text-center text-sm">Visited</div>
-              <div className="text-center text-3xl">{companyStatusData?.visited}</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">Visited</div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.visited}
+              </div>
             </div>
             <div>
-              <div className="text-center text-sm">Not Visited</div>
-              <div className="text-center text-3xl">{companyStatusData?.notVisited}</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Not Visited
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.notVisited}
+              </div>
+            </div>
+            <div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">Ongoing</div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.ongoing}
+              </div>
             </div>
           </div>
         </div>
         {/* Area chart */}
         <div className="rounded-lg p-6 shadow">
-          <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
-            Deals Status
-          </h5>
+          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Deals Status</h5>
           <div id="area-chart"></div>
           <div className="mt-4 grid grid-cols-3 gap-2">
             <div>
-              <div className="text-center text-sm">Ongoing Deals</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Ongoing Deals
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">0</div>
             </div>
             <div>
-              <div className="text-center text-sm">Successful Deals</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Successful Deals
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">0</div>
             </div>
             <div>
-              <div className="text-center text-sm">Failed Deals</div>
-              <div className="text-center text-3xl">0</div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Failed Deals
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">0</div>
             </div>
           </div>
         </div>
@@ -512,54 +702,14 @@ const Page = () => {
 
       {/* Choropleth Map */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 pb-6 text-xl font-bold text-gray-900 dark:text-white">
-          World Overview
-        </h5>
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">World Overview</h5>
         <div id="choropleth-map"></div>
       </div>
 
       {/* Client List */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="me-1 p-6 text-xl font-bold text-gray-900 dark:text-white">Client List</h5>
-        <div className="relative overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Company
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Business Model
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Category
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Address
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Contact No.
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-              </tr>
-              <tr className="border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800">
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-                <td className="px-6 py-4">Test</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Client List</h5>
+        <ClientListTable data={clientListData}></ClientListTable>
       </div>
     </div>
   );
