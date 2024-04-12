@@ -22,6 +22,15 @@ interface Props {
   onEndDateChange: (date: Date) => void;
 }
 
+// If "STATUS" is a valid status, update the type definition
+interface CompaniesRefs {
+  companyRef: string;
+  schedule: {
+    start: Date;
+    end: Date;
+  };
+  status: "VISITED" | "NOT VISITED" | "ONGOING" | "STATUS" | null; // Included "STATUS"
+}
 const DatePickerSection = ({ onStartDateChange, onEndDateChange }: Props) => {
   // State variables and functions related to dates
   const [startDate, setStartDate] = useState(new Date());
@@ -29,7 +38,9 @@ const DatePickerSection = ({ onStartDateChange, onEndDateChange }: Props) => {
   const [showDatepickers, setShowDatePickers] = useState<boolean>(false);
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
-  const [filteredItineraries, setFilteredItineraries] = useState([]); // Fix type
+  const [filteredItineraries, setFilteredItineraries] = useState<
+    CompaniesRefs[]
+  >([]); // Fix type
 
   // Rest of the component code...
 
@@ -106,7 +117,7 @@ const DatePickerSection = ({ onStartDateChange, onEndDateChange }: Props) => {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const [visitedClients, setvisitedClients] = useState([]);
+  const [visitedClients, setVisitedClients] = useState<CompaniesRefs[]>([]);
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
 
   useEffect(() => {
@@ -143,18 +154,31 @@ const DatePickerSection = ({ onStartDateChange, onEndDateChange }: Props) => {
       startDate,
       endDate
     ); // Use the filtering function
-    setFilteredItineraries(filteredCompanies);
+
+    // Map filtered companies to CompaniesRefs type
+    const companiesRefs: CompaniesRefs[] = filteredCompanies.map((company) => ({
+      companyRef: company.companyRef,
+      schedule: {
+        start: company.schedule.start,
+        end: company.schedule.end,
+      },
+      status: company.status === "STATUS" ? null : company.status,
+    }));
+
+    setFilteredItineraries(companiesRefs);
   }, [itineraries, startDate, endDate]);
 
   useEffect(() => {
     const filteredClients = itineraries.flatMap((itinerary) =>
       itinerary.companiesRefs.filter((company) => company.status === "VISITED")
     );
-    setvisitedClients(filteredClients);
+    setVisitedClients(filteredClients);
   }, [itineraries]);
 
-  const progressValue =
-    (visitedClients.length / filteredItineraries.length) * 100;
+  const progressValue = Math.min(
+    100,
+    (visitedClients.length / filteredItineraries.length) * 100
+  ).toFixed(2);
 
   return (
     // JSX code for DatePickerSection...
