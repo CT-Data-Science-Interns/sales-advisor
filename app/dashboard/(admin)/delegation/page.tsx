@@ -28,22 +28,46 @@ const Page = () => {
   // TODO: This value should be retrieved
   const currentUser = "TEST"; // User['uuid'] (Retreive from logged in user)
 
-  // Dropdown options
+  // FormSelect options
   const [userOptions, setUserOptions] = useState<{ value: string; label: string }[]>([]);
   const [countryOptions, setCountryOptions] = useState<{ value: string; label: string }[]>([]);
   const [stateOptions, setStateOptions] = useState<{ value: string; label: string }[]>([]);
   const [modelOptions, setModelOptions] = useState<{ value: string; label: string }[]>([]);
   const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([]);
 
+  // FormSelect value
+  const [countryOptionValue, setCountryOptionValue] = useState<{
+    value: string;
+    label: string;
+  } | null>(null);
+  const [stateOptionValue, setStateOptionValue] = useState<{
+    value: string;
+    label: string;
+  } | null>(null);
+  const [modelOptionValue, setModelOptionValue] = useState<{
+    value: string;
+    label: string;
+  } | null>(null);
+  const [categoryOptionValue, setCategoryOptionValue] = useState<{
+    value: string;
+    label: string;
+  } | null>(null);
+
   // Selected salesperson values
   const [salespersonId, setSalesPersonId] = useState<string | null>(null);
   const [delegationId, setDelegationId] = useState<string | null>(null);
 
-  // FormSelect delegation values
+  // Currently assigned values
   const [countryId, setCountryId] = useState<string | null>(null);
   const [stateId, setStateId] = useState<string | null>(null);
   const [businessModelId, setBusinessModelId] = useState<string | null>(null);
   const [businessCategoryId, setBusinessCategoryId] = useState<string | null>(null);
+
+  // FormSelect delegation values
+  const [newCountryId, setNewCountryId] = useState<string | null>(null);
+  const [newStateId, setNewStateId] = useState<string | null>(null);
+  const [newBusinessModelId, setNewBusinessModelId] = useState<string | null>(null);
+  const [newBusinessCategoryId, setNewBusinessCategoryId] = useState<string | null>(null);
 
   // TODO: Move outside of this file for code reusability
   // Firebase functions
@@ -204,28 +228,61 @@ const Page = () => {
   };
 
   // FormSelect listeners
-  const onSalesPersonChanged = (userId: string) => {
+  const onNewSalesPersonChanged = (userId: string) => {
     setSalesPersonId(userId);
 
     // Get delegations of the newly selected user
     fetchDelegation(userId)
-      .then((data) => {
-        if (data == null) return;
-        setDelegationId(data.uuid);
+      .then((delegation) => {
+        if (delegation == null) return;
+        setDelegationId(delegation.uuid);
+
+        if (delegation.countriesRefs && delegation.countriesRefs.length > 0) {
+          setCountryId(delegation.countriesRefs[0]);
+          setNewCountryId(delegation.countriesRefs[0]);
+          fetchStates(delegation.countriesRefs[0])
+            .then((states) => {
+              const newStateOptions = states.map((model) => ({
+                value: model.uuid,
+                label: model.name,
+              }));
+              setStateOptions(newStateOptions);
+              if (delegation.statesRefs && delegation.statesRefs.length > 0) {
+                const stateRef = delegation.statesRefs[0];
+                setStateId(stateRef);
+                setNewStateId(stateRef);
+                const stateSelected = newStateOptions.find((item) => item.value === stateRef);
+                if (stateSelected) setStateOptionValue(stateSelected);
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching states:", error);
+            });
+        }
+        if (delegation.businessModelsRefs && delegation.businessModelsRefs.length > 0) {
+          setBusinessModelId(delegation.businessModelsRefs[0]);
+          setNewBusinessModelId(delegation.businessModelsRefs[0]);
+        }
+        if (delegation.categoriesRefs && delegation.categoriesRefs.length > 0) {
+          setBusinessCategoryId(delegation.categoriesRefs[0]);
+          setNewBusinessCategoryId(delegation.categoriesRefs[0]);
+        }
       })
       .catch((error) => {
         console.error("Error fetching delegations:", error);
         setDelegationId(null);
       });
   };
-  const onCountryChanged = (countryId: string) => {
-    setCountryId(countryId);
+  const onNewCountryChanged = (newId: string) => {
+    setNewCountryId(newId);
+    const selected = countryOptions.find((item) => item.value === newId);
+    if (selected) setCountryOptionValue(selected);
 
     // Get the states under this country and update options of the State FormSelect
-    fetchStates(countryId)
-      .then((data) => {
+    fetchStates(newId)
+      .then((state) => {
         setStateOptions(
-          data.map((model) => ({
+          state.map((model) => ({
             value: model.uuid,
             label: model.name,
           }))
@@ -234,23 +291,64 @@ const Page = () => {
       .catch((error) => {
         console.error("Error fetching states:", error);
       });
+    setNewStateId(null);
+    setStateOptionValue(null);
+  };
+  const onNewStateChanged = (newId: string) => {
+    setNewStateId(newId);
+    const selected = stateOptions.find((item) => item.value === newId);
+    if (selected) setStateOptionValue(selected);
+  };
+  const onNewBusinessModelChanged = (newId: string) => {
+    setNewBusinessModelId(newId);
+    const selected = modelOptions.find((item) => item.value === newId);
+    if (selected) setModelOptionValue(selected);
+  };
+  const onNewBusinessCategoryChanged = (newId: string) => {
+    setNewBusinessCategoryId(newId);
+    const selected = categoryOptions.find((item) => item.value === newId);
+    if (selected) setCategoryOptionValue(selected);
   };
 
   // Form action buttons
-  const clearForm = () => {
-    // TODO: set selected form values to default values
-    // setSelectedCountry("8OUR1y1QoSRO6dzpBKdv");
+  const resetForm = () => {
+    const defaulCountryOption = countryOptions.find((item) => item.value === countryId);
+    const defaultModelOption = modelOptions.find((item) => item.value === businessModelId);
+    const defaultCategoryOption = categoryOptions.find((item) => item.value === businessCategoryId);
+
+    setNewCountryId(countryId);
+    if (defaulCountryOption) setCountryOptionValue(defaulCountryOption);
+    if (countryId) {
+      // Get the states under this country and update options of the State FormSelect
+      fetchStates(countryId).then((states) => {
+        const newStateOptions = states.map((model) => ({
+          value: model.uuid,
+          label: model.name,
+        }));
+        setStateOptions(newStateOptions);
+        const stateSelected = newStateOptions.find((item) => item.value === stateId);
+        if (stateSelected) setStateOptionValue(stateSelected);
+      });
+    }
+
+    setModelOptionValue(defaultModelOption ?? null);
+    setCategoryOptionValue(defaultCategoryOption ?? null);
   };
   const applyForm = async () => {
     if (salespersonId == null) return;
 
     // Retrieve delegations from form-select values
     const newDelegations = {
-      countriesRefs: [countryId],
-      statesRefs: [stateId],
-      businessModelsRefs: [businessModelId],
-      categoriesRefs: [businessCategoryId],
+      countriesRefs: [newCountryId],
+      statesRefs: [newStateId],
+      businessModelsRefs: [newBusinessModelId],
+      categoriesRefs: [newBusinessCategoryId],
     };
+
+    setCountryId(newCountryId);
+    setStateId(newStateId);
+    setBusinessModelId(newBusinessModelId);
+    setBusinessCategoryId(newBusinessCategoryId);
 
     // Create delegation document if it doesn't exist, otherwise update it
     if (delegationId == null) {
@@ -271,7 +369,13 @@ const Page = () => {
   };
 
   useEffect(() => {
-    // Fetch data from server and set the initial options of the FormSelects
+    resetForm();
+    console.log("reset");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryId, stateId, businessModelId, businessCategoryId]);
+
+  useEffect(() => {
+    // Fetch data from server and  the initial options of the FormSelects
     fetchUsers()
       .then((data) => {
         setUserOptions(
@@ -326,38 +430,49 @@ const Page = () => {
 
   return (
     <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
-      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">User Management</h1>
+      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">Delegation</h1>
 
       <div className="mb-8 rounded-lg p-6 shadow">
         <FormSelect
           title="Salesperson:"
-          onSelectChange={onSalesPersonChanged}
+          onSelectChange={onNewSalesPersonChanged}
           options={userOptions}
         />
       </div>
 
       {/* Delegations dropdown */}
       <div className="mb-8 rounded-lg p-6 shadow">
-        <h5 className="mb-6 me-1 text-xl font-bold text-gray-900 dark:text-white">Delegations</h5>
         <div className="mb-6 grid gap-6 sm:grid-cols-2">
-          <FormSelect title="Country:" onSelectChange={onCountryChanged} options={countryOptions} />
-          <FormSelect title="State:" onSelectChange={setStateId} options={stateOptions} />
+          <FormSelect
+            title="Country:"
+            onSelectChange={onNewCountryChanged}
+            options={countryOptions}
+            value={countryOptionValue}
+          />
+          <FormSelect
+            title="State:"
+            onSelectChange={onNewStateChanged}
+            options={stateOptions}
+            value={stateOptionValue}
+          />
           <FormSelect
             title="Business Model:"
-            onSelectChange={setBusinessModelId}
+            onSelectChange={onNewBusinessModelChanged}
             options={modelOptions}
+            value={modelOptionValue}
           />
           <FormSelect
             title="Business Category:"
-            onSelectChange={setBusinessCategoryId}
+            onSelectChange={onNewBusinessCategoryChanged}
             options={categoryOptions}
+            value={categoryOptionValue}
           />
         </div>
         <div className="flex justify-end">
           <button
             type="button"
             className="me-4 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
-            onClick={clearForm}
+            onClick={resetForm}
           >
             Reset
           </button>

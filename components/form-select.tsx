@@ -57,7 +57,12 @@ const FormSelect = ({
         {...props}
         classNames={{
           control: () =>
-            "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+            "border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:focus:border-blue-500",
+          placeholder: () => "dark:text-gray-300",
+          input: () => "dark:text-white",
+          singleValue: () => "dark:text-white",
+          menuList: () => "dark:bg-gray-700 dark:text-white",
+          option: () => "dark:hover:bg-gray-600",
         }}
         styles={{
           input: (base) => ({
