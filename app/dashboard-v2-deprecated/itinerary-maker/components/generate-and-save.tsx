@@ -1,7 +1,7 @@
 "use client";
 import React, { FormEvent } from "react";
 import { ItineraryStage } from "./itinerary-stage-progress";
-import ItineraryMap from "@/components/itinerary-map";
+// import ItineraryMap from "@/components/itinerary-map";
 
 const GenerateAndSave = ({
   currentPageHandler,
@@ -29,7 +29,7 @@ const GenerateAndSave = ({
     <form action="#" onSubmit={handleFormSubmit}>
       <div className="flex justify-center">
         <div className="mb-4 h-[500px] w-[800px] space-y-4 xl:col-span-3">
-          <ItineraryMap />
+          {/* <ItineraryMap /> */}
         </div>
       </div>
     </form>
