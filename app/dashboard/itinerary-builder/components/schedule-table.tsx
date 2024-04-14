@@ -1,16 +1,18 @@
 "use client";
 
-import FirebaseServicesInitialization from "@/lib/firebase/firebase_services_initialization";
-import {
-    collection,
-    Firestore,
-    query,
-    where,
-    getDocs,
-    DocumentData,
-    QueryDocumentSnapshot,
-} from "firebase/firestore";
-import { useState, useEffect } from "react";
+// import { useState } from "react";
+
+// import FirebaseServicesInitialization from "@/lib/firebase/firebase_services_initialization";
+// import {
+//     collection,
+//     Firestore,
+//     query,
+//     where,
+//     getDocs,
+//     DocumentData,
+//     QueryDocumentSnapshot,
+// } from "firebase/firestore";
+// import { useState, useEffect } from "react";
 
 export type SelectedClientsUuidAddress = {
   clients: {
@@ -25,7 +27,7 @@ export type SelectedClientsUuidAddress = {
 
 const SuggestedSchedule = ({ data }: { data: SelectedClientsUuidAddress }) => {
 
-    const [companyNames, setCompanyNames] = useState<Set<string>>(new Set());
+    // const [companyNames, setCompanyNames] = useState<Set<string>>(new Set());
 
     // useEffect(() => {
     //     // Asynchronous function to fetch company data
