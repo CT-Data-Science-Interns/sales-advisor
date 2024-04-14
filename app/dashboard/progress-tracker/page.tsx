@@ -1,690 +1,530 @@
-import React from "react";
+"use client";
+
+import FormSelect from "@/components/form-select";
+import React, { useEffect, useRef, useState } from "react";
+
+import DatePicker from "tailwind-datepicker-react";
+import { IOptions } from "tailwind-datepicker-react/types/Options";
+
+import "svgmap/dist/svgMap.min.css";
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "@/configs/firebase_config";
+import { User } from "@/types/firebase/user/user";
+import { ClientListData } from "@/components/client-list-table";
+import ClientListTable from "@/app/dashboard/progress-tracker/lib/client-list-table-progress";
+import { Itinerary } from "@/types/firebase/itinerary";
+
+type CompanyStatusData = {
+  total: number;
+  visited: number;
+  notVisited: number;
+  ongoing: number;
+};
 
 const Page = () => {
+  // Firebase functions
+  // TODO: Move outside of this file for code reusability
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const fetchUsers = async (accountRoleId: string | null = null) => {
+    const usersCol = collection(db, "users");
+    const userSnapshot = accountRoleId
+      ? await getDocs(
+          query(
+            usersCol,
+            where("accountRolesRefs", "array-contains", accountRoleId)
+          )
+        )
+      : await getDocs(usersCol);
+    const users: User[] = [];
+    userSnapshot.forEach((doc) => {
+      const userData = doc.data();
+      if (userData.username) {
+        const user: User = {
+          uuid: doc.id,
+          name: userData.name,
+          username: userData.username,
+          birthdate: userData.birthdate,
+          sex: userData.sex,
+          accountRolesRefs: userData.accountRolesRefs,
+          emailAddressesRefs: userData.emailAddressesRefs,
+          contactNumbersRefs: userData.contactNumbersRefs,
+          socialMediasRefs: userData.socialMediasRefs,
+          managedUsersRefs: userData.managedUsersRefs,
+          managedByRefs: userData.managedByRefs,
+          delegationsRefs: userData.delegationsRefs,
+          addedAt: userData.addedAt,
+          addedByRef: userData.addedByRef,
+          updatedAt: userData.updatedAt,
+          updatedByRef: userData.updatedByRef,
+          deletedAt: userData.deletedAt,
+          deletedByRef: userData.deletedByRef,
+          itinerariesRefs: userData.itinerariesRefs,
+        };
+        users.push(user);
+      }
+    });
+    return users;
+  };
+  const fetchItineraries = async (
+    userRef: string | null = null,
+    startDate: Date | null = null,
+    endDate: Date | null = null
+  ) => {
+    const itinerariesRef = collection(db, "itineraries");
+    const itinerariesSnapshot = userRef
+      ? await getDocs(query(itinerariesRef, where("userRef", "==", userRef)))
+      : await getDocs(itinerariesRef);
+
+    const itineraries: Itinerary[] = [];
+    itinerariesSnapshot.forEach((doc) => {
+      const itineraryData = doc.data();
+      const itinerary: Itinerary = {
+        uuid: doc.id,
+        userRef: itineraryData.userRef,
+        companiesRefs: [],
+
+        // Metadata
+        addedAt: itineraryData.addedAt,
+        addedByRef: itineraryData.addedByRef,
+        updatedAt: itineraryData.updatedAt,
+        updatedByRef: itineraryData.updatedByRef,
+        deletedAt: itineraryData.deletedAt,
+        deletedByRef: itineraryData.deletedByRef,
+      };
+
+      itineraryData.companiesRefs.forEach(
+        (companiesRef: {
+          companyRef: string;
+          schedule: {
+            start: Timestamp;
+            end: Timestamp;
+          };
+          status: "VISITED" | "NOT VISITED" | "ONGOING" | null;
+        }) => {
+          const itemStartDate = companiesRef.schedule.start.toDate();
+          if (
+            startDate === null ||
+            endDate === null ||
+            (itemStartDate >= startDate && itemStartDate <= endDate)
+          ) {
+            const companiesRefConverted: {
+              companyRef: string;
+              schedule: {
+                start: Date;
+                end: Date;
+              };
+              status: "VISITED" | "NOT VISITED" | "ONGOING" | null;
+            } = {
+              companyRef: companiesRef.companyRef,
+              schedule: {
+                start: companiesRef.schedule.start.toDate(),
+                end: companiesRef.schedule.end.toDate(),
+              },
+              status: companiesRef.status,
+            };
+            itinerary.companiesRefs.push(companiesRefConverted);
+          }
+        }
+        //   ({
+        //   companyRef: companiesRef.companyRef,
+        //   schedule: {
+        //     start: companiesRef.schedule.start.toDate(),
+        //     end: companiesRef.schedule.end.toDate(),
+        //   },
+        //   status: companiesRef.status,
+        // })
+      );
+
+      itineraries.push(itinerary);
+    });
+    return itineraries;
+  };
+  const fetchClientListDataFromItineraries = async (
+    itineraries: Itinerary[]
+  ) => {
+    // Get all company ids and status from the itineraries
+    const companyRefs: string[] = [];
+    const companyStatus: string[] = [];
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        if (
+          dealStatus === null || // No filter
+          dealStatus === "ALL" || // Select all
+          companiesRef.status === dealStatus || // Filter matches with company status
+          (dealStatus === "NOT VISITED" && companiesRef.status === null) // Not visited / Treat companies with null status as NOT VISITED
+        ) {
+          companyRefs.push(companiesRef.companyRef);
+          companyStatus.push(companiesRef.status ?? "NOT VISITED");
+        }
+      });
+    });
+
+    // Retrieve companies from the list of ids
+    const companiesSnapshot = await Promise.all(
+      companyRefs.map((ref) => getDoc(doc(db, "companies", ref)))
+    );
+    const companiesData = companiesSnapshot.map((doc) => doc.data());
+
+    // Create ClientListData object
+    const clientListData: ClientListData = { clients: [] };
+    companiesData.forEach((data, index) => {
+      if (data) {
+        clientListData.clients.push({
+          company: data.name,
+          businessModel: data.businessModel,
+          subcategory: data.subcategory,
+          address: data.address,
+          annualSales: data.annualSales,
+          visitStatus: companyStatus[index],
+        });
+      }
+    });
+    return clientListData;
+  };
+  const getCompanyStatusDataFromItineraries = (itineraries: Itinerary[]) => {
+    // Initialize counters
+    let visitedCount = 0;
+    let notVisitedCount = 0;
+    let onGoingCount = 0;
+
+    // Check all status from companiesRefs array
+    itineraries.forEach((itinerary) => {
+      itinerary.companiesRefs.forEach((companiesRef) => {
+        // Increment counter accordingly
+        if (companiesRef.status === "VISITED") {
+          visitedCount++;
+        } else if (companiesRef.status === "ONGOING") {
+          onGoingCount++;
+        } else {
+          notVisitedCount++;
+        }
+      });
+    });
+
+    // Create CompanyStatusData object
+    const data: CompanyStatusData = {
+      total: visitedCount + notVisitedCount + onGoingCount,
+      visited: visitedCount,
+      notVisited: notVisitedCount,
+      ongoing: onGoingCount,
+    };
+
+    return data;
+  };
+
+  // Dropdown options
+  //   const [userOptions, setUserOptions] = useState<
+  //     { value: string; label: string }[]
+  //   >([]);
+
+  // Dropdown filters value
+  // eslint-disable-next-line no-unused-vars
+  const [salespersonId, setSalesPersonId] = useState<string | null>(null);
+  // eslint-disable-next-line no-unused-vars
+  const [dealStatus, setDealStatus] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(startDate);
+
+  // eslint-disable-next-line no-unused-vars
+  enum DateType {
+    // eslint-disable-next-line no-unused-vars
+    All = "All",
+    // eslint-disable-next-line no-unused-vars
+    Today = "Today",
+    // eslint-disable-next-line no-unused-vars
+    Last7Days = "Last 7 days",
+    // eslint-disable-next-line no-unused-vars
+    Last30Days = "Last 30 days",
+    // eslint-disable-next-line no-unused-vars
+    Custom = "Custom",
+  }
+
+  // Datepicker options
+  const startDatepickerOptions: IOptions = {
+    autoHide: true,
+    todayBtn: true,
+    clearBtn: false,
+    inputDateFormatProp: {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    },
+  };
+  const endDatepickerOptions: IOptions = {
+    autoHide: true,
+    todayBtn: true,
+    clearBtn: false,
+    datepickerClassNames: "right-0",
+    inputDateFormatProp: {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    },
+  };
+
+  // Datepicker states
+  const [dateType, setDateType] = useState<DateType>(DateType.All);
+  const [showDatepickers, setShowDatePickers] = useState<boolean>(false);
+  const [showStartDate, setShowStartDate] = useState<boolean>(false);
+  const [showEndDate, setShowEndDate] = useState<boolean>(false);
+
+  // Datepicker functions
+  const onSelectedDateTypeChanged = (newDateType: DateType) => {
+    setDateType(newDateType);
+    setShowDatePickers(newDateType === DateType.Custom);
+  };
+  const onSelectedStartDateChanged = (date: Date) => {
+    // Adjust end date if start date is greater
+    if (date > endDate) {
+      setEndDate(date);
+    }
+
+    setStartDate(date);
+  };
+  const onSelectedEndDateChanged = (date: Date) => {
+    // Adjust start date if end date is greater
+    if (startDate > date) {
+      setStartDate(date);
+    }
+
+    setEndDate(date);
+  };
+
+  const statusPieChartRef = useRef<any>(null);
+  // let statusPieChart: any;
+  //   let areaChart: any;
+  //   let choroplethMap: null;
+  let clientInitialized = false;
+
+  const [companyStatusData, setCompanyStatusData] = useState<CompanyStatusData>(
+    {
+      total: 0,
+      visited: 0,
+      notVisited: 0,
+      ongoing: 0,
+    }
+  );
+  const [clientListData, setClientListData] = useState<ClientListData>({
+    clients: [],
+  });
+
+  const applyFilters = () => {
+    console.log("HI");
+
+    const salesPersonIdFilter = salespersonId === "ALL" ? null : salespersonId;
+
+    const newStartDate: Date = new Date();
+    const newEndDate: Date = new Date();
+
+    newStartDate.setHours(0, 0, 0, 0);
+    newEndDate.setHours(23, 59, 59, 999);
+
+    if (dateType === DateType.Custom) {
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      if (dateType === DateType.Last7Days) {
+        newStartDate.setDate(newStartDate.getDate() - 7);
+      } else if (dateType === DateType.Last30Days) {
+        newStartDate.setDate(newStartDate.getDate() - 30);
+      }
+      setStartDate(newStartDate);
+      setEndDate(newEndDate);
+    }
+
+    const fetchItinerariesParams =
+      dateType === DateType.All
+        ? [null, null]
+        : dateType === DateType.Custom
+          ? [startDate, endDate]
+          : [newStartDate, newEndDate];
+    fetchItineraries(salesPersonIdFilter, ...fetchItinerariesParams).then(
+      (itineraries) => {
+        // Update company status data
+        const newCompanyStatusData =
+          getCompanyStatusDataFromItineraries(itineraries);
+        setCompanyStatusData(newCompanyStatusData);
+
+        // Update client list data
+        fetchClientListDataFromItineraries(itineraries).then(
+          (clientListData) => {
+            setClientListData(clientListData);
+          }
+        );
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (!clientInitialized) {
+      // Fetch users which are salesperson and display on FormSelect options
+      fetchUsers("f83f0d9cb57849c78276")
+        .then((data) => {
+          const newUserOptions = data.map((user) => ({
+            value: user.uuid,
+            label: user.name.firstName + " " + user.name.lastName,
+          }));
+          newUserOptions.unshift({ value: "ALL", label: "All" });
+          // setUserOptions(newUserOptions);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+        });
+
+      // Fetch companies from itineraries to be displayed on client list
+      fetchItineraries()
+        .then((itineraries) => {
+          console.log(itineraries);
+          const newCompanyStatusData =
+            getCompanyStatusDataFromItineraries(itineraries);
+          setCompanyStatusData(newCompanyStatusData);
+
+          fetchClientListDataFromItineraries(itineraries).then(
+            (clientListData) => {
+              setClientListData(clientListData);
+            }
+          );
+        })
+        .catch((error) => {
+          console.error("Error fetching itineraries:", error);
+        });
+
+      clientInitialized = true;
+    }
+  }, []);
+
   return (
-    <div>
-      <div className="max-w-screen mt-10 flex h-screen flex-col items-center">
-        <h1 className="mt- 6 mb-4 text-center text-5xl font-bold text-gray-900 dark:text-white">
-          Sales Visit Progress Tracker
-        </h1>
+    <div className="mx-auto px-4 py-8 md:max-w-6xl lg:py-16">
+      <h1 className="mb-4 text-5xl font-bold text-gray-900 dark:text-white">
+        Sales Visit Progress Tracker
+      </h1>
 
-        {/* First Column: Select Date Part */}
-        <section className="bg-white dark:bg-gray-900">
-          <div className="flex flex-col px-8 py-16 lg:flex-row lg:justify-start lg:px-10 lg:py-20">
-            <div className="grid grid-cols-3 gap-10 lg:gap-16">
-              <form>
-                <label
-                  htmlFor="dates"
-                  className="mb-4 block text-base font-medium text-gray-900 dark:text-white"
-                >
-                  Select Date option
-                </label>
-                <select
-                  id="dates"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  defaultValue=""
-                >
-                  <option disabled value="">
-                    Select an option
-                  </option>
-                  <option value="all">All Dates</option>
-                  <option value="range">Date Range</option>
-                  <option value="specific">Specific Date</option>
-                </select>
-              </form>
-
-              <div className="my-6 flex items-center space-x-4">
-                <input
-                  name="start"
-                  type="date"
-                  id="start"
-                  placeholder="Select start date"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+      {/* Dropdown filters */}
+      <div className="mb-8 rounded-lg p-6 shadow">
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">
+          Filters
+        </h5>
+        <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Dates */}
+          <div className="sm:col-span-2">
+            <FormSelect
+              className="mb-2"
+              title="Date:"
+              onSelectChange={onSelectedDateTypeChanged}
+              options={[
+                DateType.All,
+                DateType.Today,
+                DateType.Last7Days,
+                DateType.Last30Days,
+                DateType.Custom,
+              ]}
+            />
+            {showDatepickers && (
+              <div className="flex">
+                <DatePicker
+                  value={startDate}
+                  options={startDatepickerOptions}
+                  classNames="relative"
+                  show={showStartDate}
+                  setShow={setShowStartDate}
+                  selectedDateState={[startDate, onSelectedStartDateChanged]}
                 />
-                <span className="text-xl text-gray-500">to</span>
-                <input
-                  name="end"
-                  type="date"
-                  placeholder="Select end date"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                <span className="mx-4 my-auto text-gray-500">to</span>
+                <DatePicker
+                  value={endDate}
+                  options={endDatepickerOptions}
+                  classNames="relative"
+                  show={showEndDate}
+                  setShow={setShowEndDate}
+                  selectedDateState={[endDate, onSelectedEndDateChanged]}
                 />
               </div>
+            )}
+          </div>
+        </div>
+        <div className="flex justify-start">
+          <button
+            type="button"
+            onClick={applyFilters}
+            className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </div>
 
-              {/* Second Column: Progress Bar */}
-              <div className="ml-5">
-                <div>
-                  <div className="mb-1 flex justify-between">
-                    <span className="text-base font-medium text-blue-700 dark:text-white">
-                      Your Progress
-                    </span>
-                    <span className="text-sm font-medium text-blue-700 dark:text-white">
-                      45%
-                    </span>
-                  </div>
-                  <div className="h-10 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-                    <div
-                      className="h-10 rounded-full bg-blue-600 dark:bg-blue-500"
-                      style={{ width: "45%" }}
-                    ></div>
-                  </div>
-                </div>
+      <div className="mb-8 grid gap-6 md:grid-cols-2">
+        <div className="rounded-lg p-6 shadow">
+          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">
+            Visit Progress
+          </h5>
+          <div id="pie-chart" ref={statusPieChartRef}></div>
+          <div className="mt-4 grid grid-cols-4 gap-2">
+            <div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Total
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.total}
+              </div>
+            </div>
+            <div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Visited
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.visited}
+              </div>
+            </div>
+            <div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Not Visited
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.notVisited}
+              </div>
+            </div>
+            <div>
+              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Ongoing
+              </div>
+              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
+                {companyStatusData?.ongoing}
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Second Row: Conversion Status */}
-        <section className="bg-white dark:bg-gray-900">
-          <div className="max-w-screen-3xl mx-auto px-8 py-16 lg:px-10 lg:py-20">
-            <div className="grid grid-cols-3 gap-10 lg:gap-16">
-              {/* Ongoing Column */}
-              <div className="flex flex-col rounded-lg border border-gray-300 bg-white p-10 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
-                <h3 className="mb-8 text-4xl font-semibold">Ongoing</h3>
-                {/* Cards for companies in Ongoing status */}
-                <div className="space-y-8">
-                  <div className="rounded-lg bg-gray-100 p-8">
-                    <h4 className="mb-2 font-bold">21 CENTURY CORPORATION</h4>
-                    <p>
-                      Building 11, EZP Center Determine Street, CPIP, Barangay
-                      Batino Calamba, Laguna, 4027 Philippines
-                    </p>
-                    <p>Business Category: Tools, Cutters, Moulds, and Dies</p>
-                    <a
-                      href="#"
-                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      Read more
-                      <svg
-                        className="ms-2 size-3.5 rtl:rotate-180"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  <div className="rounded-lg bg-gray-100 p-8">
-                    <h4 className="mb-2 font-bold">
-                      3J METAL INDUSTRIES, INC.
-                    </h4>
-                    <p>
-                      16 Golden Lane Morningstar Heights Culiat Quezon, Manila,
-                      1100 Philippines
-                    </p>
-                    <p>Business Category: Steel</p>
-                    <a
-                      href="#"
-                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      Read more
-                      <svg
-                        className="ms-2 size-3.5 rtl:rotate-180"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  {/* Add more cards for companies as needed */}
-                </div>
-              </div>
-
-              {/* Success Column */}
-              <div className="flex flex-col rounded-lg border border-gray-300 bg-white p-10 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
-                <h3 className="mb-8 text-4xl font-semibold">Success</h3>
-                {/* Cards for companies in Success status */}
-                <div className="space-y-8">
-                  <div className="rounded-lg bg-gray-100 p-8">
-                    <h4 className="mb-2 font-bold">3M PHILIPPINES, INC.</h4>
-                    <p>
-                      10th and 11th Floors The Finance Center 26th Street corner
-                      9th Avenue Taguig, Manila, 1634 Philippines
-                    </p>
-                    <p>Business Category: Transportation Equipment</p>
-                    <a
-                      href="#"
-                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      Read more
-                      <svg
-                        className="ms-2 size-3.5 rtl:rotate-180"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  <div className="rounded-lg bg-gray-100 p-8">
-                    <h4 className="mb-2 font-bold">Puyat Steel Corporation</h4>
-                    <p>
-                      2nd Floor Alegria Alta Building 2294 Don Chino Roces
-                      Extension, Magallanes Makati, Manila, 1232 Philippines
-                    </p>
-                    <p>Business Category: Fabricated Metal</p>
-                    <a
-                      href="#"
-                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      Read more
-                      <svg
-                        className="ms-2 size-3.5 rtl:rotate-180"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  {/* Add more cards for companies as needed */}
-                </div>
-              </div>
-
-              {/* Failed Column */}
-              <div className="flex flex-col rounded-lg border border-gray-300 bg-white p-10 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white">
-                <h3 className="mb-8 text-4xl font-semibold">Failed</h3>
-                {/* Cards for companies in Failed status */}
-                <div className="space-y-8">
-                  <div className="rounded-lg bg-gray-100 p-8">
-                    <h4 className="mb-2 font-bold">A.S.RIVERA CORPORATION</h4>
-                    <p>
-                      Block 46, Lot 1, Pampano Street, Barangay Longos Malabon,
-                      Manila, 1470 Philippines
-                    </p>
-                    <p>Business Category: Fabricated Metal</p>
-                    <a
-                      href="#"
-                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      Read more
-                      <svg
-                        className="ms-2 size-3.5 rtl:rotate-180"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                  <div className="rounded-lg bg-gray-100 p-8">
-                    <h4 className="mb-2 font-bold">
-                      AAB BAKING GOODS & SUPPLIES INC.
-                    </h4>
-                    <p>
-                      2 Kitanlad Street corner Quezon Avenue, Barangay Dona
-                      Josefa Quezon, Manila, 1113 Philippines
-                    </p>
-                    <p>Business Category: Food</p>
-                    <a
-                      href="#"
-                      className="mt-6 inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      Read more
-                      <svg
-                        className="ms-2 size-3.5 rtl:rotate-180"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
+          {/* Progress Value */}
+          {companyStatusData && (
+            <div className="mt-4">
+              Progress:{" "}
+              {(
+                (companyStatusData.visited / companyStatusData.total) *
+                100
+              ).toFixed(2)}
+              %
             </div>
-          </div>
-        </section>
-
-        {/* Fourth Row: Client List */}
-        <div className="relative shadow-md sm:rounded-lg">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-            <caption className="bg-white p-5 text-left text-lg font-semibold text-gray-900 dark:bg-gray-800 dark:text-white rtl:text-right">
-              Client List
-              <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                Overview of the clients.
-              </p>
-            </caption>
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-all-search"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label htmlFor="checkbox-all-search" className="sr-only">
-                      checkbox
-                    </label>
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Company
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Business Model
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Subcategory
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Address
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Annual Sales
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Visit Status
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Deal Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  EPSON PRECISION (PHILIPPINES), INC.
-                </td>
-                <td className="px-6 py-4">End-User</td>
-                <td className="px-6 py-4">
-                  Commercial And Service Industry Machinery
-                </td>
-                <td className="px-6 py-4">
-                  Special Economic Processing Zone (SEPZ), Lima Technology
-                  Center Lipa City, Batangas, 4217 Philippines
-                </td>
-                <td className="px-6 py-4">1,236,040,000</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
-                    Visited
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-red-500"></div>
-                    Failed
-                  </div>
-                </td>
-              </tr>
-
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  3M PHILIPPINES, INC.
-                </td>
-                <td className="px-6 py-4">End-User</td>
-                <td className="px-6 py-4">Transportation Equipment</td>
-                <td className="px-6 py-4">
-                  10th and 11th Floors The Finance Center 26th Street corner 9th
-                  Avenue Taguig, Manila, 1634 Philippines
-                </td>
-                <td className="px-6 py-4">1,540,000</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
-                    Visited
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
-                    Success
-                  </div>
-                </td>
-              </tr>
-
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  21 CENTURY CORPORATION
-                </td>
-                <td className="px-6 py-4">End-User</td>
-                <td className="px-6 py-4">Tools, Cutters, Moulds, and Dies</td>
-                <td className="px-6 py-4">
-                  Building 11, EZP Center Determine Street, CPIP, Barangay
-                  Batino Calamba, Laguna, 4027 Philippines
-                </td>
-                <td className="px-6 py-4">803,000</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-green-500"></div>
-                    Visited
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-yellow-300"></div>
-                    Ongoing
-                  </div>
-                </td>
-              </tr>
-
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  A.S.RIVERA CORPORATION
-                </td>
-                <td className="px-6 py-4">End-User</td>
-                <td className="px-6 py-4">Fabricated Metal</td>
-                <td className="px-6 py-4">
-                  Block 46, Lot 1, Pampano Street, Barangay Longos Malabon,
-                  Manila, 1470 Philippines
-                </td>
-                <td className="px-6 py-4">26,040,000</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-red-500"></div>
-                    Failed
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div className="me-2 size-2.5 rounded-full bg-red-500"></div>
-                    Failed
-                  </div>
-                </td>
-              </tr>
-              {/* Additional rows */}
-            </tbody>
-          </table>
-          <nav
-            className="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
-            aria-label="Table navigation"
-          >
-            <span className="mb-4 block w-full text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 md:inline md:w-auto">
-              Showing{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1-10
-              </span>{" "}
-              of{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1000
-              </span>
-            </span>
-            <ul className="inline-flex h-8 -space-x-px text-sm rtl:space-x-reverse">
-              <li>
-                <a
-                  href="#"
-                  className="ms-0 flex h-8 items-center justify-center rounded-s-lg border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  Previous
-                </a>
-              </li>
-              {/* Additional pagination links */}
-            </ul>
-          </nav>
+          )}
         </div>
+        {/* Remaining code */}
+      </div>
 
-        {/* Suggested Schedule */}
-        <div className="max-w-screen-3xl mx-auto px-8 py-16 lg:px-10 lg:py-20">
-          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-            <caption className="bg-white p-5 text-left text-lg font-semibold text-gray-900 dark:bg-gray-800 dark:text-white rtl:text-right">
-              Suggested Schedule
-              <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                Feel free to follow this schedule.
-              </p>
-            </caption>
-            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-all-search"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label htmlFor="checkbox-all-search" className="sr-only">
-                      checkbox
-                    </label>
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Time
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Activity
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Company
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  07:30 to 08:30 (2024-03-15 )
-                </td>
-                <td className="px-6 py-4">🤝Meeting</td>
-                <td className="px-6 py-4">
-                  EPSON PRECISION (PHILIPPINES), INC.
-                </td>
-              </tr>
-
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  08:30 to 09:30 (2024-03-15 )
-                </td>
-                <td className="px-6 py-4">🤝Meeting</td>
-                <td className="px-6 py-4">
-                  JT INTERNATIONAL ASIA MANUFACTURING CORP.
-                </td>
-              </tr>
-
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  09:40 to 10:40 (2024-03-15 )
-                </td>
-                <td className="px-6 py-4">🤝Meeting</td>
-                <td className="px-6 py-4">FIRST PHILEC, INC.</td>
-              </tr>
-
-              <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      className="size-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
-                    />
-                    <label
-                      htmlFor="checkbox-table-search-1"
-                      className="sr-only"
-                    >
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                  11:01 to 12:01 (2024-03-15 )
-                </td>
-                <td className="px-6 py-4">🤝Meeting</td>
-                <td className="px-6 py-4">
-                  ZAMA PRECISION INDUSTRY MANUFACTURING PHILIPPINES, INC.
-                </td>
-              </tr>
-              {/* Additional rows */}
-            </tbody>
-          </table>
-          <nav
-            className="flex-column flex flex-wrap items-center justify-between pt-4 md:flex-row"
-            aria-label="Table navigation"
-          >
-            <span className="mb-4 block w-full text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 md:inline md:w-auto">
-              Showing{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1-10
-              </span>{" "}
-              of{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                1000
-              </span>
-            </span>
-            <ul className="inline-flex h-8 -space-x-px text-sm rtl:space-x-reverse">
-              <li>
-                <a
-                  href="#"
-                  className="ms-0 flex h-8 items-center justify-center rounded-s-lg border border-gray-300 bg-white px-3 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  Previous
-                </a>
-              </li>
-              {/* Additional pagination links */}
-            </ul>
-          </nav>
-        </div>
+      {/* Client List */}
+      <div className="mb-8 rounded-lg p-6 shadow">
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">
+          Client List
+        </h5>
+        <ClientListTable data={clientListData}></ClientListTable>
       </div>
     </div>
   );
