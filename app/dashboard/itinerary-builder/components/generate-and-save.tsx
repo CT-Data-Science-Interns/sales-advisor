@@ -9,12 +9,14 @@ import {
 } from "../lib/create-itinerary";
 import FirebaseServicesInitialization from "@/lib/firebase/firebase_services_initialization";
 import { Firestore, getDoc, doc } from "firebase/firestore";
+
 import SuggestedSchedule, { SelectedClientsUuidAddress } from "./schedule-table";
 
 // type ScheduleDetails = {
 //   uuid: string;
 //   companyAddressUuid: string[];
 // };
+
 
 const GenerateAndSave = ({
   startDate,
@@ -34,8 +36,10 @@ const GenerateAndSave = ({
   const [sortedCompanies, setSortedCompanies] = useState<CompanyWithAddress[]>(
     []
   );
+
   // State for clientListData:
   const [clientUuidAddressList, setClientUuidAddressList] = useState<SelectedClientsUuidAddress>({ clients: [] }); 
+
   // Access the companies collection and get address.
   useEffect(() => {
     filteredCompanies?.forEach(async (company) => {
@@ -78,11 +82,11 @@ const GenerateAndSave = ({
     setClientUuidAddressList({ clients: clientsInfo });
   }, [sortedCompanies]);
   
-  console.log("length of array")
-  console.log(sortedCompanies.length)
-  console.log("client list data")
-  console.log(clientUuidAddressList);
-  console.log("end client list data")
+  // console.log("length of array")
+  // console.log(sortedCompanies.length)
+  // console.log("client list data")
+  // console.log(clientUuidAddressList);
+  // console.log("end client list data")
 
   if (!db) throw new Error("Firestore not initialized");
   if (!latLng) throw new Error("No location selected");

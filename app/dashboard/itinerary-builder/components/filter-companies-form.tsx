@@ -23,9 +23,11 @@ const FilterCompaniesForm = ({
   //   null
   // );
 
+
   const handleGoBack = () => {
     currentPageHandler(ItineraryStage.SET_LOCATION ); // Replace PREVIOUS_STAGE with the actual previous stage
   };
+
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -120,6 +122,7 @@ const FilterCompaniesForm = ({
                 />
               </div>
             </div> */}
+
           </div>
           <div className="flex justify-between">
             <button
