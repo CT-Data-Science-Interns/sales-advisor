@@ -1,3 +1,5 @@
+"use client";
+
 import usersList from "@/data/user/users.json";
 import type { User } from "@/types/user/user";
 import UsersListPageContent from "./components/content";

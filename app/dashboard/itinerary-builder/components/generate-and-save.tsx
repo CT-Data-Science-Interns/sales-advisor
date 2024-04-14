@@ -10,6 +10,14 @@ import {
 import FirebaseServicesInitialization from "@/lib/firebase/firebase_services_initialization";
 import { Firestore, getDoc, doc } from "firebase/firestore";
 
+import SuggestedSchedule, { SelectedClientsUuidAddress } from "./schedule-table";
+
+// type ScheduleDetails = {
+//   uuid: string;
+//   companyAddressUuid: string[];
+// };
+
+
 const GenerateAndSave = ({
   startDate,
   endDate,
@@ -28,6 +36,9 @@ const GenerateAndSave = ({
   const [sortedCompanies, setSortedCompanies] = useState<CompanyWithAddress[]>(
     []
   );
+
+  // State for clientListData:
+  const [clientUuidAddressList, setClientUuidAddressList] = useState<SelectedClientsUuidAddress>({ clients: [] }); 
 
   // Access the companies collection and get address.
   useEffect(() => {
@@ -59,6 +70,24 @@ const GenerateAndSave = ({
     );
   }, [companies, latLng]);
 
+  // fetch the selected clients and schedule generated
+  useEffect(() => {
+    if (sortedCompanies.length === 0) return;
+    // Assuming SelectedClientsInfo expects an array of objects with certain properties including uuid
+    const clientsInfo = sortedCompanies.map(company => ({
+      uuid: company.uuid,
+      address: company.address
+      // Add other properties as needed, based on the structure of SelectedClientsInfo
+    }));
+    setClientUuidAddressList({ clients: clientsInfo });
+  }, [sortedCompanies]);
+  
+  // console.log("length of array")
+  // console.log(sortedCompanies.length)
+  // console.log("client list data")
+  // console.log(clientUuidAddressList);
+  // console.log("end client list data")
+
   if (!db) throw new Error("Firestore not initialized");
   if (!latLng) throw new Error("No location selected");
 
@@ -68,17 +97,26 @@ const GenerateAndSave = ({
   };
 
   return (
-    <form action="#" onSubmit={handleFormSubmit}>
-      <div className="flex justify-center">
-        <div className="mb-4 h-[500px] w-[800px] space-y-4 xl:col-span-3">
-          <ItineraryMap
-            startLatLng={latLng}
-            nearestCompanies={sortedCompanies}
-          />
+    <>
+      <form action="#" onSubmit={handleFormSubmit}>
+        <div className="flex justify-center">
+          <div className="mb-4 h-[500px] w-[800px] space-y-4 xl:col-span-3">
+            <ItineraryMap
+              startLatLng={latLng}
+              nearestCompanies={sortedCompanies}
+            />
+          </div>
         </div>
+      </form>
+      {/* Client List */}
+      <div className="mb-8 rounded-lg p-6 shadow">
+        <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">Client List</h5>
+        <SuggestedSchedule data={clientUuidAddressList}></SuggestedSchedule>
       </div>
-    </form>
+    </>
   );
+
+  
 };
 
 export default GenerateAndSave;

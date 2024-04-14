@@ -2,11 +2,11 @@ import React from "react";
 
 export enum ItineraryStage {
   // eslint-disable-next-line no-unused-vars
-  SET_LOCATION = "Set starting location",
+  SET_LOCATION = "Set starting date and location",
   // eslint-disable-next-line no-unused-vars
-  FILTER_COMPANIES = "Filter delegated companies",
+  FILTER_COMPANIES = "Set your client preferences",
   // eslint-disable-next-line no-unused-vars
-  GENERATE_AND_SAVE = "Generate and Save Itinerary",
+  GENERATE_AND_SAVE = "Save your AI generated schedule",
 }
 
 const ItineraryStageItem = ({
