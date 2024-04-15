@@ -23,6 +23,10 @@ const FilterCompaniesForm = ({
   //   null
   // );
 
+  const handleGoBack = () => {
+    currentPageHandler(ItineraryStage.SET_LOCATION); // Replace PREVIOUS_STAGE with the actual previous stage
+  };
+
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
     const filteredCompanies = filterCompanies(
@@ -116,6 +120,21 @@ const FilterCompaniesForm = ({
                 />
               </div>
             </div> */}
+          </div>
+          <div className="flex justify-between">
+            <button
+              type="button" // Important to specify type="button" to prevent form submission
+              className="mt-4 inline-flex items-center rounded-lg bg-gray-300 px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 sm:mt-6"
+              onClick={handleGoBack}
+            >
+              Previous
+            </button>
+            <button
+              type="submit"
+              className="mt-4 inline-flex items-center rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 sm:mt-6"
+            >
+              Generate Itinerary
+            </button>
           </div>
         </form>
       </div>

@@ -82,7 +82,7 @@ const StartingLocationForm = ({
   return (
     <form onSubmit={handleFormSubmit}>
       <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-        Search for a location or click on the map
+        Where will you be coming from? Search for a location or click on the map
       </h2>
       <div className="gap-4 sm:grid sm:grid-cols-2 sm:gap-6 xl:grid-cols-5">
         <div className="h-96 space-y-4 xl:col-span-3">
