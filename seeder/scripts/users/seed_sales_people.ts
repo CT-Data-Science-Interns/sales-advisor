@@ -22,9 +22,9 @@ function generateAlphanumericUUID(length: number): string {
     return alphanumericUUID.padEnd(length, '0');
 }
 
-const filePath = '../../raw_data/sales_leaders_v2.csv';
+const filePath = '../../raw_data/sales_people_v2.csv';
 
-// Read the sales_leaders_v2.csv file
+// Read the csv file.
 let data: string = '';
 try {
     data = readFileSync(filePath, 'utf-8');
@@ -45,7 +45,7 @@ columns.shift();
 columns.pop();
 
 // Make an array of objects.
-const salesLeaders = columns.map(column => {
+const salesPeople = columns.map(column => {
     // Parse the country column to a list 
     // (i.e., it is possible to have multiple countries separated by a semicolon).
     const countries = column[5].split(';');
@@ -60,7 +60,7 @@ const salesLeaders = columns.map(column => {
     };
 });
 
-// console.log('Sales Leaders:', salesLeaders);
+// console.log('Sales Leaders:', salesPeople);
 
 // Setup Firestore connection.
 const app: FirebaseApp = initializeApp({
@@ -150,25 +150,26 @@ const addUserObject = async (user: User): Promise<void> => {
 
 }
 
-const SALES_LEADER_UUID = 'e62750e9626b49c2bb80';
+// const SALES_LEADER_UUID = 'e62750e9626b49c2bb80';
+const SALES_PERSON_UUID = 'f83f0d9cb57849c78276';
 
 // Create users in Firebase Auth.
 const main = async () => {
-    for (let i = 0; i < salesLeaders.length; i++) {
-        console.log(`Processing #${i + 1} ${salesLeaders[i].email}...`);
+    for (let i = 0; i < salesPeople.length; i++) {
+        console.log(`Processing #${i + 1} ${salesPeople[i].email}...`);
 
         console.log('Signing in user...');
 
         let userUUID: string | null;
 
         // Check if user exists. If not, create user.
-        userUUID = await signInUser(salesLeaders[i].email, salesLeaders[i].password);
+        userUUID = await signInUser(salesPeople[i].email, salesPeople[i].password);
         if (userUUID === null) {
             console.log('User does not exist. Creating user...');
 
-            userUUID = await createUser(salesLeaders[i].email, salesLeaders[i].password);
+            userUUID = await createUser(salesPeople[i].email, salesPeople[i].password);
             if (userUUID === null) {
-                console.log('User creation failed for', salesLeaders[i].email);
+                console.log('User creation failed for', salesPeople[i].email);
                 return;
             }
         }
@@ -177,13 +178,13 @@ const main = async () => {
         console.log('Adding user email address to Firestore (usersEmailAddresses collection)...');
 
         // Check if the email address already exists in Firestore.
-        const q: Query = query(collection(db, 'usersEmailAddresses'), where('email', '==', salesLeaders[i].email));
+        const q: Query = query(collection(db, 'usersEmailAddresses'), where('email', '==', salesPeople[i].email));
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty) {
             // Add user email address to Firestore.
-            const userEmailAddressUUID: string | null = await addUserEmailAddress(userUUID, salesLeaders[i].email);
+            const userEmailAddressUUID: string | null = await addUserEmailAddress(userUUID, salesPeople[i].email);
             if (userEmailAddressUUID === null) {
-                console.log('UserEmailAddress creation failed for', salesLeaders[i].email);
+                console.log('UserEmailAddress creation failed for', salesPeople[i].email);
                 return;
             }
 
@@ -197,17 +198,17 @@ const main = async () => {
         // Build user object.
         const user: User = {
             uuid: userUUID,
-            username: salesLeaders[i].username,
+            username: salesPeople[i].username,
             name: {
-                firstName: salesLeaders[i].firstName,
-                lastName: salesLeaders[i].lastName,
+                firstName: salesPeople[i].firstName,
+                lastName: salesPeople[i].lastName,
                 middleName: null,
                 suffix: null,
             },
             birthdate: null,
             sex: null,
-            accountRolesRefs: [SALES_LEADER_UUID], // Sales Leader
-            emailAddressesRefs: [salesLeaders[i].email],
+            accountRolesRefs: [SALES_PERSON_UUID], // Sales Person
+            emailAddressesRefs: [salesPeople[i].email],
             contactNumbersRefs: null,
             socialMediasRefs: null,
             managedUsersRefs: null,
@@ -236,7 +237,7 @@ const main = async () => {
 
         console.log('User signed out.\n');
 
-        if (i === salesLeaders.length - 1) {
+        if (i === salesPeople.length - 1) {
             console.log('All users have been seeded.');
         }
     }
