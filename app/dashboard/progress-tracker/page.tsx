@@ -1,7 +1,7 @@
 "use client";
 
 import FormSelect from "@/components/form-select";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import DatePicker from "tailwind-datepicker-react";
 import { IOptions } from "tailwind-datepicker-react/types/Options";
@@ -20,15 +20,28 @@ import {
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "@/configs/firebase_config";
 import { User } from "@/types/firebase/user/user";
-import { ClientListData } from "@/components/client-list-table";
-import ClientListTable from "@/app/dashboard/progress-tracker/lib/client-list-table-progress";
+import ClientListTable from "@/app/dashboard/progress-tracker/lib/client-table-list-progress";
 import { Itinerary } from "@/types/firebase/itinerary";
+import ProgressBar from "./lib/progress-bar";
 
 type CompanyStatusData = {
   total: number;
   visited: number;
   notVisited: number;
   ongoing: number;
+};
+
+export type ClientListData = {
+  clients: {
+    id: string;
+    company: string;
+    businessModel: string;
+    subcategory: string;
+    address: string;
+    annualSales: number;
+    visitStatus: string;
+    companyRef: string;
+  }[];
 };
 
 const Page = () => {
@@ -156,6 +169,7 @@ const Page = () => {
     // Get all company ids and status from the itineraries
     const companyRefs: string[] = [];
     const companyStatus: string[] = [];
+    const companyIds: string[] = [];
     itineraries.forEach((itinerary) => {
       itinerary.companiesRefs.forEach((companiesRef) => {
         if (
@@ -166,6 +180,7 @@ const Page = () => {
         ) {
           companyRefs.push(companiesRef.companyRef);
           companyStatus.push(companiesRef.status ?? "NOT VISITED");
+          companyIds.push(itinerary.uuid); // Pushing itinerary id as company id
         }
       });
     });
@@ -177,20 +192,22 @@ const Page = () => {
     const companiesData = companiesSnapshot.map((doc) => doc.data());
 
     // Create ClientListData object
-    const clientListData: ClientListData = { clients: [] };
+    const clientListData2: ClientListData = { clients: [] };
     companiesData.forEach((data, index) => {
       if (data) {
-        clientListData.clients.push({
+        clientListData2.clients.push({
+          id: companyIds[index],
           company: data.name,
           businessModel: data.businessModel,
           subcategory: data.subcategory,
           address: data.address,
           annualSales: data.annualSales,
           visitStatus: companyStatus[index],
+          companyRef: companyRefs[index],
         });
       }
     });
-    return clientListData;
+    return clientListData2;
   };
   const getCompanyStatusDataFromItineraries = (itineraries: Itinerary[]) => {
     // Initialize counters
@@ -301,7 +318,7 @@ const Page = () => {
     setEndDate(date);
   };
 
-  const statusPieChartRef = useRef<any>(null);
+  // const statusPieChartRef = useRef<any>(null);
   // let statusPieChart: any;
   //   let areaChart: any;
   //   let choroplethMap: null;
@@ -359,6 +376,7 @@ const Page = () => {
         // Update client list data
         fetchClientListDataFromItineraries(itineraries).then(
           (clientListData) => {
+            console.log("Use effect triggered");
             setClientListData(clientListData);
           }
         );
@@ -392,6 +410,7 @@ const Page = () => {
 
           fetchClientListDataFromItineraries(itineraries).then(
             (clientListData) => {
+              console.log("Use effect triggered");
               setClientListData(clientListData);
             }
           );
@@ -464,67 +483,17 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="mb-8 grid gap-6 md:grid-cols-2">
-        <div className="rounded-lg p-6 shadow">
-          <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">
-            Visit Progress
-          </h5>
-          <div id="pie-chart" ref={statusPieChartRef}></div>
-          <div className="mt-4 grid grid-cols-4 gap-2">
-            <div>
-              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
-                Total
-              </div>
-              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
-                {companyStatusData?.total}
-              </div>
-            </div>
-            <div>
-              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
-                Visited
-              </div>
-              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
-                {companyStatusData?.visited}
-              </div>
-            </div>
-            <div>
-              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
-                Not Visited
-              </div>
-              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
-                {companyStatusData?.notVisited}
-              </div>
-            </div>
-            <div>
-              <div className="text-center text-sm text-gray-600 dark:text-gray-300">
-                Ongoing
-              </div>
-              <div className="text-center text-3xl text-gray-600 dark:text-gray-300">
-                {companyStatusData?.ongoing}
-              </div>
-            </div>
-          </div>
-          {/* Progress Value */}
-          {companyStatusData && (
-            <div className="mt-4">
-              Progress:{" "}
-              {(
-                (companyStatusData.visited / companyStatusData.total) *
-                100
-              ).toFixed(2)}
-              %
-            </div>
-          )}
-        </div>
-        {/* Remaining code */}
-      </div>
+      <ProgressBar companyStatusData={companyStatusData} />
 
       {/* Client List */}
       <div className="mb-8 rounded-lg p-6 shadow">
         <h5 className="pb-6 text-xl font-bold text-gray-900 dark:text-white">
           Client List
         </h5>
-        <ClientListTable data={clientListData}></ClientListTable>
+        <ClientListTable
+          data={clientListData}
+          setClientListData={setClientListData}
+        ></ClientListTable>
       </div>
     </div>
   );
